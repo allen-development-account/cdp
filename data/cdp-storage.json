@@ -1,0 +1,127 @@
+{
+  "profiles": [
+    {
+      "id": "prof_mwmlxjek_eeyz",
+      "unifiedName": "test.user",
+      "primaryEmail": "test.user@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80",
+      "createdAt": "2026-11-18T21:02:17.468Z",
+      "lastActiveAt": "2026-11-18T21:02:17.468Z",
+      "identities": [
+        {
+          "id": "id_710bzg",
+          "type": "email",
+          "value": "test.user@example.com",
+          "firstSeen": "2026-11-18T21:02:17.468Z",
+          "lastSeen": "2026-11-18T21:02:17.468Z",
+          "source": "Web SDK",
+          "isPrimary": true
+        },
+        {
+          "id": "id_lzejkr",
+          "type": "cookie",
+          "value": "cid_test_991",
+          "firstSeen": "2026-11-18T21:02:17.468Z",
+          "lastSeen": "2026-11-18T21:02:17.468Z",
+          "source": "Web SDK"
+        }
+      ],
+      "identityLinks": [],
+      "attributes": {
+        "firstName": "test.user",
+        "lastName": "",
+        "city": "Undetermined",
+        "state": "CA",
+        "country": "US",
+        "customerTier": "Silver",
+        "totalSpend": 0,
+        "purchaseCount": 0,
+        "loyaltyPoints": 100
+      },
+      "consent": {
+        "gdprConsent": true,
+        "ccpaOptOut": false,
+        "marketingEmailConsent": true,
+        "thirdPartySharingConsent": false,
+        "sensitiveDataAllowed": false,
+        "lastUpdated": "2026-11-18T21:02:17.468Z",
+        "consentSource": "Web SDK"
+      },
+      "predictions": {
+        "churnRisk": 12,
+        "churnRiskBand": "Low",
+        "predictedLtv": 2400,
+        "upsellPropensity": 78,
+        "brandLoyaltyScore": 85,
+        "nextBestAction": "Deliver VIP Welcome Offer",
+        "nextBestOffer": "15% Off Next Purchase",
+        "calculatedAt": "2026-11-18T21:02:17.468Z"
+      },
+      "events": [
+        {
+          "id": "evt_mwmlxjek",
+          "eventType": "AddToCart",
+          "timestamp": "2026-11-18T21:02:17.468Z",
+          "channel": "Web SDK",
+          "schemaId": "xdm_experience_event",
+          "identifiers": {
+            "email": "test.user@example.com",
+            "cookieId": "cid_test_991",
+            "crmId": "",
+            "phone": "",
+            "deviceToken": ""
+          },
+          "payload": {
+            "channel": "Web SDK",
+            "schemaId": "xdm_experience_event",
+            "eventType": "AddToCart",
+            "timestamp": "2026-11-18T21:02:17.313Z",
+            "email": "test.user@example.com",
+            "cookieId": "cid_test_991",
+            "unifiedName": "Test User",
+            "cartTotal": 520
+          }
+        }
+      ],
+      "qualifyingAudienceIds": [],
+      "activeJourneys": []
+    }
+  ],
+  "audiences": [],
+  "destinations": [],
+  "dlq": [],
+  "syncLogs": [],
+  "streamEvents": [
+    {
+      "id": "stream_evt_mwmlxjek",
+      "eventType": "AddToCart",
+      "timestamp": "2026-11-18T21:02:17.468Z",
+      "channel": "Web SDK",
+      "schemaId": "xdm_experience_event",
+      "identifiers": {
+        "email": "test.user@example.com",
+        "cookieId": "cid_test_991",
+        "crmId": "",
+        "phone": "",
+        "deviceToken": ""
+      },
+      "payload": {
+        "channel": "Web SDK",
+        "schemaId": "xdm_experience_event",
+        "eventType": "AddToCart",
+        "timestamp": "2026-11-18T21:02:17.313Z",
+        "email": "test.user@example.com",
+        "cookieId": "cid_test_991",
+        "unifiedName": "Test User",
+        "cartTotal": 520
+      },
+      "stitchingLog": {
+        "matchedProfileId": "prof_mwmlxjek_eeyz",
+        "stitchingKey": "test.user@example.com",
+        "isMerged": false
+      }
+    }
+  ],
+  "isDemoSeeded": false,
+  "hasUserActivity": true
+}

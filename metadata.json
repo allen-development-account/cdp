@@ -1,0 +1,7 @@
+{
+  "name": "XLR8 Realtime CDP",
+  "description": "Enterprise-grade Real-Time Customer Data Platform (XLR8 Realtime CDP) featuring XDM schema registry, streaming ingestion, Adobe Real-Time CDP Data Usage Labeling (DULE) for datasets, deterministic identity resolution graph, 360 unified profiles, predictive ML scoring, and XLR8 AI Support for automated screenshot troubleshooting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

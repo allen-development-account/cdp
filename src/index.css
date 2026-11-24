@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Montserrat', sans-serif;
+  --font-mono: 'Montserrat', monospace;
+}
+
+:root {
+  font-family: 'Montserrat', sans-serif;
+  --spectrum-blue: #1473E6;
+  --spectrum-blue-hover: #0D66D0;
+  --spectrum-blue-active: #095ABA;
+  --spectrum-charcoal: #1E1E1E;
+  --spectrum-gray-100: #F8F9FA;
+  --spectrum-gray-200: #E1E5EA;
+  --spectrum-gray-300: #D0D5DD;
+  --spectrum-text-dark: #121212;
+  --spectrum-text-muted: #1F242D;
+  --spectrum-red: #EB1000;
+}
+
+*, *::before, *::after, input, button, select, textarea {
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #F4F5F8;
+  color: #121212;
+}
+
+code, kbd, samp, pre, .font-mono {
+  font-family: 'Montserrat', monospace !important;
+}
+
+/* Spectrum Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #98A2B3;
+}
