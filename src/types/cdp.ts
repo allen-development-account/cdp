@@ -325,6 +325,10 @@ export interface DestinationConnector {
   managerAccountId?: string;
   connectionName?: string;
   connectedUserEmail?: string;
+  catalogId?: string;
+  customFields?: Record<string, string>;
+  configuredAudienceId?: string;
+  configuredAudienceName?: string;
   fieldMappings?: DestinationFieldMapping[];
   scheduleConfig?: {
     frequency: 'Real-Time' | 'Hourly' | 'Daily';

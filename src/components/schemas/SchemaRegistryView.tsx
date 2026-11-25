@@ -30,7 +30,8 @@ import {
   Check,
   CheckCircle2,
   ChevronRight,
-  FolderOpen
+  FolderOpen,
+  ArrowLeft
 } from 'lucide-react';
 
 export const SchemaRegistryView: React.FC = () => {
@@ -50,6 +51,7 @@ export const SchemaRegistryView: React.FC = () => {
 
   const [selectedSchemaId, setSelectedSchemaId] = useState<string>(schemas[0]?.id || '');
   const [isCreateSchemaModalOpen, setIsCreateSchemaModalOpen] = useState(false);
+  const [showBlueprintSelection, setShowBlueprintSelection] = useState(false);
   const [isAddFieldModalOpen, setIsAddFieldModalOpen] = useState(false);
   const [viewingJsonSchema, setViewingJsonSchema] = useState<SchemaDefinition | null>(null);
 
@@ -145,68 +147,100 @@ export const SchemaRegistryView: React.FC = () => {
 
       {/* Main Schema Workspace */}
       {schemas.length === 0 ? (
-        /* Empty State: No Schemas Registered */
-        <div className="bg-[#FFFFFF] rounded-md border border-[#E1E5EA] shadow-2xs p-10 text-center space-y-5">
-          <div className="w-14 h-14 rounded-full bg-[#F2F4F7] border border-[#E1E5EA] flex items-center justify-center text-[#6E6E6E] mx-auto">
-            <FolderOpen className="w-7 h-7" />
-          </div>
-
-          <div className="max-w-md mx-auto space-y-1.5">
-            <h3 className="text-base font-bold text-[#2C2C2C]">No Schemas in Active Sandbox</h3>
-            <p className="text-xs text-[#6E6E6E] leading-relaxed">
-              Create a new custom Experience Data Model (XDM) schema from scratch, or instantiate an industry-standard XLR8 Real-Time CDP blueprint.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <button
-              onClick={() => {
-                setEditingSchemaId(null);
-                setActiveTab('create_schema');
-              }}
-              className="px-4 py-2 bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-medium rounded transition-colors flex items-center space-x-1.5"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Create Schema from Scratch</span>
-            </button>
-          </div>
-
-          {/* Quick-start blueprint cards */}
-          <div className="pt-6 border-t border-[#E1E5EA] max-w-4xl mx-auto">
-            <div className="text-[11px] font-semibold text-[#6E6E6E] uppercase tracking-wider mb-3">
-              Or Instantiate an Industry Standard Blueprint:
+        !showBlueprintSelection ? (
+          /* Screen 1: Clean Empty State with Two Clear Paths */
+          <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs p-10 text-center space-y-6">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#E0F2FE] to-[#DBEAFE] border border-[#BAE6FD] flex items-center justify-center text-[#1473E6] mx-auto">
+              <FolderOpen className="w-7 h-7" />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-left">
+
+            <div className="max-w-md mx-auto space-y-1.5">
+              <h3 className="text-base font-bold text-[#1E2229]">No Schemas in Active Sandbox</h3>
+              <p className="text-xs text-[#596780] leading-relaxed">
+                Create a new custom Experience Data Model (XDM) schema from scratch, or start immediately from an industry-standard XLR8 Real-Time CDP blueprint.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingSchemaId(null);
+                  setActiveTab('create_schema');
+                }}
+                className="px-4 py-2.5 bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold rounded-lg transition-colors inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 shadow-2xs cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Create Schema from Scratch</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowBlueprintSelection(true)}
+                className="px-4 py-2.5 bg-[#EBF3FC] hover:bg-[#DCEAF9] border border-[#BFDBFE] text-[#0D66D0] text-xs font-semibold rounded-lg transition-colors inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Instantiate Create Schema Using Blueprint</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Screen 2: Industry Standard Blueprint Selection */
+          <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-bold text-white">
+                  Instantiate Industry Standard Blueprint
+                </h3>
+                <p className="text-xs text-blue-100 mt-0.5">
+                  Choose one of the three pre-built XDM schema blueprints below to create it instantly in your active sandbox.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBlueprintSelection(false)}
+                className="px-3 py-1.5 rounded-lg bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 cursor-pointer self-start sm:self-center transition-colors shadow-2xs"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back</span>
+              </button>
+            </div>
+
+            <div className="p-6 sm:p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
               {STANDARD_SCHEMA_BLUEPRINTS.slice(0, 3).map(bp => (
                 <div
                   key={bp.id}
-                  className="p-3.5 rounded border border-[#E1E5EA] hover:border-[#1473E6] bg-[#FFFFFF] transition-all flex flex-col justify-between"
+                  className="p-5 rounded-xl border border-[#E1E5EA] hover:border-[#1473E6] bg-[#FFFFFF] transition-all flex flex-col justify-between shadow-2xs"
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
+                    <div className="flex items-center justify-between mb-2.5">
+                      <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
                         {bp.category}
                       </span>
-                      <span className="text-[10px] font-mono text-[#888888]">{bp.fields.length} Fields</span>
+                      <span className="text-[11px] font-mono text-[#64748B] tabular-nums">{bp.fields.length} Fields</span>
                     </div>
-                    <h5 className="font-semibold text-xs text-[#2C2C2C] mb-1">{bp.name}</h5>
-                    <p className="text-[11px] text-[#6E6E6E] line-clamp-2 mb-3">{bp.description}</p>
+                    <h4 className="font-bold text-sm text-[#1E2229] mb-1.5">{bp.name}</h4>
+                    <p className="text-xs text-[#596780] leading-relaxed mb-5">{bp.description}</p>
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => {
                       loadSchemaBlueprint(bp.id);
+                      setShowBlueprintSelection(false);
                     }}
-                    className="w-full py-1.5 bg-[#FFFFFF] hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#2C2C2C] rounded text-xs font-medium transition-colors flex items-center justify-center space-x-1"
+                    className="w-full py-2 bg-[#1473E6] hover:bg-[#0D66D0] text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center space-x-1.5 cursor-pointer shadow-2xs"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-[#1473E6]" />
-                    <span>Instantiate</span>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Instantiate Blueprint</span>
                   </button>
                 </div>
               ))}
             </div>
+            </div>
           </div>
-        </div>
+        )
       ) : (
         /* Populated Schemas View */
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
@@ -244,10 +278,10 @@ export const SchemaRegistryView: React.FC = () => {
                         schema.category === 'Profile'
                           ? 'bg-[#EBF3FC] text-[#0D66D0] border-[#C5DCFA]'
                           : schema.category === 'ExperienceEvent'
-                          ? 'bg-[#DEFBE6] text-[#0E7A36] border-[#B4F0C3]'
+                          ? 'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]'
                           : schema.category === 'B2BAccount'
-                          ? 'bg-[#F2EDFD] text-[#7024C4] border-[#D3BCF6]'
-                          : 'bg-[#FFF8E1] text-[#B25900] border-[#FFE082]'
+                          ? 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]'
+                          : 'bg-[#DBEAFE] text-[#0A3D82] border-[#93C5FD]'
                       }`}>
                         {schema.category}
                       </span>
@@ -261,7 +295,7 @@ export const SchemaRegistryView: React.FC = () => {
 
                     <div className="mt-2 pt-2 border-t border-[#F2F4F7] flex items-center justify-between text-[10px] text-[#888888]">
                       <span>{schema.fields.length} Attributes</span>
-                      <span className="font-semibold text-[#0E7A36]">{schema.status || 'Active'}</span>
+                      <span className="font-semibold text-[#0284C7]">{schema.status || 'Active'}</span>
                     </div>
                   </div>
                 );
@@ -271,7 +305,7 @@ export const SchemaRegistryView: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={clearAllSchemas}
-                className="w-full py-1.5 bg-[#FFFFFF] hover:bg-[#FFEBEB] text-[#6E6E6E] hover:text-[#D7373F] border border-[#E1E5EA] hover:border-[#FFCCD0] rounded text-xs font-medium transition-colors flex items-center justify-center space-x-1.5"
+                className="w-full py-1.5 bg-[#FFFFFF] hover:bg-[#EFF6FF] text-[#596780] hover:text-[#0A3D82] border border-[#E1E5EA] hover:border-[#BFDBFE] rounded text-xs font-medium transition-colors flex items-center justify-center space-x-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Clear All Schemas</span>
@@ -283,22 +317,22 @@ export const SchemaRegistryView: React.FC = () => {
           {currentSchema && (
             <div className="lg:col-span-3 space-y-4">
               {/* Selected Schema Header Card */}
-              <div className="bg-[#FFFFFF] rounded-md border border-[#E1E5EA] shadow-2xs p-4 space-y-3.5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="text-base font-bold text-[#2C2C2C]">{currentSchema.name}</h3>
-                      <span className="text-[10px] font-mono bg-[#F2F4F7] text-[#4B4B4B] px-1.5 py-0.5 rounded font-medium border border-[#E1E5EA]">
+                    <div className="flex items-center flex-wrap gap-2">
+                      <h3 className="text-base font-bold text-white">{currentSchema.name}</h3>
+                      <span className="text-[10px] font-mono bg-white/15 text-white px-1.5 py-0.5 rounded font-medium border border-white/25">
                         v{currentSchema.version}
                       </span>
-                      <span className="text-[10px] font-medium text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.5 rounded border border-[#B4F0C3]">
+                      <span className="text-[10px] font-medium text-[#0369A1] bg-[#E0F2FE] px-2 py-0.5 rounded border border-[#BAE6FD]">
                         {currentSchema.status || 'Enabled for Profile'}
                       </span>
                     </div>
-                    <p className="text-xs text-[#6E6E6E] mt-1 leading-relaxed">{currentSchema.description}</p>
-                    <div className="flex flex-wrap items-center gap-3 mt-2 text-[11px] font-mono text-[#6E6E6E]">
-                      <span><strong>Base Class:</strong> {currentSchema.baseClass || 'https://ns.xprplatform.com/xdm/context/profile'}</span>
-                      <span><strong>Namespace:</strong> {currentSchema.tenantNamespace || '_tenant'}</span>
+                    <p className="text-xs text-blue-100 mt-1 leading-relaxed">{currentSchema.description}</p>
+                    <div className="flex flex-wrap items-center gap-3 mt-2 text-[11px] font-mono text-blue-100">
+                      <span><strong className="text-white">Base Class:</strong> {currentSchema.baseClass || 'https://ns.xprplatform.com/xdm/context/profile'}</span>
+                      <span><strong className="text-white">Namespace:</strong> {currentSchema.tenantNamespace || '_tenant'}</span>
                     </div>
                   </div>
 
@@ -308,7 +342,7 @@ export const SchemaRegistryView: React.FC = () => {
                         setEditingSchemaId(currentSchema.id);
                         setActiveTab('create_schema');
                       }}
-                      className="px-2.5 py-1 bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-medium rounded transition-colors flex items-center space-x-1.5 shadow-2xs"
+                      className="px-2.5 py-1 bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold rounded transition-colors flex items-center space-x-1.5 shadow-2xs cursor-pointer whitespace-nowrap"
                       title="Open in Dedicated Schema Editor"
                     >
                       <Sliders className="w-3.5 h-3.5" />
@@ -316,22 +350,22 @@ export const SchemaRegistryView: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setViewingJsonSchema(currentSchema)}
-                      className="px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F2F4F7] text-[#4B4B4B] text-xs font-medium rounded border border-[#D5D5D5] transition-colors flex items-center space-x-1.5 shadow-2xs"
+                      className="px-2.5 py-1 bg-white/15 hover:bg-white/25 text-white text-xs font-medium rounded border border-white/25 transition-colors flex items-center space-x-1.5 cursor-pointer whitespace-nowrap"
                       title="Inspect JSON Schema"
                     >
-                      <Code2 className="w-3.5 h-3.5 text-[#1473E6]" />
+                      <Code2 className="w-3.5 h-3.5 text-white" />
                       <span>JSON Schema</span>
                     </button>
                     <button
                       onClick={() => duplicateSchema(currentSchema.id)}
-                      className="p-1 bg-[#FFFFFF] hover:bg-[#F2F4F7] text-[#4B4B4B] rounded border border-[#D5D5D5] transition-colors"
+                      className="p-1.5 bg-white/15 hover:bg-white/25 text-white rounded border border-white/25 transition-colors cursor-pointer"
                       title="Duplicate Schema"
                     >
                       <Copy className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => deleteSchema(currentSchema.id)}
-                      className="p-1 bg-[#FFFFFF] hover:bg-[#FFEBEB] text-[#D7373F] rounded border border-[#D5D5D5] hover:border-[#FFCCD0] transition-colors"
+                      className="p-1.5 bg-white/15 hover:bg-white/25 text-white hover:text-sky-200 rounded border border-white/25 hover:border-white/40 transition-colors cursor-pointer"
                       title="Delete Schema"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -340,7 +374,7 @@ export const SchemaRegistryView: React.FC = () => {
                 </div>
 
                 {/* Schema Metric Pills */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-[#E1E5EA]">
+                <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   <div className="bg-[#F8F9FA] p-2 rounded border border-[#E1E5EA]">
                     <div className="text-[10px] text-[#6E6E6E] uppercase font-semibold">Total Fields</div>
                     <div className="text-base font-bold text-[#2C2C2C]">{currentSchema.fields.length}</div>
@@ -350,11 +384,11 @@ export const SchemaRegistryView: React.FC = () => {
                     <div className="text-base font-bold text-[#2C2C2C]">{identityFieldsCount}</div>
                   </div>
                   <div className="bg-[#F8F9FA] p-2 rounded border border-[#E1E5EA]">
-                    <div className="text-[10px] text-[#D7373F] uppercase font-semibold">Sensitive PII</div>
+                    <div className="text-[10px] text-[#0A3D82] uppercase font-semibold">Sensitive PII</div>
                     <div className="text-base font-bold text-[#2C2C2C]">{sensitiveFieldsCount}</div>
                   </div>
                   <div className="bg-[#F8F9FA] p-2 rounded border border-[#E1E5EA]">
-                    <div className="text-[10px] text-[#0E7A36] uppercase font-semibold">Field Groups</div>
+                    <div className="text-[10px] text-[#0284C7] uppercase font-semibold">Field Groups</div>
                     <div className="text-base font-bold text-[#2C2C2C]">{currentSchema.fieldGroups?.length || 2}</div>
                   </div>
                 </div>
@@ -427,7 +461,7 @@ export const SchemaRegistryView: React.FC = () => {
                               <div className="flex items-center space-x-2">
                                 <span className="font-mono font-semibold text-[#2C2C2C]">{field.name}</span>
                                 {field.isRequired && (
-                                  <span className="text-[9px] font-semibold bg-[#FFF8E1] text-[#B25900] px-1 py-0.2 rounded border border-[#FFE082]">
+                                  <span className="text-[9px] font-semibold bg-[#E0F2FE] text-[#0369A1] px-1 py-0.2 rounded border border-[#BAE6FD]">
                                     REQ
                                   </span>
                                 )}
@@ -462,13 +496,13 @@ export const SchemaRegistryView: React.FC = () => {
                             {/* Ad Policy */}
                             <td className="py-2.5 px-3">
                               {field.isSensitive ? (
-                                <span className="inline-flex items-center space-x-1 text-[10px] font-semibold text-[#D7373F] bg-[#FFEBEB] px-1.5 py-0.2 rounded border border-[#FFCCD0]">
+                                <span className="inline-flex items-center space-x-1 text-[10px] font-semibold text-[#0A3D82] bg-[#EFF6FF] px-1.5 py-0.2 rounded border border-[#BFDBFE]">
                                   <Lock className="w-3 h-3" />
                                   <span>Blocked in Ads</span>
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center space-x-1 text-[10px] font-medium text-[#4B4B4B]">
-                                  <Check className="w-3 h-3 text-[#0E7A36]" />
+                                  <Check className="w-3 h-3 text-[#0284C7]" />
                                   <span>Syndication Allowed</span>
                                 </span>
                               )}
@@ -481,8 +515,8 @@ export const SchemaRegistryView: React.FC = () => {
                                   onClick={() => toggleFieldSensitivity(currentSchema.id, field.id)}
                                   className={`p-1 rounded text-xs font-medium transition-colors border ${
                                     field.isSensitive
-                                      ? 'bg-[#FFEBEB] text-[#D7373F] border-[#FFCCD0] hover:bg-[#FFD9DC]'
-                                      : 'bg-[#FFFFFF] text-[#4B4B4B] border-[#D5D5D5] hover:bg-[#F2F4F7]'
+                                      ? 'bg-[#EFF6FF] text-[#0A3D82] border-[#BFDBFE] hover:bg-[#DBEAFE]'
+                                      : 'bg-[#FFFFFF] text-[#0D66D0] border-[#D5D5D5] hover:bg-[#EBF3FC]'
                                   }`}
                                   title={field.isSensitive ? 'Mark Standard' : 'Mark Sensitive PII (DULE)'}
                                 >
@@ -490,7 +524,7 @@ export const SchemaRegistryView: React.FC = () => {
                                 </button>
                                 <button
                                   onClick={() => deleteSchemaField(currentSchema.id, field.id)}
-                                  className="p-1 rounded text-[#888888] hover:text-[#D7373F] hover:bg-[#FFEBEB] border border-transparent hover:border-[#FFCCD0] transition-colors"
+                                  className="p-1 rounded text-[#888888] hover:text-[#0A3D82] hover:bg-[#EFF6FF] border border-transparent hover:border-[#BFDBFE] transition-colors"
                                   title="Delete Field"
                                 >
                                   <Trash2 className="w-3 h-3" />
@@ -627,12 +661,12 @@ export const SchemaRegistryView: React.FC = () => {
                   <span className="text-[#4B4B4B]">Required Schema Attribute</span>
                 </label>
 
-                <label className="flex items-center space-x-2 cursor-pointer text-[#D7373F] font-semibold">
+                <label className="flex items-center space-x-2 cursor-pointer text-[#0A3D82] font-semibold">
                   <input
                     type="checkbox"
                     checked={isSensitive}
                     onChange={(e) => setIsSensitive(e.target.checked)}
-                    className="rounded text-[#D7373F] focus:ring-[#D7373F]"
+                    className="rounded text-[#1473E6] focus:ring-[#1473E6]"
                   />
                   <span>Sensitive PII (Auto-Mask & Block in Ad Networks)</span>
                 </label>

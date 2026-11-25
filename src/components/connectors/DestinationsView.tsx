@@ -491,6 +491,7 @@ export const DestinationsView: React.FC = () => {
   const isCatalogCardConnected = (item: CatalogDestinationCard) => {
     return safeDestinations.some(
       d =>
+        d.catalogId === item.id ||
         d.id === item.id ||
         d.id === `dest_${item.id}` ||
         d.name.toLowerCase() === item.name.toLowerCase() ||
@@ -536,6 +537,7 @@ export const DestinationsView: React.FC = () => {
   const findMatchingCatalogCard = (dest: DestinationConnector): CatalogDestinationCard => {
     const match = DESTINATION_CATALOG.find(
       item =>
+        dest.catalogId === item.id ||
         dest.id === item.id ||
         dest.id === `dest_${item.id}` ||
         dest.name.toLowerCase() === item.name.toLowerCase()
@@ -566,6 +568,7 @@ export const DestinationsView: React.FC = () => {
     if (!card) return undefined;
     return safeDestinations.find(
       d =>
+        d.catalogId === card.id ||
         d.id === card.id ||
         d.id === `dest_${card.id}` ||
         d.name.toLowerCase() === card.name.toLowerCase()
@@ -704,7 +707,7 @@ export const DestinationsView: React.FC = () => {
                 <div className="flex items-center space-x-4 shrink-0 self-end md:self-center">
                   <button
                     onClick={() => setHeroExpanded(!heroExpanded)}
-                    className="text-xs text-[#2C2C2C] hover:text-[#1473E6] font-medium flex items-center space-x-1"
+                    className="text-xs text-white hover:text-blue-100 bg-white/15 hover:bg-white/25 border border-white/25 px-3 py-1 rounded-full font-semibold flex items-center space-x-1 whitespace-nowrap cursor-pointer transition-colors"
                   >
                     <span>{heroExpanded ? 'Show less' : 'Show more'}</span>
                     {heroExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -896,7 +899,7 @@ export const DestinationsView: React.FC = () => {
                         <div
                           key={card.id}
                           className={`bg-[#FFFFFF] border rounded-xl p-5 flex flex-col justify-between h-[160px] shadow-2xs transition-all ${
-                            isConnected ? 'border-[#B4F0C3] hover:border-[#0E7A36]' : 'border-[#E5E7EB] hover:border-[#B5B5B5]'
+                            isConnected ? 'border-[#93C5FD] hover:border-[#1473E6]' : 'border-[#E5E7EB] hover:border-[#93C5FD]'
                           }`}
                         >
                           {/* Top: Logo + Name + Subtitle */}
@@ -908,7 +911,7 @@ export const DestinationsView: React.FC = () => {
                                   {card.name}
                                 </span>
                                 {isConnected && (
-                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] shrink-0">
+                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] shrink-0">
                                     Connected
                                   </span>
                                 )}
@@ -974,7 +977,7 @@ export const DestinationsView: React.FC = () => {
 
                   {filteredCatalog.length === 0 && (
                     <div className="text-center py-16 bg-[#F9FAFB] rounded-xl border border-dashed border-[#E1E5EA] space-y-3">
-                      <Search className="w-8 h-8 text-[#262A33] mx-auto" />
+                      <Search className="w-8 h-8 text-[#1473E6] mx-auto" />
                       <h3 className="text-sm font-bold text-[#2C2C2C]">
                         {destFilter === 'my' ? 'No connected destinations yet' : 'No destinations found'}
                       </h3>
@@ -1002,10 +1005,10 @@ export const DestinationsView: React.FC = () => {
         {/* ================= OVERVIEW TAB ================= */}
         {activeTab === 'Overview' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex items-center justify-between">
               <div>
-                <h2 className="text-base font-bold text-[#2C2C2C]">Audience Activation & Destinations Overview</h2>
-                <p className="text-xs text-[#1E2229]">
+                <h2 className="text-base font-bold text-white">Audience Activation & Destinations Overview</h2>
+                <p className="text-xs text-blue-100 mt-0.5">
                   Syndicate real-time customer segments to ad networks, marketing automation platforms, and data clean rooms.
                 </p>
               </div>
@@ -1060,16 +1063,16 @@ export const DestinationsView: React.FC = () => {
         {/* ================= BROWSE TAB ================= */}
         {activeTab === 'Browse' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-bold text-[#2C2C2C]">Active Destination Integrations</h2>
-                <p className="text-xs text-[#1E2229]">
+                <h2 className="text-base font-bold text-white">Active Destination Integrations</h2>
+                <p className="text-xs text-blue-100 mt-0.5">
                   Live outbound connections with real-time sync metrics, synced profile counts, and privacy gate counts.
                 </p>
               </div>
               <button
                 onClick={() => setActiveTab('Catalog')}
-                className="px-4 py-1.5 rounded-full bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold shadow-2xs transition-colors"
+                className="px-4 py-1.5 rounded-full bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold shadow-2xs transition-colors shrink-0 self-start sm:self-center cursor-pointer whitespace-nowrap"
               >
                 + Connect New Destination
               </button>
@@ -1078,8 +1081,8 @@ export const DestinationsView: React.FC = () => {
             {browseNotice && (
               <div className={`p-3 rounded-lg border text-xs flex items-center justify-between ${
                 browseNotice.type === 'success'
-                  ? 'bg-[#DEFBE6] border-[#B4F0C3] text-[#0E7A36]'
-                  : 'bg-[#FFEBEB] border-[#FFCCD0] text-[#D7373F]'
+                  ? 'bg-[#E0F2FE] border-[#BAE6FD] text-[#0369A1]'
+                  : 'bg-[#EFF6FF] border-[#93C5FD] text-[#0A3D82]'
               }`}>
                 <span>{browseNotice.text}</span>
                 <button onClick={() => setBrowseNotice(null)} className="font-bold ml-3">✕</button>
@@ -1103,15 +1106,15 @@ export const DestinationsView: React.FC = () => {
             ) : (
               <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] overflow-hidden shadow-2xs">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#F8F9FA] border-b border-[#E1E5EA] text-[#1E2229] font-semibold uppercase text-[10px] tracking-wider">
+                  <thead className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] border-b border-[#0E4DA4] text-white font-semibold uppercase text-[10px] tracking-wider">
                     <tr>
-                      <th className="px-5 py-3">Destination Name</th>
-                      <th className="px-5 py-3">Target Platform</th>
-                      <th className="px-5 py-3">Cadence</th>
-                      <th className="px-5 py-3">Status</th>
-                      <th className="px-5 py-3 text-right">Synced Profiles</th>
-                      <th className="px-5 py-3 text-right">DULE Blocked</th>
-                      <th className="px-5 py-3 text-right">Actions</th>
+                      <th className="px-5 py-3 text-white">Destination Name</th>
+                      <th className="px-5 py-3 text-white">Target Platform</th>
+                      <th className="px-5 py-3 text-white">Cadence</th>
+                      <th className="px-5 py-3 text-white">Status</th>
+                      <th className="px-5 py-3 text-right text-white">Synced Profiles</th>
+                      <th className="px-5 py-3 text-right text-white">DULE Blocked</th>
+                      <th className="px-5 py-3 text-right text-white">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E1E5EA]">
@@ -1129,7 +1132,12 @@ export const DestinationsView: React.FC = () => {
                           </div>
                         </td>
                         <td className="px-5 py-3.5 text-[#1A1D23] font-medium">
-                          {dest.targetPlatform}
+                          <span className="block">{dest.targetPlatform}</span>
+                          {dest.configuredAudienceName && (
+                            <span className="text-[10px] text-[#0D66D0] font-semibold">
+                              Audience: {dest.configuredAudienceName}
+                            </span>
+                          )}
                         </td>
                         <td className="px-5 py-3.5">
                           <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#EBF3FC] text-[#0D66D0]">
@@ -1137,15 +1145,15 @@ export const DestinationsView: React.FC = () => {
                           </span>
                         </td>
                         <td className="px-5 py-3.5">
-                          <span className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#DEFBE6] text-[#0E7A36]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36]" />
+                          <span className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#E0F2FE] text-[#0369A1]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7]" />
                             <span>{dest.status}</span>
                           </span>
                         </td>
                         <td className="px-5 py-3.5 text-right font-mono font-bold text-[#2C2C2C]">
                           {dest.totalSynced.toLocaleString()}
                         </td>
-                        <td className="px-5 py-3.5 text-right font-mono text-[#D7373F] font-semibold">
+                        <td className="px-5 py-3.5 text-right font-mono text-[#1D4ED8] font-semibold">
                           {dest.totalBlockedForPrivacy.toLocaleString()}
                         </td>
                         <td className="px-5 py-3.5 text-right">
@@ -1162,13 +1170,27 @@ export const DestinationsView: React.FC = () => {
                                   setBrowseNotice({ type: 'error', text: 'Create at least one Audience Segment before triggering a sync.' });
                                   return;
                                 }
-                                const log = activateDestination(dest.id, safeAudiences[0].id, dest);
+                                const targetAudience =
+                                  (dest.configuredAudienceId && safeAudiences.find(a => a.id === dest.configuredAudienceId)) ||
+                                  safeAudiences[0];
+                                const log = activateDestination(dest.id, targetAudience.id, dest);
+                                if (dest.endpoint) {
+                                  testOutboundWebhook(dest.endpoint, {
+                                    event: 'audience_sync',
+                                    destination: dest.name,
+                                    accountId: dest.accountId,
+                                    audienceId: targetAudience.id,
+                                    audienceName: targetAudience.name,
+                                    profilesSynced: log.profilesSynced,
+                                    profilesBlockedPrivacy: log.profilesBlockedPrivacy,
+                                  }).catch(() => {});
+                                }
                                 setBrowseNotice({
                                   type: 'success',
-                                  text: `Synced "${safeAudiences[0].name}" to ${dest.name}: ${log.profilesSynced} profile(s) delivered, ${log.profilesBlockedPrivacy} privacy-suppressed.`
+                                  text: `Synced "${targetAudience.name}" to ${dest.connectionName || dest.name}: ${log.profilesSynced} profile(s) delivered, ${log.profilesBlockedPrivacy} privacy-suppressed.`
                                 });
                               }}
-                              className="px-3 py-1 rounded bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold cursor-pointer"
+                              className="px-3 py-1 rounded bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold cursor-pointer whitespace-nowrap"
                             >
                               Sync Now
                             </button>
@@ -1186,16 +1208,16 @@ export const DestinationsView: React.FC = () => {
         {/* ================= ACCOUNTS TAB ================= */}
         {activeTab === 'Accounts' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div className="flex items-center justify-between gap-4">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-base font-bold text-[#2C2C2C]">Destination Ad Accounts &amp; Authorizations</h2>
-                <p className="text-xs text-[#1E2229]">
+                <h2 className="text-base font-bold text-white">Destination Ad Accounts &amp; Authorizations</h2>
+                <p className="text-xs text-blue-100 mt-0.5">
                   Connected Customer IDs, OAuth 2.0 grants, and field mappings active in this workspace. Edit any account to renew OAuth credentials.
                 </p>
               </div>
               <button
                 onClick={() => setActiveTab('Catalog')}
-                className="px-4 py-1.5 rounded-full bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+                className="px-4 py-1.5 rounded-full bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold shadow-2xs transition-colors cursor-pointer shrink-0 self-start sm:self-center whitespace-nowrap"
               >
                 + Connect Account
               </button>
@@ -1203,7 +1225,7 @@ export const DestinationsView: React.FC = () => {
 
             {safeDestinations.length === 0 ? (
               <div className="bg-[#F9FAFB] rounded-xl border border-dashed border-[#D0D7DE] p-12 text-center space-y-3">
-                <Lock className="w-8 h-8 text-[#596780] mx-auto" />
+                <Lock className="w-8 h-8 text-[#1473E6] mx-auto" />
                 <h3 className="text-sm font-bold text-[#2C2C2C]">No Authorized Destination Accounts</h3>
                 <p className="text-xs text-[#596780] max-w-md mx-auto">
                   Select any destination (such as Google Ads or Meta Ads) in the Catalog to authorize OAuth 2.0 credentials and bind your Customer Account ID.
@@ -1225,33 +1247,49 @@ export const DestinationsView: React.FC = () => {
                           <BrandIcon name={dest.icon || 'advertising_cloud'} className="w-8 h-8 shrink-0" />
                           <div className="min-w-0">
                             <span className="text-xs font-bold text-[#2C2C2C] block truncate">{dest.connectionName || dest.name}</span>
-                            <span className="text-[10px] text-[#0E7A36] font-semibold">
+                            <span className="text-[10px] text-[#0369A1] font-semibold">
                               {dest.authStatus || 'Authenticated'} · {dest.authType || 'OAuth 2.0'}
                             </span>
                           </div>
                         </div>
-                        <span className="px-2 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] text-[10px] font-bold shrink-0">
+                        <span className="px-2 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] text-[10px] font-bold shrink-0">
                           {dest.status}
                         </span>
                       </div>
 
                       <div className="space-y-1.5 text-[11px] bg-[#F8FAFC] p-3 rounded-lg border border-[#E1E5EA]">
-                        <div className="flex justify-between">
-                          <span className="text-[#596780]">Customer / Account ID</span>
-                          <span className="font-mono font-bold text-[#1E2229]">{dest.accountId || 'Configured'}</span>
+                        <div className="flex justify-between gap-2">
+                          <span className="text-[#596780] shrink-0">Customer / Account ID</span>
+                          <span className="font-mono font-bold text-[#1E2229] truncate">{dest.accountId || 'Configured'}</span>
                         </div>
                         {dest.managerAccountId && (
-                          <div className="flex justify-between">
-                            <span className="text-[#596780]">MCC Manager ID</span>
-                            <span className="font-mono text-[#1E2229]">{dest.managerAccountId}</span>
+                          <div className="flex justify-between gap-2">
+                            <span className="text-[#596780] shrink-0">MCC Manager ID</span>
+                            <span className="font-mono text-[#1E2229] truncate">{dest.managerAccountId}</span>
                           </div>
                         )}
-                        <div className="flex justify-between">
-                          <span className="text-[#596780]">Authorized Operator</span>
+                        {dest.customFields &&
+                          Object.entries(dest.customFields)
+                            .filter(([k, v]) => v && !/secret|token|key/i.test(k))
+                            .slice(0, 2)
+                            .map(([k, v]) => (
+                              <div key={k} className="flex justify-between gap-2">
+                                <span className="text-[#596780] capitalize shrink-0">{k.replace(/([A-Z])/g, ' $1')}</span>
+                                <span className="font-mono text-[#1E2229] truncate max-w-[160px]">{v}</span>
+                              </div>
+                            ))}
+                        {dest.configuredAudienceName && (
+                          <div className="flex justify-between gap-2">
+                            <span className="text-[#596780] shrink-0">Active Audience</span>
+                            <span className="font-semibold text-[#0D66D0] truncate max-w-[160px]">{dest.configuredAudienceName}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between gap-2">
+                          <span className="text-[#596780] shrink-0">Authorized Operator</span>
                           <span className="text-[#1E2229] truncate max-w-[160px]">{dest.connectedUserEmail || 'admin@xlr8.cdp'}</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-[#596780]">Mapped Keys</span>
+                        <div className="flex justify-between gap-2">
+                          <span className="text-[#596780] shrink-0">Mapped Keys</span>
                           <span className="font-semibold text-[#1473E6]">
                             {dest.fieldMappings ? `${dest.fieldMappings.filter(m => m.enabled).length} XDM fields` : 'Default Identities'}
                           </span>
@@ -1285,9 +1323,9 @@ export const DestinationsView: React.FC = () => {
         {/* ================= SYSTEM VIEW TAB ================= */}
         {activeTab === 'System View' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div>
-              <h2 className="text-base font-bold text-[#2C2C2C]">Audience Activation Topology</h2>
-              <p className="text-xs text-[#1E2229]">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs">
+              <h2 className="text-base font-bold text-white">Audience Activation Topology</h2>
+              <p className="text-xs text-blue-100 mt-0.5">
                 End-to-end activation flow illustrating audience qualification, DULE policy evaluation, hashing, and dispatch.
               </p>
             </div>
@@ -1302,9 +1340,9 @@ export const DestinationsView: React.FC = () => {
                   <span className="text-xs block text-[#262A33] font-normal mb-1">Qualification</span>
                   →
                 </div>
-                <div className="p-4 bg-[#DEFBE6] rounded-lg border border-[#B4F0C3] text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0E7A36] block mb-1">DULE Privacy Gate</span>
-                  <span className="text-xs font-bold text-[#0E7A36]">Filter Non-Consented Profiles</span>
+                <div className="p-4 bg-[#E0F2FE] rounded-lg border border-[#BAE6FD] text-center">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0369A1] block mb-1">DULE Privacy Gate</span>
+                  <span className="text-xs font-bold text-[#0369A1]">Filter Non-Consented Profiles</span>
                 </div>
                 <div className="p-4 bg-[#EBF3FC] rounded-lg border border-[#C5DCFA] text-center">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#0D66D0] block mb-1">Syndication</span>

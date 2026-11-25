@@ -22,21 +22,32 @@ export const PageBackButton: React.FC<PageBackButtonProps> = ({
   size = 'md'
 }) => {
   const {
+    activeTab,
+    history,
+    historyIndex,
     canGoBack,
     canGoForward,
     goBack,
     goForward,
     getPreviousTabTitle,
     getNextTabTitle,
-    setActiveTab
+    setActiveTab,
+    guidedReturnStep,
+    returnToGuidedStep
   } = useCDP();
 
+  const hasHistoryBack = historyIndex > 0;
+  const prevTab = hasHistoryBack ? history[historyIndex - 1] : null;
+  const isGuidedNavigation = guidedReturnStep !== null && activeTab !== 'get_started';
+  const isPrevGetStarted = prevTab === 'get_started' || isGuidedNavigation;
   const prevTitle = getPreviousTabTitle() || fallbackLabel || 'Previous';
   const nextTitle = getNextTabTitle() || 'Forward';
 
   const handleBack = () => {
     if (onCustomBack) {
       onCustomBack();
+    } else if (isGuidedNavigation) {
+      returnToGuidedStep();
     } else if (canGoBack) {
       goBack();
     } else if (fallbackTab) {
@@ -44,9 +55,15 @@ export const PageBackButton: React.FC<PageBackButtonProps> = ({
     }
   };
 
-  const isEnabled = canGoBack || !!onCustomBack || !!fallbackTab;
+  const isEnabled = canGoBack || !!onCustomBack || !!fallbackTab || isGuidedNavigation;
 
-  const displayLabel = customLabel || `Back to ${fallbackLabel || prevTitle}`;
+  const displayLabel =
+    customLabel ||
+    (isGuidedNavigation
+      ? `Back to Get Started (Step ${guidedReturnStep})`
+      : isPrevGetStarted
+      ? `Back to ${prevTitle}`
+      : `Back to ${fallbackLabel || prevTitle}`);
 
   const isSm = size === 'sm';
 
@@ -57,7 +74,7 @@ export const PageBackButton: React.FC<PageBackButtonProps> = ({
         disabled={!isEnabled}
         title={isEnabled ? `Navigate back to ${displayLabel} (Alt + ←)` : 'No previous page'}
         aria-label={displayLabel}
-        className={`inline-flex items-center space-x-1.5 rounded-lg font-semibold transition-all border shadow-2xs select-none ${
+        className={`inline-flex items-center space-x-1.5 rounded-lg font-semibold transition-all border shadow-2xs select-none whitespace-nowrap shrink-0 ${
           isSm ? 'px-2 py-1 text-xs' : 'px-2.5 py-1.5 text-xs'
         } ${
           isEnabled
@@ -65,8 +82,8 @@ export const PageBackButton: React.FC<PageBackButtonProps> = ({
             : 'bg-[#F8F9FA] text-[#262A33] border-[#E8ECEF] cursor-not-allowed opacity-50'
         }`}
       >
-        <ArrowLeft className={isSm ? 'w-3 h-3 text-[#1473E6]' : 'w-3.5 h-3.5 text-[#1473E6]'} />
-        <span className="truncate max-w-[200px]">{displayLabel}</span>
+        <ArrowLeft className={isSm ? 'w-3 h-3 text-[#1473E6] shrink-0' : 'w-3.5 h-3.5 text-[#1473E6] shrink-0'} />
+        <span className="truncate max-w-[240px]">{displayLabel}</span>
       </button>
 
       {showForward && canGoForward && (

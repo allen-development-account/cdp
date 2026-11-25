@@ -348,12 +348,12 @@ export const LiveXDMTesterView: React.FC = () => {
         <div className="flex items-start space-x-3.5">
           <PageBackButton fallbackTab="ingestion" fallbackLabel="Data Ingestion & Streams" className="mt-1 shrink-0" />
           <div className="w-10 h-10 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0 shadow-2xs">
-            <Zap className="w-5 h-5 text-amber-300" />
+            <Zap className="w-5 h-5 text-sky-200" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-bold text-white">Live XDM Event Ingestion Tester & Edge Simulator</h2>
-              <span className="text-[10px] bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40 font-bold px-2 py-0.5 rounded uppercase">
+              <span className="text-[10px] bg-white/15 text-sky-200 border border-sky-200/40 font-bold px-2 py-0.5 rounded uppercase">
                 Sub-5ms Edge SLA
               </span>
             </div>
@@ -407,22 +407,22 @@ export const LiveXDMTesterView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: JSON Payload Editor & Quick Parameters */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E1E5EA] pb-3">
+          <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center space-x-2">
-                <Code className="w-4 h-4 text-[#1473E6]" />
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+                <Code className="w-4 h-4 text-white shrink-0" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider">
                   Live XDM Payload Editor
                 </h3>
               </div>
 
               {/* Quick Profile Injector */}
               <div className="flex items-center space-x-1.5">
-                <span className="text-[10px] text-[#596780] font-semibold">Inject Persona:</span>
+                <span className="text-[10px] text-blue-100 font-semibold">Inject Persona:</span>
                 <select
                   value={targetProfileId}
                   onChange={e => handleInjectProfileIdentity(e.target.value)}
-                  className="px-2 py-1 bg-[#F8FAFC] border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A] focus:outline-none"
+                  className="px-2 py-1 bg-white border border-white/30 rounded text-[11px] font-semibold text-[#0F172A] focus:outline-none"
                 >
                   {profiles.map(p => (
                     <option key={p.id} value={p.id}>
@@ -432,6 +432,8 @@ export const LiveXDMTesterView: React.FC = () => {
                 </select>
               </div>
             </div>
+
+            <div className="p-5 space-y-3">
 
             {/* Editor Area */}
             <div className="relative">
@@ -448,7 +450,7 @@ export const LiveXDMTesterView: React.FC = () => {
             </div>
 
             {jsonError && (
-              <div className="p-2.5 bg-[#FFF1F2] border border-[#FECDD3] text-[#D7373F] rounded text-xs flex items-center space-x-1.5">
+              <div className="p-2.5 bg-[#EFF6FF] border border-[#BFDBFE] text-[#0A3D82] rounded text-xs flex items-center space-x-1.5">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{jsonError}</span>
               </div>
@@ -488,31 +490,33 @@ export const LiveXDMTesterView: React.FC = () => {
                 )}
               </button>
             </div>
+            </div>
           </div>
         </div>
 
         {/* Right: Pipeline Trace & Real-Time Qualification Badges */}
         <div className="lg:col-span-6 space-y-4">
           {/* Step-by-Step Edge Pipeline Trace */}
-          <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-[#E1E5EA] pb-3">
+          <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
               <div>
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider flex items-center space-x-1.5">
-                  <Activity className="w-4 h-4 text-[#1473E6]" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-1.5">
+                  <Activity className="w-4 h-4 text-white shrink-0" />
                   <span>Real-Time Edge Pipeline Trace</span>
                 </h3>
-                <p className="text-[11px] text-[#596780] mt-0.5">
+                <p className="text-[11px] text-blue-100 mt-0.5">
                   Sub-second stages executed across global edge points of presence.
                 </p>
               </div>
 
               {executionResult && (
-                <span className="text-xs font-mono font-bold text-[#0E7A36] bg-[#DEFBE6] border border-[#B4F0C3] px-2.5 py-0.5 rounded">
+                <span className="text-xs font-mono font-bold text-[#0369A1] bg-[#E0F2FE] border border-[#BAE6FD] px-2.5 py-0.5 rounded shrink-0">
                   {executionResult.totalLatencyMs}ms Total Latency
                 </span>
               )}
             </div>
 
+            <div className="p-5">
             {/* Pipeline Steps List */}
             <div className="space-y-2.5">
               {[
@@ -554,7 +558,7 @@ export const LiveXDMTesterView: React.FC = () => {
                     <div
                       className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-bold text-xs mt-0.5 ${
                         isCompleted
-                          ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]'
+                          ? 'bg-[#E0F2FE] text-[#0284C7] border border-[#BAE6FD]'
                           : isCurrent
                           ? 'bg-[#1473E6] text-white animate-pulse'
                           : 'bg-[#F2F4F7] text-[#596780] border border-[#D0D7DE]'
@@ -578,15 +582,16 @@ export const LiveXDMTesterView: React.FC = () => {
                 );
               })}
             </div>
+            </div>
           </div>
 
           {/* Dynamic Segment Qualification Badge Flashes & Profile Delta */}
           {executionResult && (
-            <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4 animate-in fade-in duration-300">
-              <div className="flex items-center justify-between border-b border-[#E1E5EA] pb-3">
+            <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden animate-in fade-in duration-300">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
                 <div className="flex items-center space-x-2">
-                  <Sparkles className="w-4 h-4 text-[#E68619]" />
-                  <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+                  <Sparkles className="w-4 h-4 text-white shrink-0" />
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
                     Profile State & Qualification Delta
                   </h3>
                 </div>
@@ -597,13 +602,14 @@ export const LiveXDMTesterView: React.FC = () => {
                     setSelectedProfileId(executionResult.profileId);
                     setActiveTab('profiles');
                   }}
-                  className="text-xs font-semibold text-[#1473E6] hover:underline flex items-center space-x-1"
+                  className="text-xs font-semibold bg-white/15 hover:bg-white/25 border border-white/25 text-white px-2.5 py-1 rounded-md flex items-center space-x-1 whitespace-nowrap shrink-0 cursor-pointer transition-colors"
                 >
                   <span>Inspect 360 Profile</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
 
+              <div className="p-5 space-y-4">
               {/* Segment Flashes */}
               <div className="space-y-2">
                 <span className="text-[10px] font-bold uppercase text-[#596780] tracking-wider block">
@@ -625,7 +631,7 @@ export const LiveXDMTesterView: React.FC = () => {
                       return (
                         <div
                           key={segId}
-                          className="px-3 py-1.5 rounded bg-[#DEFBE6] border border-[#0E7A36] text-[#0E7A36] font-bold text-xs flex items-center space-x-1.5 shadow-2xs animate-bounce"
+                          className="px-3 py-1.5 rounded bg-[#E0F2FE] border border-[#0284C7] text-[#0369A1] font-bold text-xs flex items-center space-x-1.5 shadow-2xs animate-bounce"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>+ JOINED: {seg?.name || segId}</span>
@@ -639,7 +645,7 @@ export const LiveXDMTesterView: React.FC = () => {
                       return (
                         <div
                           key={segId}
-                          className="px-3 py-1.5 rounded bg-[#FFF4E5] border border-[#FFE2B3] text-[#B76E00] font-bold text-xs flex items-center space-x-1.5"
+                          className="px-3 py-1.5 rounded bg-[#EFF6FF] border border-[#BFDBFE] text-[#0A3D82] font-bold text-xs flex items-center space-x-1.5"
                         >
                           <AlertCircle className="w-3.5 h-3.5" />
                           <span>- LEFT: {seg?.name || segId}</span>
@@ -666,7 +672,7 @@ export const LiveXDMTesterView: React.FC = () => {
                     <span className="text-xs font-mono line-through text-[#8C95A6]">
                       ${(executionResult.profileBefore?.attributes?.totalSpend || 0).toLocaleString()}
                     </span>
-                    <span className="text-xs font-mono font-bold text-[#0E7A36]">
+                    <span className="text-xs font-mono font-bold text-[#0284C7]">
                       &rarr; ${(executionResult.profileAfter?.attributes?.totalSpend || 0).toLocaleString()}
                     </span>
                   </div>
@@ -689,6 +695,7 @@ export const LiveXDMTesterView: React.FC = () => {
                     </span>
                   ))}
                 </div>
+              </div>
               </div>
             </div>
           )}

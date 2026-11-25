@@ -180,7 +180,7 @@ export const FileIngestionModal: React.FC<FileIngestionModalProps> = ({ isOpen, 
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="text-sm font-bold text-[#2C2C2C]">Batch File Ingestion (CSV / JSON)</h3>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   Guided File Ingestion
                 </span>
               </div>
@@ -308,10 +308,10 @@ export const FileIngestionModal: React.FC<FileIngestionModalProps> = ({ isOpen, 
 
           {/* Success Result Banner */}
           {ingestionResult.status === 'success' && (
-            <div className="p-3.5 bg-[#DEFBE6] border border-[#B4F0C3] rounded flex items-start space-x-2.5">
-              <CheckCircle2 className="w-4 h-4 text-[#0E7A36] shrink-0 mt-0.5" />
+            <div className="p-3.5 bg-[#EBF3FC] border border-[#BFDBFE] rounded flex items-start space-x-2.5">
+              <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-xs text-[#0E7A36]">{ingestionResult.message}</p>
+                <p className="font-bold text-xs text-[#0D66D0]">{ingestionResult.message}</p>
                 <p className="text-[11px] text-[#1A1D23] mt-0.5">
                   Records have been unified into the Profile Graph and are immediately accessible in Customer 360 Profiles.
                 </p>

@@ -116,7 +116,7 @@ export const CalculatedAttributesView: React.FC = () => {
             className="flex items-center space-x-1.5 bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded border border-white/25 shadow-2xs transition-all disabled:opacity-50 cursor-pointer"
             title="Trigger continuous aggregation engine"
           >
-            <Play className={`w-3.5 h-3.5 text-[#8CE2A7] ${isRecalculating ? 'animate-spin' : 'fill-[#8CE2A7]'}`} />
+            <Play className={`w-3.5 h-3.5 text-sky-200 ${isRecalculating ? 'animate-spin' : 'fill-sky-200'}`} />
             <span>{isRecalculating ? 'Computing...' : 'Recalculate All'}</span>
           </button>
 
@@ -185,8 +185,8 @@ export const CalculatedAttributesView: React.FC = () => {
                     onClick={() => toggleCalculatedAttributeStatus(attr.id)}
                     className={`p-1.5 rounded border transition-all ${
                       isActive
-                        ? 'bg-[#DEFBE6] text-[#0E7A36] border-[#A1ECC4]'
-                        : 'bg-[#FFF0D4] text-[#C76A00] border-[#FFD085]'
+                        ? 'bg-[#E0F2FE] text-[#0284C7] border-[#BAE6FD]'
+                        : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]'
                     }`}
                     title={isActive ? 'Pause calculation' : 'Activate calculation'}
                   >
@@ -222,7 +222,7 @@ export const CalculatedAttributesView: React.FC = () => {
               {/* Footer Evaluation Live Status */}
               <div className="mt-4 pt-3 border-t border-[#E1E5EA] flex items-center justify-between text-xs text-[#1E2229]">
                 <span className="flex items-center space-x-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#0E7A36] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-[#0EA5E9] animate-pulse" />
                   <span>Real-Time Stream Active</span>
                 </span>
                 <span>Evaluated: Today 13:50 UTC</span>
@@ -234,14 +234,14 @@ export const CalculatedAttributesView: React.FC = () => {
 
       {/* Live Aggregation Feedback */}
       {recalcResultMsg && (
-        <div className="p-3.5 bg-[#DEFBE6] border border-[#B4F0C3] rounded text-xs text-[#0E7A36] flex items-center justify-between">
+        <div className="p-3.5 bg-[#E0F2FE] border border-[#BAE6FD] rounded text-xs text-[#0369A1] flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4 text-[#0E7A36] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0" />
             <span>{recalcResultMsg}</span>
           </div>
           <button
             onClick={() => setRecalcResultMsg(null)}
-            className="text-[#0E7A36] font-bold hover:underline"
+            className="text-[#0369A1] font-bold hover:underline"
           >
             Dismiss
           </button>
@@ -249,15 +249,15 @@ export const CalculatedAttributesView: React.FC = () => {
       )}
 
       {/* Live Profile Calculated Trait Values Preview Table */}
-      <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs overflow-hidden">
-        <div className="px-5 py-3.5 bg-[#F8FAFC] border-b border-[#E1E5EA] flex items-center justify-between">
+      <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+        <div className="px-5 py-3.5 bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white border-b border-[#0E4DA4] flex items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <Database className="w-4 h-4 text-[#1473E6]" />
-            <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+            <Database className="w-4 h-4 text-white shrink-0" />
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider">
               Enriched Customer Profiles (Real-Time Calculated Trait State)
             </h3>
           </div>
-          <span className="text-[10px] font-mono text-[#596780]">
+          <span className="text-[10px] font-mono text-white bg-white/15 border border-white/25 px-2 py-0.5 rounded shrink-0 tabular-nums">
             {profiles.length} Profiles Dynamically Enriched
           </span>
         </div>
@@ -281,7 +281,7 @@ export const CalculatedAttributesView: React.FC = () => {
                     <div className="font-bold text-[#1E2229]">{p.unifiedName}</div>
                     <div className="text-[11px] text-[#596780] font-mono">{p.primaryEmail}</div>
                   </td>
-                  <td className="py-2.5 px-4 font-mono font-semibold text-[#0E7A36]">
+                  <td className="py-2.5 px-4 font-mono font-semibold text-[#0369A1]">
                     ${p.attributes.totalSpend.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
                   <td className="py-2.5 px-4 font-mono text-[#1E2229]">
@@ -293,15 +293,15 @@ export const CalculatedAttributesView: React.FC = () => {
                   <td className="py-2.5 px-4 font-mono">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       p.predictions.churnRisk > 50 
-                        ? 'bg-[#FDE8E8] text-[#E34850] border border-[#F8B4B4]' 
-                        : 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]'
+                        ? 'bg-[#DBEAFE] text-[#0A3D82] border border-[#93C5FD]' 
+                        : 'bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]'
                     }`}>
                       {p.predictions.churnRisk}% risk
                     </span>
                   </td>
                   <td className="py-2.5 px-4">
-                    <span className="flex items-center space-x-1.5 text-[11px] text-[#0E7A36] font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36] animate-pulse" />
+                    <span className="flex items-center space-x-1.5 text-[11px] text-[#0284C7] font-medium">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] animate-pulse" />
                       <span>Streaming (0ms Lag)</span>
                     </span>
                   </td>

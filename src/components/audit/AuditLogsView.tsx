@@ -219,22 +219,22 @@ export const AuditLogsView: React.FC = () => {
     switch (status) {
       case 'SUCCESS':
         return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4]">
-            <CheckCircle2 className="w-3 h-3" />
+          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#EBF3FC] text-[#0D66D0] border border-[#BFDBFE]">
+            <CheckCircle2 className="w-3 h-3 text-[#0284C7]" />
             <span>SUCCESS</span>
           </span>
         );
       case 'WARNING':
         return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FFF0D4] text-[#C76A00] border border-[#FFD085]">
-            <AlertTriangle className="w-3 h-3" />
+          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
+            <AlertTriangle className="w-3 h-3 text-[#0284C7]" />
             <span>WARNING</span>
           </span>
         );
       case 'FAILED':
         return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FDE6E8] text-[#D7373F] border border-[#F88B8B]">
-            <XCircle className="w-3 h-3" />
+          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#EFF6FF] text-[#1E3A8A] border border-[#93C5FD]">
+            <XCircle className="w-3 h-3 text-[#0A3D82]" />
             <span>FAILED</span>
           </span>
         );
@@ -272,8 +272,8 @@ export const AuditLogsView: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-bold text-white tracking-tight">Audit Logs & Compliance Ledger</h1>
-              <span className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40 uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8CE2A7] animate-pulse" />
+              <span className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-white/15 text-sky-200 border border-sky-200/40 uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-pulse" />
                 <span>Immutable SHA-256 Ledger</span>
               </span>
             </div>
@@ -318,7 +318,7 @@ export const AuditLogsView: React.FC = () => {
             <p className="text-2xl font-bold text-[#2C2C2C] mt-0.5">{totalLogs}</p>
             <span className="text-[11px] text-[#0E7A36] font-semibold">100% tamper-evident</span>
           </div>
-          <div className="w-10 h-10 rounded bg-[#F2F4F7] border border-[#E1E5EA] flex items-center justify-center text-[#1E2229]">
+          <div className="w-10 h-10 rounded bg-[#E0F2FE] border border-[#BAE6FD] flex items-center justify-center text-[#0284C7]">
             <Layers className="w-5 h-5" />
           </div>
         </div>
@@ -337,10 +337,10 @@ export const AuditLogsView: React.FC = () => {
         <div className="bg-[#FFFFFF] border border-[#E1E5EA] rounded p-4 flex items-center justify-between shadow-2xs">
           <div>
             <p className="text-xs font-medium text-[#1E2229]">Schema & Ingestion</p>
-            <p className="text-2xl font-bold text-[#0E7A36] mt-0.5">{schemaLogsCount}</p>
-            <span className="text-[11px] text-[#0E7A36]">XDM Evolution & DLQ</span>
+            <p className="text-2xl font-bold text-[#1D4ED8] mt-0.5">{schemaLogsCount}</p>
+            <span className="text-[11px] text-[#1D4ED8]">XDM Evolution & DLQ</span>
           </div>
-          <div className="w-10 h-10 rounded bg-[#DEFBE6] border border-[#A1ECC4] flex items-center justify-center text-[#0E7A36]">
+          <div className="w-10 h-10 rounded bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#1D4ED8]">
             <Database className="w-5 h-5" />
           </div>
         </div>
@@ -348,10 +348,10 @@ export const AuditLogsView: React.FC = () => {
         <div className="bg-[#FFFFFF] border border-[#E1E5EA] rounded p-4 flex items-center justify-between shadow-2xs">
           <div>
             <p className="text-xs font-medium text-[#1E2229]">Privacy & Consent</p>
-            <p className="text-2xl font-bold text-[#C76A00] mt-0.5">{privacyLogsCount}</p>
-            <span className="text-[11px] text-[#C76A00]">GDPR & CCPA Opt-Outs</span>
+            <p className="text-2xl font-bold text-[#0A3D82] mt-0.5">{privacyLogsCount}</p>
+            <span className="text-[11px] text-[#0A3D82]">GDPR & CCPA Opt-Outs</span>
           </div>
-          <div className="w-10 h-10 rounded bg-[#FFF0D4] border border-[#FFD085] flex items-center justify-center text-[#C76A00]">
+          <div className="w-10 h-10 rounded bg-[#EBF3FC] border border-[#93C5FD] flex items-center justify-center text-[#0A3D82]">
             <Fingerprint className="w-5 h-5" />
           </div>
         </div>
@@ -440,16 +440,16 @@ export const AuditLogsView: React.FC = () => {
       </div>
 
       {/* Audit Logs Table / List */}
-      <div className="bg-[#FFFFFF] border border-[#E1E5EA] rounded overflow-hidden shadow-2xs">
-        <div className="px-5 py-3.5 border-b border-[#E1E5EA] flex items-center justify-between bg-[#F2F4F7]">
+      <div className="bg-[#FFFFFF] border border-[#E1E5EA] rounded-xl overflow-hidden shadow-2xs">
+        <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <h2 className="text-xs font-bold text-[#2C2C2C]">Chronological Audit Events</h2>
-            <span className="text-[10px] bg-[#FFFFFF] text-[#1A1D23] border border-[#D5D5D5] px-2 py-0.5 rounded font-mono">
+            <h2 className="text-xs font-bold text-white uppercase tracking-wider">Chronological Audit Events</h2>
+            <span className="text-[10px] bg-white/15 text-white border border-white/25 px-2 py-0.5 rounded font-mono tabular-nums">
               {filteredLogs.length} of {auditLogs.length} events
             </span>
           </div>
-          <div className="flex items-center space-x-1.5 text-xs text-[#1E2229]">
-            <Clock className="w-3.5 h-3.5 text-[#1E2229]" />
+          <div className="flex items-center space-x-1.5 text-xs text-blue-100">
+            <Clock className="w-3.5 h-3.5 text-white shrink-0" />
             <span>Ordered newest first (UTC/Local)</span>
           </div>
         </div>
@@ -600,7 +600,7 @@ export const AuditLogsView: React.FC = () => {
                               onClick={() => handleCopy(JSON.stringify(log.details?.jsonPayload, null, 2), log.id)}
                               className="text-[#1E2229] hover:text-[#2C2C2C] text-[11px] flex items-center space-x-1"
                             >
-                              {copiedId === log.id ? <Check className="w-3 h-3 text-[#0E7A36]" /> : <Copy className="w-3 h-3" />}
+                              {copiedId === log.id ? <Check className="w-3 h-3 text-[#0D66D0]" /> : <Copy className="w-3 h-3" />}
                               <span>{copiedId === log.id ? 'Copied' : 'Copy JSON'}</span>
                             </button>
                           </div>

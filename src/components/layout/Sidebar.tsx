@@ -34,8 +34,15 @@ export const Sidebar: React.FC = () => {
     anomalies,
     isDemoMode,
     isSidebarCollapsed,
-    toggleSidebar
+    toggleSidebar,
+    openGuidedOverview,
+    clearGuidedReturn
   } = useCDP();
+
+  const navigateFromSidebar = (tab: string) => {
+    clearGuidedReturn();
+    setActiveTab(tab);
+  };
 
   const isSchemasActive =
     activeTab === 'schemas' ||
@@ -168,12 +175,12 @@ export const Sidebar: React.FC = () => {
           >
             <PanelLeftOpen className="w-4 h-4" />
           </button>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36] absolute top-1.5 right-2" title="Pipeline Active" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] absolute top-1.5 right-2" title="Pipeline Active" />
         </div>
       ) : (
         <div className="px-3 py-2 bg-[#F9FAFB] border-b border-[#E8ECEF] flex items-center justify-between text-xs min-h-[41px]">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-[#0E7A36] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
             <span className="text-[11px] font-semibold text-[#333333]">Pipeline Active</span>
           </div>
           <button
@@ -194,7 +201,7 @@ export const Sidebar: React.FC = () => {
         <div className="space-y-1">
           {/* 1. HOME */}
           <button
-            onClick={() => setActiveTab('home')}
+            onClick={() => navigateFromSidebar('home')}
             className={`w-full flex items-center ${
               isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
             } rounded-lg transition-all text-left relative group ${
@@ -225,7 +232,7 @@ export const Sidebar: React.FC = () => {
           {/* 1B. GET STARTED (GUIDED STEPS) above OVERVIEW */}
           <button
             id="sidebar-nav-get-started"
-            onClick={() => setActiveTab('get_started')}
+            onClick={openGuidedOverview}
             className={`w-full flex items-center ${
               isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
             } rounded-lg transition-all text-left relative group cursor-pointer ${
@@ -251,38 +258,10 @@ export const Sidebar: React.FC = () => {
             )}
           </button>
 
-          {/* 2. OVERVIEW */}
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`w-full flex items-center ${
-              isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
-            } rounded-lg transition-all text-left relative group ${
-              activeTab === 'dashboard'
-                ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs'
-                : 'text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] font-normal'
-            }`}
-            title="Overview (Live Metrics)"
-          >
-            {activeTab === 'dashboard' && (
-              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
-            )}
-            <div className={`flex items-center ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
-              <div className={activeTab === 'dashboard' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1A1D23]'}>
-                <LayoutDashboard className="w-4 h-4" />
-              </div>
-              {!isSidebarCollapsed && <span className="text-xs tracking-tight">Overview</span>}
-            </div>
-            {!isSidebarCollapsed && (
-              <span className="text-[9px] font-semibold bg-[#DEFBE6] text-[#0E7A36] px-1.5 py-0.2 rounded border border-[#B4F0C3]">
-                Live
-              </span>
-            )}
-          </button>
-
           {/* 3. XLR8 AI SUPPORT (Dedicated Troubleshooting & Guidance Agent) */}
           <button
             id="sidebar-nav-ai-support"
-            onClick={() => setActiveTab('ai_support')}
+            onClick={() => navigateFromSidebar('ai_support')}
             className={`w-full flex items-center ${
               isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
             } rounded-lg transition-all text-left relative group cursor-pointer ${
@@ -336,7 +315,7 @@ export const Sidebar: React.FC = () => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => navigateFromSidebar(item.id)}
                   className={`w-full flex items-center ${
                     isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
                   } rounded-lg transition-all text-left relative group ${
@@ -386,10 +365,10 @@ export const Sidebar: React.FC = () => {
                     <span
                       className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full ${
                         item.id === 'hub_intelligence' && anomalies && anomalies.filter(a => a.status === 'Active').length > 0
-                          ? 'bg-[#D7373F]'
+                          ? 'bg-[#0284C7]'
                           : isActive
                           ? 'bg-[#1473E6]'
-                          : 'bg-[#B0B0B0]'
+                          : 'bg-[#93C5FD]'
                       }`}
                     />
                   )}
@@ -398,11 +377,11 @@ export const Sidebar: React.FC = () => {
             })}
           </div>
 
-          {/* LAST MENU ITEM: Why Choose XLR8? */}
-          <div className="pt-2 mt-2 border-t border-[#F0F2F5]">
+          {/* BOTTOM MENU ITEMS: Why Choose XLR8? + Overview & Metrics */}
+          <div className="pt-2 mt-2 border-t border-[#F0F2F5] space-y-1">
             <button
               id="sidebar-nav-why-xlr8"
-              onClick={() => setActiveTab('why_excelr8')}
+              onClick={() => navigateFromSidebar('why_excelr8')}
               className={`w-full flex items-center ${
                 isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
               } rounded-lg transition-all text-left relative group cursor-pointer ${
@@ -423,7 +402,7 @@ export const Sidebar: React.FC = () => {
               </div>
               {!isSidebarCollapsed && (
                 <div className="flex items-center space-x-1 shrink-0">
-                  <span className="text-[9px] font-bold bg-[#F2EBF9] text-[#7B2CBF] px-1.5 py-0.2 rounded border border-[#E1D0F5]">
+                  <span className="text-[9px] font-bold bg-[#EBF3FC] text-[#0D66D0] px-1.5 py-0.2 rounded border border-[#BFDBFE]">
                     vs Adobe
                   </span>
                   <ChevronRight
@@ -434,7 +413,37 @@ export const Sidebar: React.FC = () => {
                 </div>
               )}
               {isSidebarCollapsed && (
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#7B2CBF]" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+              )}
+            </button>
+
+            {/* VERY LAST MENU ITEM: Overview & Metrics */}
+            <button
+              id="sidebar-nav-overview-metrics"
+              type="button"
+              onClick={() => navigateFromSidebar('dashboard')}
+              className={`w-full flex items-center ${
+                isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
+              } rounded-lg transition-all text-left relative group cursor-pointer ${
+                activeTab === 'dashboard'
+                  ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs border border-[#BFDBFE]'
+                  : 'bg-[#F8FAFC] text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] border border-[#E1E5EA] font-medium'
+              }`}
+              title="Overview & Metrics (Live Telemetry)"
+            >
+              {activeTab === 'dashboard' && (
+                <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+              )}
+              <div className={`flex items-center min-w-0 ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
+                <div className={`shrink-0 ${activeTab === 'dashboard' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1473E6]'}`}>
+                  <LayoutDashboard className="w-4 h-4" />
+                </div>
+                {!isSidebarCollapsed && <span className="text-xs tracking-tight truncate">Overview &amp; Metrics</span>}
+              </div>
+              {!isSidebarCollapsed && (
+                <span className="text-[9px] font-semibold bg-[#E0F2FE] text-[#0369A1] px-1.5 py-0.2 rounded border border-[#BAE6FD] shrink-0">
+                  Live
+                </span>
               )}
             </button>
           </div>

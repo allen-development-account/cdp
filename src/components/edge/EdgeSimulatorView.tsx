@@ -1,35 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCDP } from '../../context/CDPContext';
 import { PageBackButton } from '../common/PageBackButton';
 import { DynamicOffer, EdgeEvaluationResult } from '../../types/cdp';
 import {
   Zap,
-  Globe,
-  Layers,
   ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
-  Clock,
   Sparkles,
   Smartphone,
   Monitor,
-  RefreshCw,
-  Eye,
   Sliders,
-  Tag,
-  ExternalLink
 } from 'lucide-react';
 
-export const EdgeSimulatorView: React.FC = () => {
-  const { profiles, dynamicOffers, evaluateEdgePersonalization } = useCDP();
+const EDGE_PLACEMENTS: DynamicOffer['placement'][] = [
+  'Home Hero Banner',
+  'Exit Intent Modal',
+  'Checkout Upsell',
+  'Mobile Push Carousel',
+];
 
-  const [selectedProfileId, setSelectedProfileId] = useState<string>(profiles[0]?.id || '');
+export const EdgeSimulatorView: React.FC = () => {
+  const { profiles, evaluateEdgePersonalization } = useCDP();
+
+  const [selectedProfileId, setSelectedProfileId] = useState<string>('');
   const [selectedPlacement, setSelectedPlacement] = useState<DynamicOffer['placement']>('Home Hero Banner');
-  const [edgeResult, setEdgeResult] = useState<EdgeEvaluationResult | null>(() => {
-    return evaluateEdgePersonalization(profiles[0]?.id || '', 'Home Hero Banner');
-  });
+  const [edgeResult, setEdgeResult] = useState<EdgeEvaluationResult | null>(null);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [deviceMode, setDeviceMode] = useState<'desktop' | 'mobile'>('desktop');
+
+  // Run initial edge evaluation in an effect (never synchronously during render)
+  useEffect(() => {
+    const targetProfileId =
+      selectedProfileId && profiles.some(p => p.id === selectedProfileId)
+        ? selectedProfileId
+        : profiles[0]?.id || '';
+
+    if (targetProfileId !== selectedProfileId) {
+      setSelectedProfileId(targetProfileId);
+    }
+
+    const res = evaluateEdgePersonalization(targetProfileId, selectedPlacement);
+    setEdgeResult(res);
+    // Intentionally run when profiles hydrate or user hasn't picked yet; manual clicks call handleSimulate
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profiles]);
 
   const handleSimulate = (profileId: string, placement: DynamicOffer['placement']) => {
     setIsSimulating(true);
@@ -49,12 +62,12 @@ export const EdgeSimulatorView: React.FC = () => {
         <div className="flex items-start space-x-3.5">
           <PageBackButton fallbackTab="hub_data_science" fallbackLabel="Data Science & Query" className="mt-1 shrink-0" />
           <div className="w-10 h-10 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0 shadow-2xs">
-            <Zap className="w-5 h-5 text-amber-300" />
+            <Zap className="w-5 h-5 text-sky-200" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-bold text-white">Real-Time Edge Personalization & Offer Decisioning</h2>
-              <span className="text-[10px] bg-white/15 text-white border border-white/25 font-bold px-2 py-0.5 rounded uppercase">
+              <span className="text-[10px] bg-white/15 text-white border border-white/25 font-bold px-2 py-0.5 rounded uppercase whitespace-nowrap">
                 XLR8 Edge Network / SDK
               </span>
             </div>
@@ -91,63 +104,68 @@ export const EdgeSimulatorView: React.FC = () => {
         {/* Left Column: Control Deck & Profile Switcher */}
         <div className="lg:col-span-5 flex flex-col space-y-4 overflow-y-auto pr-1">
           {/* Target Profile Selector */}
-          <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-4 shadow-2xs">
-            <h3 className="text-xs font-bold text-[#2C2C2C] uppercase tracking-wider mb-3 flex items-center space-x-1.5">
-              <Sliders className="w-4 h-4 text-[#1473E6]" />
-              <span>Simulated Visitor Persona</span>
-            </h3>
-
-            <div className="space-y-2">
-              {profiles.map((p) => {
-                const isSelected = p.id === selectedProfileId;
-                return (
-                  <div
-                    key={p.id}
-                    onClick={() => {
-                      setSelectedProfileId(p.id);
-                      handleSimulate(p.id, selectedPlacement);
-                    }}
-                    className={`p-3 rounded border transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#EBF3FC] border-[#1473E6] shadow-2xs'
-                        : 'bg-[#FFFFFF] border-[#E1E5EA] hover:bg-[#F2F4F7]'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#2C2C2C]">{p.unifiedName}</span>
-                      <span className="text-[10px] font-mono text-[#1E2229]">${p.attributes.totalSpend} Spend</span>
-                    </div>
-                    <p className="text-[11px] text-[#1E2229] mt-0.5 truncate">{p.primaryEmail}</p>
-
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {p.qualifyingAudienceIds.map((aid, idx) => (
-                        <span key={idx} className="text-[9px] bg-[#FFFFFF] border border-[#E1E5EA] text-[#1473E6] px-1.5 py-0.5 rounded font-semibold">
-                          {aid}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+          <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-4 py-3 border-b border-[#0E4DA4]">
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-1.5">
+                <Sliders className="w-4 h-4 text-white shrink-0" />
+                <span>Simulated Visitor Persona</span>
+              </h3>
             </div>
+
+            <div className="p-4">
+
+            {profiles.length === 0 ? (
+              <div className="p-4 rounded border border-dashed border-[#D0D7DE] bg-[#F8FAFC] text-xs text-[#596780]">
+                No Customer 360 profiles loaded yet. Switch to Demo Mode or ingest an event to simulate personalized visitor offers (showing anonymous fallback visitor).
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {profiles.map((p) => {
+                  const isSelected = p.id === selectedProfileId;
+                  return (
+                    <div
+                      key={p.id}
+                      onClick={() => {
+                        setSelectedProfileId(p.id);
+                        handleSimulate(p.id, selectedPlacement);
+                      }}
+                      className={`p-3 rounded border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#EBF3FC] border-[#1473E6] shadow-2xs'
+                          : 'bg-[#FFFFFF] border-[#E1E5EA] hover:bg-[#F2F4F7]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#2C2C2C]">{p.unifiedName}</span>
+                        <span className="text-[10px] font-mono text-[#1E2229]">${p.attributes.totalSpend} Spend</span>
+                      </div>
+                      <p className="text-[11px] text-[#1E2229] mt-0.5 truncate">{p.primaryEmail}</p>
+
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {p.qualifyingAudienceIds.map((aid, idx) => (
+                          <span key={idx} className="text-[9px] bg-[#FFFFFF] border border-[#E1E5EA] text-[#1473E6] px-1.5 py-0.5 rounded font-semibold">
+                            {aid}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Placement Switcher */}
             <div className="mt-4 pt-3 border-t border-[#E1E5EA]">
               <label className="block text-xs font-bold text-[#2C2C2C] mb-2">Web / App Experience Placement</label>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  'Home Hero Banner',
-                  'Checkout Upgrade Drawer',
-                  'In-App Notification Banner',
-                  'Cart Upsell Modal'
-                ].map((placement) => (
+                {EDGE_PLACEMENTS.map((placement) => (
                   <button
                     key={placement}
                     onClick={() => {
-                      setSelectedPlacement(placement as any);
-                      handleSimulate(selectedProfileId, placement as any);
+                      setSelectedPlacement(placement);
+                      handleSimulate(selectedProfileId, placement);
                     }}
-                    className={`text-left p-2 rounded text-xs font-semibold border transition-all ${
+                    className={`text-left p-2 rounded text-xs font-semibold border transition-all cursor-pointer ${
                       selectedPlacement === placement
                         ? 'bg-[#1473E6] text-white border-[#1473E6] shadow-2xs'
                         : 'bg-[#FFFFFF] border-[#E1E5EA] text-[#2C2C2C] hover:bg-[#F2F4F7]'
@@ -158,22 +176,25 @@ export const EdgeSimulatorView: React.FC = () => {
                 ))}
               </div>
             </div>
+            </div>
           </div>
 
           {/* Real-Time Edge Latency Telemetry */}
           {edgeResult && (
-            <div className="bg-[#FFFFFF] rounded p-4 text-[#2C2C2C] border border-[#E1E5EA] shadow-2xs">
-              <div className="flex items-center justify-between text-xs font-bold text-[#2C2C2C] pb-2 border-b border-[#E1E5EA]">
-                <span className="flex items-center space-x-1.5">
-                  <Zap className="w-3.5 h-3.5 text-[#1473E6]" />
+            <div className="bg-[#FFFFFF] rounded-xl text-[#2C2C2C] border border-[#E1E5EA] shadow-2xs overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-4 py-3 border-b border-[#0E4DA4] flex items-center justify-between text-xs font-bold">
+                <span className="flex items-center space-x-1.5 text-white">
+                  <Zap className="w-3.5 h-3.5 text-white shrink-0" />
                   <span>Edge Decisioning Telemetry</span>
                 </span>
-                <span className="text-[#0E7A36] font-mono bg-[#DEFBE6] px-2 py-0.5 rounded border border-[#A1ECC4] text-[11px] font-bold">
-                  {edgeResult.evaluationLatencyMs} ms
+                <span className="text-[#0369A1] font-mono bg-[#E0F2FE] px-2 py-0.5 rounded border border-[#BAE6FD] text-[11px] font-bold">
+                  {isSimulating ? 'Evaluating...' : `${edgeResult.evaluationLatencyMs} ms`}
                 </span>
               </div>
 
-              <div className="mt-3 space-y-1.5 text-xs text-[#1A1D23]">
+              <div className="p-4">
+
+              <div className="space-y-1.5 text-xs text-[#1A1D23]">
                 <div className="flex justify-between">
                   <span className="text-[#1E2229]">Edge Region Node:</span>
                   <span className="font-mono text-[#1473E6] font-semibold">{edgeResult.edgeRegion}</span>
@@ -184,7 +205,7 @@ export const EdgeSimulatorView: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#1E2229]">Affinity Score:</span>
-                  <span className="font-mono text-[#0E7A36] font-bold">{edgeResult.calculatedScore.toFixed(0)} / 100</span>
+                  <span className="font-mono text-[#0284C7] font-bold">{edgeResult.calculatedScore.toFixed(0)} / 100</span>
                 </div>
               </div>
 
@@ -193,12 +214,13 @@ export const EdgeSimulatorView: React.FC = () => {
                 <div className="space-y-1">
                   {edgeResult.appliedPersonalizationRules.map((rule, idx) => (
                     <div key={idx} className="text-[11px] text-[#2C2C2C] font-mono flex items-center space-x-1">
-                      <span className="text-[#0E7A36] font-bold">✓</span>
+                      <span className="text-[#0284C7] font-bold">✓</span>
                       <span>{rule}</span>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
             </div>
           )}
         </div>
@@ -216,7 +238,7 @@ export const EdgeSimulatorView: React.FC = () => {
               </div>
             </div>
 
-            <span className="text-[10px] bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] font-bold px-2 py-0.5 rounded">
+            <span className="text-[10px] bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] font-bold px-2 py-0.5 rounded">
               LIVE ALLOY.JS
             </span>
           </div>
@@ -233,23 +255,33 @@ export const EdgeSimulatorView: React.FC = () => {
 
                   <div className="flex items-center space-x-1.5 text-[#1473E6] text-xs font-bold uppercase tracking-wider mb-2">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Personalized for {selectedProfile?.unifiedName || 'You'}</span>
+                    <span>Personalized for {selectedProfile?.unifiedName || 'Anonymous Visitor'}</span>
                   </div>
 
                   <h3 className="text-lg font-bold text-[#2C2C2C] tracking-tight">
-                    {edgeResult.selectedOffer.title}
+                    {edgeResult.selectedOffer.headline || edgeResult.selectedOffer.title}
                   </h3>
 
                   <p className="text-xs text-[#1A1D23] mt-1.5 leading-relaxed">
-                    {edgeResult.selectedOffer.body}
+                    {edgeResult.selectedOffer.subhead}
                   </p>
+
+                  {edgeResult.selectedOffer.promoCode && (
+                    <div className="mt-3 inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-[#EBF3FC] border border-[#C5DCFA] text-[11px] font-mono text-[#0D66D0]">
+                      <span>Code:</span>
+                      <strong>{edgeResult.selectedOffer.promoCode}</strong>
+                      {edgeResult.selectedOffer.discountPercentage && (
+                        <span>({edgeResult.selectedOffer.discountPercentage}% off)</span>
+                      )}
+                    </div>
+                  )}
 
                   <div className="mt-4 flex items-center justify-between pt-3 border-t border-[#E1E5EA]">
                     <div className="text-[11px] text-[#1E2229]">
                       Placement: <strong className="text-[#2C2C2C]">{edgeResult.selectedOffer.placement}</strong>
                     </div>
 
-                    <button className="bg-[#1473E6] hover:bg-[#0D66D0] text-white font-semibold text-xs px-3.5 py-1.5 rounded shadow-2xs transition-all flex items-center space-x-1">
+                    <button className="bg-[#1473E6] hover:bg-[#0D66D0] text-white font-semibold text-xs px-3.5 py-1.5 rounded shadow-2xs transition-all flex items-center space-x-1 cursor-pointer">
                       <span>{edgeResult.selectedOffer.ctaText}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -261,10 +293,11 @@ export const EdgeSimulatorView: React.FC = () => {
                   <div className="text-[#1E2229] text-[10px] uppercase font-bold mb-1">
                     Alloy Edge Payload (JSON Response)
                   </div>
-                  <pre className="overflow-x-auto text-[10px] text-[#0E7A36] bg-[#F2F4F7] p-2 rounded border border-[#E1E5EA]">
+                  <pre className="overflow-x-auto text-[10px] text-[#0D66D0] bg-[#F2F4F7] p-2 rounded border border-[#E1E5EA]">
 {JSON.stringify(
   {
     proposition: edgeResult.selectedOffer.id,
+    title: edgeResult.selectedOffer.title,
     targetAudiences: edgeResult.selectedOffer.targetAudienceIds,
     score: edgeResult.calculatedScore,
     edgeDeliveryLatency: `${edgeResult.evaluationLatencyMs}ms`,

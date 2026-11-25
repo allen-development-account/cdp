@@ -274,9 +274,9 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                 Live Edge Stream, Decisioning & Real-Time Engine Console
               </h2>
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                isLiveStreamConnected ? 'bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40' : 'bg-white/15 text-[#FDE68A] border border-[#FDE68A]/40'
+                isLiveStreamConnected ? 'bg-white/15 text-sky-200 border border-sky-200/40' : 'bg-white/15 text-blue-200 border border-blue-200/40'
               }`}>
-                <span className={`w-2 h-2 rounded-full ${isLiveStreamConnected ? 'bg-[#8CE2A7] animate-ping' : 'bg-[#FDE68A]'}`} />
+                <span className={`w-2 h-2 rounded-full ${isLiveStreamConnected ? 'bg-sky-300 animate-ping' : 'bg-blue-200'}`} />
                 {isLiveStreamConnected ? `Stream Active (${liveWebSocketPingMs}ms RTT)` : 'Connecting to Stream...'}
               </span>
             </div>
@@ -294,7 +294,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
           </div>
           <div className="bg-white px-3 py-1.5 rounded-md border border-[#E1E5EA] text-center">
             <span className="text-[#6E7681] block">Kafka Queue Latency</span>
-            <span className="font-semibold text-[#0E7A36]">{systemMetrics.kafkaLatencyMs} ms</span>
+            <span className="font-semibold text-[#0284C7]">{systemMetrics.kafkaLatencyMs} ms</span>
           </div>
           <div className="bg-white px-3 py-1.5 rounded-md border border-[#E1E5EA] text-center">
             <span className="text-[#6E7681] block">Disk Storage</span>
@@ -304,7 +304,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
           </div>
           <div className="bg-white px-3 py-1.5 rounded-md border border-[#E1E5EA] text-center">
             <span className="text-[#6E7681] block">Dead Letter Queue</span>
-            <span className={`font-semibold ${dlq.filter(d => d.status === 'PENDING').length > 0 ? 'text-[#D73A49]' : 'text-[#6E7681]'}`}>
+            <span className={`font-semibold ${dlq.filter(d => d.status === 'PENDING').length > 0 ? 'text-[#0A3D82]' : 'text-[#6E7681]'}`}>
               {dlq.filter(d => d.status === 'PENDING').length} Rejected
             </span>
           </div>
@@ -321,7 +321,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
               : 'border-transparent text-[#5C6573] hover:text-[#1E2229]'
           }`}
         >
-          <Globe className="w-4 h-4" />
+          <Globe className="w-4 h-4 text-[#1473E6]" />
           Live Web SDK Playground
         </button>
 
@@ -333,9 +333,9 @@ export const LiveEdgeStreamConsole: React.FC = () => {
               : 'border-transparent text-[#5C6573] hover:text-[#1E2229]'
           }`}
         >
-          <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
+          <Sparkles className="w-4 h-4 text-[#1D4ED8]" />
           Edge Decisioning REST API
-          <span className="px-1.5 py-0.2 bg-[#F3E8FF] text-[#8B5CF6] rounded text-[10px] font-bold border border-[#8B5CF6]/30">
+          <span className="px-1.5 py-0.2 bg-[#EFF6FF] text-[#1D4ED8] rounded text-[10px] font-bold border border-[#BFDBFE]">
             &lt; 2ms
           </span>
         </button>
@@ -348,7 +348,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
               : 'border-transparent text-[#5C6573] hover:text-[#1E2229]'
           }`}
         >
-          <Zap className="w-4 h-4 text-[#E68619]" />
+          <Zap className="w-4 h-4 text-[#0EA5E9]" />
           Automated Background Webhooks
         </button>
 
@@ -360,10 +360,10 @@ export const LiveEdgeStreamConsole: React.FC = () => {
               : 'border-transparent text-[#5C6573] hover:text-[#1E2229]'
           }`}
         >
-          <ShieldAlert className="w-4 h-4 text-[#D73A49]" />
+          <ShieldAlert className="w-4 h-4 text-[#0A3D82]" />
           Dead Letter Queue (DLQ)
           {dlq.filter(d => d.status === 'PENDING').length > 0 && (
-            <span className="px-1.5 py-0.2 bg-[#D73A49] text-white rounded-full text-[10px] font-bold">
+            <span className="px-1.5 py-0.2 bg-[#0A3D82] text-white rounded-full text-[10px] font-bold">
               {dlq.filter(d => d.status === 'PENDING').length}
             </span>
           )}
@@ -389,7 +389,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
               : 'border-transparent text-[#5C6573] hover:text-[#1E2229]'
           }`}
         >
-          <Terminal className="w-4 h-4 text-[#0E7A36]" />
+          <Terminal className="w-4 h-4 text-[#0284C7]" />
           cURL Edge Ingest
         </button>
       </div>
@@ -443,10 +443,10 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                   <button
                     disabled={isFiringSdkEvent}
                     onClick={() => handleFireLiveSdkEvent('cart')}
-                    className="p-3 border border-[#D0D7DE] rounded-lg hover:border-[#E68619] hover:bg-[#FFF9F2] text-left transition-all group"
+                    className="p-3 border border-[#D0D7DE] rounded-lg hover:border-[#0EA5E9] hover:bg-[#F0F9FF] text-left transition-all group"
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="w-2 h-2 rounded-full bg-[#E68619]" />
+                      <span className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
                       <span className="text-xs font-bold text-[#1E2229]">2. Track AddToCart ($1,450)</span>
                     </div>
                     <span className="text-[11px] text-[#5C6573] block">
@@ -457,10 +457,10 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                   <button
                     disabled={isFiringSdkEvent}
                     onClick={() => handleFireLiveSdkEvent('identify')}
-                    className="p-3 border border-[#D0D7DE] rounded-lg hover:border-[#0E7A36] hover:bg-[#F2FAF5] text-left transition-all group"
+                    className="p-3 border border-[#D0D7DE] rounded-lg hover:border-[#0284C7] hover:bg-[#E0F2FE]/40 text-left transition-all group"
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="w-2 h-2 rounded-full bg-[#0E7A36]" />
+                      <span className="w-2 h-2 rounded-full bg-[#0284C7]" />
                       <span className="text-xs font-bold text-[#1E2229]">3. Identify (Sarah Connor)</span>
                     </div>
                     <span className="text-[11px] text-[#5C6573] block">
@@ -471,11 +471,11 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                   <button
                     disabled={isFiringSdkEvent}
                     onClick={() => handleFireLiveSdkEvent('dlq_violation')}
-                    className="p-3 border border-[#D0D7DE] rounded-lg hover:border-[#D73A49] hover:bg-[#FFF5F5] text-left transition-all group"
+                    className="p-3 border border-[#D0D7DE] rounded-lg hover:border-[#0A3D82] hover:bg-[#EFF6FF] text-left transition-all group"
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="w-2 h-2 rounded-full bg-[#D73A49]" />
-                      <span className="text-xs font-bold text-[#D73A49]">4. Breach Identity (DLQ)</span>
+                      <span className="w-2 h-2 rounded-full bg-[#0A3D82]" />
+                      <span className="text-xs font-bold text-[#0A3D82]">4. Breach Identity (DLQ)</span>
                     </div>
                     <span className="text-[11px] text-[#5C6573] block">
                       Omits identity to test DLQ rejection.
@@ -486,8 +486,8 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                 {sdkEventResponse && (
                   <div className={`p-3 rounded-lg border text-xs font-mono transition-all ${
                     sdkEventResponse.status === 200
-                      ? 'bg-[#E6F4EA]/40 border-[#0E7A36]/30 text-[#0E7A36]'
-                      : 'bg-[#FFF5F5] border-[#D73A49]/30 text-[#D73A49]'
+                      ? 'bg-[#E0F2FE]/40 border-[#0284C7]/30 text-[#0369A1]'
+                      : 'bg-[#EFF6FF] border-[#0A3D82]/30 text-[#0A3D82]'
                   }`}>
                     <div className="font-semibold mb-1 flex items-center justify-between">
                       <span>HTTP {sdkEventResponse.status} {sdkEventResponse.status === 200 ? 'Acknowledged' : 'Rejected'}</span>
@@ -506,16 +506,16 @@ export const LiveEdgeStreamConsole: React.FC = () => {
         {/* TAB 2: Edge Decisioning REST API */}
         {activeTab === 'edge_decisioning' && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-sm font-semibold text-[#1E2229]">
+                <h3 className="text-sm font-semibold text-white">
                   Real-Time Edge Personalization & Decisioning Engine (POST /api/v1/edge/decide)
                 </h3>
-                <p className="text-xs text-[#5C6573]">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Sub-2ms server-side edge decisioning endpoint. Evaluates unified profile traits, active audience memberships, and dynamic offers on the fly for headless apps, CDNs, and mobile storefronts.
                 </p>
               </div>
-              <span className="text-xs font-mono bg-[#F8FAFC] border border-[#E1E5EA] px-2.5 py-1 rounded text-[#1473E6]">
+              <span className="text-xs font-mono bg-white/15 border border-white/25 px-2.5 py-1 rounded text-white shrink-0 self-start sm:self-center">
                 Target SLA: &lt; 2.5ms Roundtrip
               </span>
             </div>
@@ -609,7 +609,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                   <button
                     disabled={isQueryingEdge}
                     onClick={handleQueryEdgeDecision}
-                    className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold rounded-lg shadow-xs transition-all disabled:opacity-50"
+                    className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#1473E6] to-[#1D4ED8] hover:from-[#0D66D0] hover:to-[#1E40AF] text-white text-xs font-semibold rounded-lg shadow-xs transition-all disabled:opacity-50"
                   >
                     <Sparkles className="w-4 h-4" />
                     {isQueryingEdge ? 'Evaluating Edge Model...' : 'Execute POST /api/v1/edge/decide'}
@@ -624,24 +624,24 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                 </span>
 
                 {edgeDecisionResult ? (
-                  <div className="bg-[#FAF5FF] border border-[#E9D5FF] rounded-xl p-4 space-y-3">
-                    <div className="flex items-center justify-between pb-2 border-b border-[#E9D5FF]">
-                      <span className="text-xs font-bold text-[#6B21A8] flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#8B5CF6]" />
+                  <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-xl p-4 space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#BFDBFE]">
+                      <span className="text-xs font-bold text-[#1E40AF] flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-[#1473E6]" />
                         Matched: {edgeDecisionResult.matchedProfileId || 'Anonymous Profile'}
                       </span>
-                      <span className="text-xs font-mono font-bold text-[#8B5CF6]">
+                      <span className="text-xs font-mono font-bold text-[#1D4ED8]">
                         {edgeDecisionResult.decisionLatencyMs}ms Latency
                       </span>
                     </div>
 
-                    <div className="bg-white p-3.5 rounded-lg border border-[#E9D5FF] space-y-2">
+                    <div className="bg-white p-3.5 rounded-lg border border-[#BFDBFE] space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-[#8B5CF6] uppercase tracking-wider">
+                        <span className="text-[11px] font-bold text-[#1D4ED8] uppercase tracking-wider">
                           {edgeDecisionResult.selectedOffer?.badge || 'Personalized Offer'}
                         </span>
                         {edgeDecisionResult.selectedOffer?.discountPercentage && (
-                          <span className="px-2 py-0.5 bg-[#DEFBE6] text-[#0E7A36] rounded font-bold text-xs">
+                          <span className="px-2 py-0.5 bg-[#E0F2FE] text-[#0369A1] rounded font-bold text-xs">
                             {edgeDecisionResult.selectedOffer.discountPercentage}% OFF
                           </span>
                         )}
@@ -662,7 +662,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="text-[11px] text-[#6B21A8] space-y-1">
+                    <div className="text-[11px] text-[#1E40AF] space-y-1">
                       <div><strong>Decision Logic:</strong> {edgeDecisionResult.decisionRuleApplied}</div>
                       <div><strong>Qualified Audiences:</strong> {edgeDecisionResult.matchedAudienceNames?.join(', ') || 'None'}</div>
                     </div>
@@ -688,16 +688,16 @@ export const LiveEdgeStreamConsole: React.FC = () => {
         {/* TAB 3: Automated Background Webhooks */}
         {activeTab === 'automated_egress' && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-sm font-semibold text-[#1E2229]">
+                <h3 className="text-sm font-semibold text-white">
                   Automated Background Webhook Egress Configuration
                 </h3>
-                <p className="text-xs text-[#5C6573]">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Configure target endpoint URLs on active destinations. Every incoming streaming event that qualifies a customer profile will automatically fire a signed HTTP POST request in the background.
                 </p>
               </div>
-              <span className="text-xs bg-[#DEFBE6] text-[#0E7A36] px-2.5 py-1 rounded font-bold border border-[#0E7A36]/20">
+              <span className="text-xs bg-[#E0F2FE] text-[#0369A1] px-2.5 py-1 rounded font-bold border border-[#BAE6FD] shrink-0 self-start sm:self-center">
                 HMAC-SHA256 Signed
               </span>
             </div>
@@ -757,7 +757,7 @@ export const LiveEdgeStreamConsole: React.FC = () => {
                   </button>
 
                   {endpointSaveMsg && (
-                    <div className="p-3 bg-[#E6F4EA] border border-[#0E7A36]/30 text-[#0E7A36] rounded-lg text-xs">
+                    <div className="p-3 bg-[#E0F2FE] border border-[#7DD3FC] text-[#0369A1] rounded-lg text-xs">
                       {endpointSaveMsg}
                     </div>
                   )}
@@ -793,23 +793,23 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
         {/* TAB 4: Dead Letter Queue (DLQ) */}
         {activeTab === 'dlq' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-sm font-semibold text-[#1E2229]">
+                <h3 className="text-sm font-semibold text-white">
                   Dead Letter Queue (Non-Conformant Ingestion Payloads)
                 </h3>
-                <p className="text-xs text-[#5C6573]">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Events rejected by schema validation or strict identity resolution gating are isolated here for auditing, remediation, and replay.
                 </p>
               </div>
-              <span className="text-xs text-[#5C6573]">
-                Total Records: <strong>{dlq.length}</strong> ({dlq.filter(d => d.status === 'PENDING').length} pending remediation)
+              <span className="text-xs text-blue-100 bg-white/15 border border-white/25 px-2.5 py-1 rounded shrink-0 self-start sm:self-center tabular-nums">
+                Total Records: <strong className="text-white">{dlq.length}</strong> ({dlq.filter(d => d.status === 'PENDING').length} pending remediation)
               </span>
             </div>
 
             {dlq.length === 0 ? (
               <div className="p-8 text-center bg-[#F8FAFC] rounded-lg border border-dashed border-[#D0D7DE]">
-                <CheckCircle2 className="w-8 h-8 text-[#0E7A36] mx-auto mb-2" />
+                <CheckCircle2 className="w-8 h-8 text-[#0284C7] mx-auto mb-2" />
                 <p className="text-sm font-medium text-[#1E2229]">Dead Letter Queue is Empty</p>
                 <p className="text-xs text-[#5C6573]">All incoming streaming events have passed schema validation and identity gating.</p>
               </div>
@@ -821,9 +821,9 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
                       <div className="flex items-center gap-2">
                         <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
                           item.status === 'PENDING'
-                            ? 'bg-[#FFEBE9] text-[#CF222E] border border-[#CF222E]/20'
+                            ? 'bg-[#EFF6FF] text-[#0A3D82] border border-[#BFDBFE]'
                             : item.status === 'REPLAYED'
-                            ? 'bg-[#E6F4EA] text-[#0E7A36] border border-[#0E7A36]/20'
+                            ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]'
                             : 'bg-[#F1F3F5] text-[#5C6573]'
                         }`}>
                           {item.status}
@@ -846,7 +846,7 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
                         )}
                         <button
                           onClick={() => discardDlqItem(item.id)}
-                          className="p-1 text-[#6E7681] hover:text-[#D73A49] transition-colors"
+                          className="p-1 text-[#6E7681] hover:text-[#0A3D82] transition-colors"
                           title="Discard Entry"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -854,7 +854,7 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
                       </div>
                     </div>
 
-                    <p className="text-xs text-[#D73A49] mb-2 font-medium">
+                    <p className="text-xs text-[#0A3D82] mb-2 font-medium">
                       {item.errorMessage}
                     </p>
 
@@ -871,12 +871,12 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
         {/* TAB 5: Outbound Webhook Tester */}
         {activeTab === 'webhook_tester' && (
           <div className="space-y-4">
-            <div>
-              <h3 className="text-sm font-semibold text-[#1E2229]">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs">
+              <h3 className="text-sm font-semibold text-white">
                 Live Real-Time Outbound Webhook Egress Tester
               </h3>
-              <p className="text-xs text-[#5C6573]">
-                Sends an actual HTTP POST request directly from the XLR8 server with cryptographic HMAC-SHA256 headers (<code className="bg-[#F1F3F5] px-1 rounded">X-XLR8-Signature-256</code>) to verify destination endpoint readiness.
+              <p className="text-xs text-blue-100 mt-0.5">
+                Sends an actual HTTP POST request directly from the XLR8 server with cryptographic HMAC-SHA256 headers (<code className="bg-white/15 text-white px-1 rounded">X-XLR8-Signature-256</code>) to verify destination endpoint readiness.
               </p>
             </div>
 
@@ -922,12 +922,12 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
                 {webhookResult ? (
                   <div className={`p-4 rounded-lg border text-xs font-mono ${
                     webhookResult.success
-                      ? 'bg-[#E6F4EA]/40 border-[#0E7A36]/30 text-[#1E2229]'
-                      : 'bg-[#FFF5F5] border-[#D73A49]/30 text-[#1E2229]'
+                      ? 'bg-[#E0F2FE]/40 border-[#0284C7]/30 text-[#1E2229]'
+                      : 'bg-[#EFF6FF] border-[#0A3D82]/30 text-[#1E2229]'
                   }`}>
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#E1E5EA]">
                       <span className="font-bold flex items-center gap-1.5">
-                        {webhookResult.success ? <CheckCircle2 className="w-4 h-4 text-[#0E7A36]" /> : <AlertTriangle className="w-4 h-4 text-[#D73A49]" />}
+                        {webhookResult.success ? <CheckCircle2 className="w-4 h-4 text-[#0284C7]" /> : <AlertTriangle className="w-4 h-4 text-[#0A3D82]" />}
                         HTTP Status: {webhookResult.statusCode}
                       </span>
                       <span className="text-[#6E7681]">Roundtrip: <strong>{webhookResult.roundtripMs}ms</strong></span>
@@ -960,20 +960,20 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
         {/* TAB 6: REST Edge Endpoint & cURL */}
         {activeTab === 'curl_builder' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-sm font-semibold text-[#1E2229]">
+                <h3 className="text-sm font-semibold text-white">
                   Edge Ingestion REST API Endpoint (cURL / Backend Microservices)
                 </h3>
-                <p className="text-xs text-[#5C6573]">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Direct HTTPS POST endpoint for external servers, batch ETL, and microservices to push events directly into the real-time stream.
                 </p>
               </div>
               <button
                 onClick={() => copyToClipboard(curlCommand, 'curl')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#D0D7DE] hover:bg-[#F1F3F5] text-xs font-semibold text-[#1E2229] rounded-md transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#F2F4F7] text-xs font-semibold text-[#0D66D0] rounded-md transition-colors shadow-2xs shrink-0 self-start sm:self-center cursor-pointer whitespace-nowrap"
               >
-                {copiedCurl ? <Check className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copiedCurl ? <Check className="w-3.5 h-3.5 text-[#0284C7]" /> : <Copy className="w-3.5 h-3.5" />}
                 {copiedCurl ? 'Copied cURL!' : 'Copy cURL Command'}
               </button>
             </div>
@@ -993,7 +993,7 @@ X-XLR8-Timestamp: 2026-10-04T18:20:00Z`}</pre>
               </div>
               <div className="p-3 bg-[#F8FAFC] rounded-lg border border-[#E1E5EA]">
                 <span className="text-xs font-semibold text-[#1E2229] block mb-1">Processing SLA</span>
-                <span className="text-xs text-[#0E7A36] font-semibold">&lt; 3.8ms Deterministic Resolution</span>
+                <span className="text-xs text-[#0284C7] font-semibold">&lt; 3.8ms Deterministic Resolution</span>
               </div>
             </div>
           </div>

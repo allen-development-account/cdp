@@ -373,8 +373,8 @@ export const WhyChooseExcelR8View: React.FC = () => {
         <div className="relative rounded-3xl bg-gradient-to-br from-[#090D16] via-[#0E1526] to-[#181E38] border border-slate-800 shadow-2xl p-7 sm:p-10 text-white overflow-hidden">
           {/* Subtle Ambient Glows */}
           <div className="absolute -right-20 -top-20 w-[420px] h-[420px] bg-[#1473E6]/20 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute left-1/4 -bottom-28 w-96 h-96 bg-[#7B2CBF]/20 rounded-full blur-[110px] pointer-events-none" />
-          <div className="absolute right-1/3 top-1/2 w-64 h-64 bg-[#0E7A36]/15 rounded-full blur-[90px] pointer-events-none" />
+          <div className="absolute left-1/4 -bottom-28 w-96 h-96 bg-[#0EA5E9]/20 rounded-full blur-[110px] pointer-events-none" />
+          <div className="absolute right-1/3 top-1/2 w-64 h-64 bg-[#38BDF8]/15 rounded-full blur-[90px] pointer-events-none" />
 
           {/* Technical Grid Background */}
           <div
@@ -391,8 +391,8 @@ export const WhyChooseExcelR8View: React.FC = () => {
                   <span aria-hidden="true" className="text-slate-600">/</span>
                   <span className="text-slate-400">Competitive Architecture Dossier</span>
                   <span aria-hidden="true" className="text-slate-600">/</span>
-                  <span className="text-emerald-400 font-medium inline-flex items-center space-x-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-sky-300 font-medium inline-flex items-center space-x-1.5">
+                    <span className="w-2 h-2 rounded-full bg-sky-300 animate-pulse" />
                     <span>100% Adobe Parity</span>
                   </span>
                 </div>
@@ -404,7 +404,7 @@ export const WhyChooseExcelR8View: React.FC = () => {
                   onClick={() => setActiveTab('xdm_tester')}
                   className="px-4 py-2 bg-gradient-to-r from-[#1473E6] to-[#0D66D0] hover:from-[#1982fc] hover:to-[#1070e3] text-white font-semibold text-xs rounded-xl shadow-lg shadow-blue-900/40 transition-all flex items-center space-x-2 active:scale-98 cursor-pointer border border-blue-400/30"
                 >
-                  <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                  <Zap className="w-3.5 h-3.5 text-sky-300 fill-sky-300" />
                   <span>Launch Live XDM Tester</span>
                 </button>
               </div>
@@ -414,12 +414,12 @@ export const WhyChooseExcelR8View: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8 space-y-3">
                 <div className="inline-flex items-center space-x-2 text-xs font-semibold text-blue-400 tracking-wide">
-                  <Award className="w-4 h-4 text-amber-400" />
+                  <Award className="w-4 h-4 text-sky-300" />
                   <span>Adobe Real-Time CDP (AEP) vs. XLR8 Realtime CDP</span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
                   Enterprise Parity.<br />
-                  <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
                     Without The Black Boxes.
                   </span>
                 </h1>
@@ -501,9 +501,9 @@ export const WhyChooseExcelR8View: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-slate-400 font-medium">Graph Governance</span>
-                  <GitMerge className="w-3.5 h-3.5 text-purple-400" />
+                  <GitMerge className="w-3.5 h-3.5 text-sky-400" />
                 </div>
-                <div className="text-sm font-bold text-white mt-1 group-hover:text-purple-400 transition-colors">
+                <div className="text-sm font-bold text-white mt-1 group-hover:text-sky-400 transition-colors">
                   Collision Simulator
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">Auditable shared device splits</div>
@@ -515,9 +515,9 @@ export const WhyChooseExcelR8View: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-slate-400 font-medium">Developer Velocity</span>
-                  <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                  <Zap className="w-3.5 h-3.5 text-cyan-400" />
                 </div>
-                <div className="text-sm font-bold text-white mt-1 group-hover:text-emerald-400 transition-colors">
+                <div className="text-sm font-bold text-white mt-1 group-hover:text-cyan-400 transition-colors">
                   Sub-5ms Ingestion QA
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">Zero external proxy setup</div>
@@ -529,9 +529,9 @@ export const WhyChooseExcelR8View: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-slate-400 font-medium">Campaign Precision</span>
-                  <Split className="w-3.5 h-3.5 text-amber-400" />
+                  <Split className="w-3.5 h-3.5 text-blue-300" />
                 </div>
-                <div className="text-sm font-bold text-white mt-1 group-hover:text-amber-400 transition-colors">
+                <div className="text-sm font-bold text-white mt-1 group-hover:text-blue-300 transition-colors">
                   Anti-Fatigue Venn
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">1-click exclusionary segments</div>
@@ -542,66 +542,66 @@ export const WhyChooseExcelR8View: React.FC = () => {
 
         {/* 2. INTERACTIVE SIMULATOR STAGE: High-Impact Visual Demonstration */}
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
-          <div className="border-b border-slate-100 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white border-b border-[#0E4DA4] p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-100 font-mono">
                   Interactive Architectural Stage
                 </span>
               </div>
-              <h2 className="text-lg font-bold text-slate-900 mt-0.5">
+              <h2 className="text-lg font-bold text-white mt-0.5">
                 Simulate XLR8 vs. Legacy CDP Mechanics Live
               </h2>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-xs text-blue-100 mt-0.5">
                 Toggle through key capabilities below to experience XLR8's real-time visual observability.
               </p>
             </div>
 
             {/* Showcase Selector Tabs */}
-            <div className="flex items-center bg-slate-200/70 p-1 rounded-xl gap-1">
+            <div className="flex items-center bg-white/15 border border-white/25 p-1 rounded-xl gap-1 flex-wrap">
               <button
                 onClick={() => setActiveShowcase('collision')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
                   activeShowcase === 'collision'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#0D66D0] shadow-xs'
+                    : 'text-white hover:bg-white/10'
                 }`}
               >
-                <GitMerge className="w-3.5 h-3.5 text-purple-600" />
+                <GitMerge className="w-3.5 h-3.5 shrink-0" />
                 <span>Identity Collisions</span>
               </button>
               <button
                 onClick={() => setActiveShowcase('ingestion')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
                   activeShowcase === 'ingestion'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#0D66D0] shadow-xs'
+                    : 'text-white hover:bg-white/10'
                 }`}
               >
-                <Zap className="w-3.5 h-3.5 text-emerald-600" />
+                <Zap className="w-3.5 h-3.5 shrink-0" />
                 <span>Live Ingestion Trace</span>
               </button>
               <button
                 onClick={() => setActiveShowcase('venn')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
                   activeShowcase === 'venn'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#0D66D0] shadow-xs'
+                    : 'text-white hover:bg-white/10'
                 }`}
               >
-                <Split className="w-3.5 h-3.5 text-amber-600" />
+                <Split className="w-3.5 h-3.5 shrink-0" />
                 <span>Anti-Fatigue Venn</span>
               </button>
               <button
                 onClick={() => setActiveShowcase('mesh')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
                   activeShowcase === 'mesh'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#0D66D0] shadow-xs'
+                    : 'text-white hover:bg-white/10'
                 }`}
               >
-                <Server className="w-3.5 h-3.5 text-blue-600" />
+                <Server className="w-3.5 h-3.5 shrink-0" />
                 <span>Zero-Copy Mesh</span>
               </button>
             </div>
@@ -615,7 +615,7 @@ export const WhyChooseExcelR8View: React.FC = () => {
                 <div className="lg:col-span-7 bg-slate-900 rounded-2xl p-6 text-white border border-slate-800 relative overflow-hidden space-y-5">
                   <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
                     <span className="text-slate-400 font-mono">SCENARIO: Shared Living Room iPad Collision</span>
-                    <span className="text-purple-400 font-mono font-semibold">Active Policy: {collisionPolicy.toUpperCase()}</span>
+                    <span className="text-sky-400 font-mono font-semibold">Active Policy: {collisionPolicy.toUpperCase()}</span>
                   </div>
 
                   {/* Visual Node Diagram */}
@@ -631,21 +631,21 @@ export const WhyChooseExcelR8View: React.FC = () => {
 
                     {/* Shared Device Node (Center) */}
                     <div className="text-center space-y-1 z-10">
-                      <div className="w-16 h-16 rounded-2xl bg-purple-600/30 border-2 border-purple-400 flex flex-col items-center justify-center text-white mx-auto shadow-lg shadow-purple-500/30 animate-pulse">
-                        <Layers className="w-5 h-5 text-purple-300" />
+                      <div className="w-16 h-16 rounded-2xl bg-sky-600/30 border-2 border-sky-400 flex flex-col items-center justify-center text-white mx-auto shadow-lg shadow-sky-500/30 animate-pulse">
+                        <Layers className="w-5 h-5 text-sky-300" />
                         <span className="text-[9px] font-bold mt-0.5">Family iPad</span>
                       </div>
-                      <span className="text-[11px] text-amber-300 font-mono block">ECID: 99420-iPad</span>
-                      <span className="text-[10px] text-purple-300 font-semibold">Shared Touchpoint</span>
+                      <span className="text-[11px] text-sky-300 font-mono block">ECID: 99420-iPad</span>
+                      <span className="text-[10px] text-blue-300 font-semibold">Shared Touchpoint</span>
                     </div>
 
                     {/* Node 2: Bob */}
                     <div className="text-center space-y-1 z-10">
-                      <div className="w-14 h-14 rounded-2xl bg-emerald-600/30 border-2 border-emerald-400 flex items-center justify-center text-white mx-auto shadow-lg shadow-emerald-500/20">
+                      <div className="w-14 h-14 rounded-2xl bg-cyan-600/30 border-2 border-cyan-400 flex items-center justify-center text-white mx-auto shadow-lg shadow-cyan-500/20">
                         <span className="font-bold text-xs">Bob</span>
                       </div>
                       <span className="text-[11px] text-slate-400 font-mono block">bob@family.org</span>
-                      <span className="text-[10px] text-emerald-400 font-semibold">Profile B</span>
+                      <span className="text-[10px] text-cyan-400 font-semibold">Profile B</span>
                     </div>
 
                     {/* Dynamic Connecting Lines depending on Policy */}
@@ -686,7 +686,7 @@ export const WhyChooseExcelR8View: React.FC = () => {
 
                 <div className="lg:col-span-5 space-y-4">
                   <div className="space-y-1">
-                    <span className="text-xs font-semibold text-purple-600">The XLR8 Advantage</span>
+                    <span className="text-xs font-semibold text-[#1D4ED8]">The XLR8 Advantage</span>
                     <h3 className="text-base font-bold text-slate-900">
                       Visual Identity Governance vs. Silent DB Partitioning
                     </h3>
@@ -702,43 +702,43 @@ export const WhyChooseExcelR8View: React.FC = () => {
                         onClick={() => setCollisionPolicy('split')}
                         className={`w-full p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between ${
                           collisionPolicy === 'split'
-                            ? 'bg-purple-50 border-purple-300 text-purple-900 font-semibold'
+                            ? 'bg-blue-50 border-blue-300 text-blue-900 font-semibold'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                         }`}
                       >
                         <span>1. Split Graph on Shared Collision (Recommended)</span>
-                        {collisionPolicy === 'split' && <Check className="w-4 h-4 text-purple-600" />}
+                        {collisionPolicy === 'split' && <Check className="w-4 h-4 text-[#1473E6]" />}
                       </button>
 
                       <button
                         onClick={() => setCollisionPolicy('latest')}
                         className={`w-full p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between ${
                           collisionPolicy === 'latest'
-                            ? 'bg-purple-50 border-purple-300 text-purple-900 font-semibold'
+                            ? 'bg-blue-50 border-blue-300 text-blue-900 font-semibold'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                         }`}
                       >
                         <span>2. Most Recent Activity Wins</span>
-                        {collisionPolicy === 'latest' && <Check className="w-4 h-4 text-purple-600" />}
+                        {collisionPolicy === 'latest' && <Check className="w-4 h-4 text-[#1473E6]" />}
                       </button>
 
                       <button
                         onClick={() => setCollisionPolicy('deterministic')}
                         className={`w-full p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between ${
                           collisionPolicy === 'deterministic'
-                            ? 'bg-purple-50 border-purple-300 text-purple-900 font-semibold'
+                            ? 'bg-blue-50 border-blue-300 text-blue-900 font-semibold'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                         }`}
                       >
                         <span>3. Deterministic Identity Precedence (CRM Over Cookie)</span>
-                        {collisionPolicy === 'deterministic' && <Check className="w-4 h-4 text-purple-600" />}
+                        {collisionPolicy === 'deterministic' && <Check className="w-4 h-4 text-[#1473E6]" />}
                       </button>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setActiveTab('identities')}
-                    className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                    className="w-full py-2.5 bg-gradient-to-r from-[#1473E6] to-[#0A3D82] hover:from-[#0D66D0] hover:to-[#082E63] text-white font-semibold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     <span>Launch Full Identity Collision Simulator</span>
                     <ArrowRight className="w-4 h-4" />
@@ -994,24 +994,24 @@ export const WhyChooseExcelR8View: React.FC = () => {
 
         {/* 3. HEAD-TO-HEAD FEATURE SHOWDOWN CARDS (Elegantly Designed Split Cards) */}
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-2xl border border-[#0E4DA4] px-6 py-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-base font-bold text-slate-900">
+              <h2 className="text-base font-bold text-white">
                 Architectural Breakdown: Adobe RT-CDP vs. XLR8 Realtime CDP
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-blue-100 mt-0.5">
                 Side-by-side technical evaluation across all 7 enterprise customer data platform domains.
               </p>
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <div className="flex items-center bg-white/15 p-1 rounded-xl border border-white/25 shrink-0">
               <button
                 onClick={() => setViewMode('visual')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                   viewMode === 'visual'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#0D66D0] shadow-xs'
+                    : 'text-white hover:bg-white/10'
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
@@ -1021,8 +1021,8 @@ export const WhyChooseExcelR8View: React.FC = () => {
                 onClick={() => setViewMode('matrix')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                   viewMode === 'matrix'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#0D66D0] shadow-xs'
+                    : 'text-white hover:bg-white/10'
                 }`}
               >
                 <TableIcon className="w-3.5 h-3.5" />
@@ -1118,34 +1118,34 @@ export const WhyChooseExcelR8View: React.FC = () => {
                       </div>
 
                       {item.adobeRTCDP.limitation && (
-                        <div className="pt-3 border-t border-slate-200/60 text-xs text-amber-700 flex items-start space-x-2">
-                          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
+                        <div className="pt-3 border-t border-slate-200/60 text-xs text-slate-700 flex items-start space-x-2">
+                          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#0284C7]" />
                           <span><strong>Constraint:</strong> {item.adobeRTCDP.limitation}</span>
                         </div>
                       )}
                     </div>
 
                     {/* XLR8 Realtime CDP Column */}
-                    <div className="p-6 space-y-3 bg-emerald-50/20 flex flex-col justify-between">
+                    <div className="p-6 space-y-3 bg-blue-50/20 flex flex-col justify-between">
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-emerald-700 flex items-center space-x-1.5">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs font-bold text-[#0D66D0] flex items-center space-x-1.5">
+                            <CheckCircle2 className="w-4 h-4 text-[#0D66D0]" />
                             <span>XLR8 Realtime CDP</span>
                           </span>
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200">
+                          <span className="text-[10px] font-bold text-[#0D66D0] bg-blue-100/80 px-2 py-0.5 rounded-full border border-blue-200">
                             {item.xlr8CDP.badge}
                           </span>
                         </div>
-                        <h4 className="text-sm font-bold text-emerald-900">{item.xlr8CDP.title}</h4>
+                        <h4 className="text-sm font-bold text-[#0A3D82]">{item.xlr8CDP.title}</h4>
                         <p className="text-xs text-slate-700 leading-relaxed">
                           {item.xlr8CDP.details}
                         </p>
                       </div>
 
-                      <div className="pt-3 border-t border-emerald-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="text-xs text-emerald-800 font-medium flex items-center space-x-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                      <div className="pt-3 border-t border-blue-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="text-xs text-[#0A3D82] font-medium flex items-center space-x-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
                           <span>{item.xlr8CDP.advantageKey}</span>
                         </div>
 
@@ -1204,13 +1204,13 @@ export const WhyChooseExcelR8View: React.FC = () => {
                           )}
                         </td>
 
-                        <td className="py-4 px-4 align-top space-y-1 bg-emerald-50/30">
-                          <strong className="text-emerald-800 block text-xs flex items-center space-x-1">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <td className="py-4 px-4 align-top space-y-1 bg-blue-50/30">
+                          <strong className="text-[#0A3D82] block text-xs flex items-center space-x-1">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#0D66D0] shrink-0" />
                             <span>{row.xlr8CDP.title}</span>
                           </strong>
                           <p className="text-[11px] text-slate-700 leading-relaxed">{row.xlr8CDP.details}</p>
-                          <span className="text-[10px] text-emerald-700 font-semibold block pt-1">
+                          <span className="text-[10px] text-[#0D66D0] font-semibold block pt-1">
                             {row.xlr8CDP.advantageKey}
                           </span>
                         </td>
@@ -1236,17 +1236,17 @@ export const WhyChooseExcelR8View: React.FC = () => {
         </div>
 
         {/* 4. EXECUTIVE RFP & PROCUREMENT DOSSIER BUILDER */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white border-b border-[#0E4DA4] px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-2xl bg-white/15 border border-white/25 text-white flex items-center justify-center font-bold shrink-0">
                 <Bookmark className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-slate-900">
+                <h2 className="text-base font-bold text-white">
                   Executive RFP & Vendor Selection Dossier
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Pre-compiled technical rationale tailored for C-suite, architecture boards, and procurement teams.
                 </p>
               </div>
@@ -1254,17 +1254,18 @@ export const WhyChooseExcelR8View: React.FC = () => {
 
             <button
               onClick={handleCopySummary}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 cursor-pointer shadow-xs ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 cursor-pointer shadow-xs shrink-0 ${
                 copiedSummary
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
-                  : 'bg-slate-900 hover:bg-slate-800 text-white'
+                  ? 'bg-[#EBF3FC] text-[#0D66D0] border border-[#BFDBFE]'
+                  : 'bg-white hover:bg-[#F2F4F7] text-[#0D66D0]'
               }`}
             >
-              {copiedSummary ? <CheckCheck className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              {copiedSummary ? <CheckCheck className="w-4 h-4 text-[#0D66D0]" /> : <Copy className="w-4 h-4" />}
               <span>{copiedSummary ? 'Copied to Clipboard!' : 'Copy Dossier Markdown'}</span>
             </button>
           </div>
 
+          <div className="p-6 sm:p-8 space-y-5">
           {/* Quick Preset Selector Buttons */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             <span className="text-xs font-semibold text-slate-500 shrink-0">Dossier Presets:</span>
@@ -1298,12 +1299,13 @@ export const WhyChooseExcelR8View: React.FC = () => {
               placeholder="Edit procurement notes or rationale here..."
             />
           </div>
+          </div>
         </div>
 
         {/* 5. FOOTER ASSURANCE */}
         <div className="p-6 bg-slate-900 rounded-3xl text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <ShieldCheck className="w-6 h-6 text-emerald-400 shrink-0" />
+            <ShieldCheck className="w-6 h-6 text-sky-400 shrink-0" />
             <div>
               <span className="text-sm font-bold text-white block">Certified Specification Parity</span>
               <span className="text-xs text-slate-400">

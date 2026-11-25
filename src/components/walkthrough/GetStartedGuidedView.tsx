@@ -12,16 +12,18 @@ import {
   CheckCircle2,
   Lock,
   ArrowRight,
-  ChevronDown,
-  ChevronUp,
+  ArrowLeft,
   RotateCcw,
   Award,
-  Check
+  Check,
+  ChevronDown,
+  BookOpen
 } from 'lucide-react';
 
 interface GuidedStepDefinition {
   stepNumber: 1 | 2 | 3 | 4 | 5 | 6;
   shortLabel: string;
+  overviewSummary: string;
   title: string;
   domain: string;
   icon: React.ReactNode;
@@ -47,6 +49,10 @@ const STORAGE_COMPLETED_KEY = 'xlr8_guided_completed_steps';
 export const GetStartedGuidedView: React.FC = () => {
   const {
     setActiveTab,
+    guidedReturnStep,
+    guidedOpenMode,
+    setGuidedOpenMode,
+    launchGuidedStepAction,
     schemas = [],
     datasets = [],
     ingestionSources = [],
@@ -72,7 +78,30 @@ export const GetStartedGuidedView: React.FC = () => {
     return [];
   });
 
-  const [expandedReviewedSteps, setExpandedReviewedSteps] = useState<number[]>([]);
+  const totalSteps = 6;
+  const currentActiveStep: number = [1, 2, 3, 4, 5, 6].find(n => !completedSteps.includes(n)) ?? 6;
+  const allCompleted = completedSteps.length >= totalSteps;
+
+  const [viewMode, setViewMode] = useState<'overview' | 'step'>(guidedOpenMode);
+  const [viewedStep, setViewedStep] = useState<number>(
+    guidedOpenMode === 'step' && guidedReturnStep ? guidedReturnStep : currentActiveStep
+  );
+  const [readMoreOpen, setReadMoreOpen] = useState(false);
+  const [beginnersOpen, setBeginnersOpen] = useState(false);
+  const [whyCdpOpen, setWhyCdpOpen] = useState(false);
+
+  useEffect(() => {
+    setViewMode(guidedOpenMode);
+    if (guidedOpenMode === 'step' && guidedReturnStep) {
+      setViewedStep(guidedReturnStep);
+    }
+  }, [guidedOpenMode, guidedReturnStep]);
+
+  useEffect(() => {
+    setReadMoreOpen(false);
+    setBeginnersOpen(false);
+    setWhyCdpOpen(false);
+  }, [viewedStep]);
 
   useEffect(() => {
     try {
@@ -82,21 +111,28 @@ export const GetStartedGuidedView: React.FC = () => {
     }
   }, [completedSteps]);
 
-  const totalSteps = 6;
-  const currentActiveStep: number = [1, 2, 3, 4, 5, 6].find(n => !completedSteps.includes(n)) ?? 7;
-  const allCompleted = completedSteps.length >= totalSteps;
+  const handleProceedToFlow = (targetStep?: number) => {
+    const nextStep = targetStep ?? (allCompleted ? 1 : currentActiveStep);
+    setViewedStep(nextStep);
+    setGuidedOpenMode('step');
+    setViewMode('step');
+  };
 
   const handleCompleteStep = (stepNumber: number) => {
     setCompletedSteps(prev => {
       if (prev.includes(stepNumber)) return prev;
       return [...prev, stepNumber].sort((a, b) => a - b);
     });
-    setExpandedReviewedSteps(prev => prev.filter(n => n !== stepNumber));
+    if (stepNumber < totalSteps) {
+      setViewedStep(stepNumber + 1);
+    }
   };
 
   const handleResetTrack = () => {
     setCompletedSteps([]);
-    setExpandedReviewedSteps([]);
+    setViewedStep(1);
+    setGuidedOpenMode('overview');
+    setViewMode('overview');
     try {
       localStorage.removeItem(STORAGE_COMPLETED_KEY);
     } catch (e) {
@@ -104,22 +140,17 @@ export const GetStartedGuidedView: React.FC = () => {
     }
   };
 
-  const toggleReviewStep = (stepNumber: number) => {
-    setExpandedReviewedSteps(prev =>
-      prev.includes(stepNumber) ? prev.filter(n => n !== stepNumber) : [...prev, stepNumber]
-    );
-  };
-
   const connectedDestinationsCount = (destinations || []).filter(
-    d => d.status === 'Connected' || (d.activeAudienceIds && d.activeAudienceIds.length > 0)
+    d => d.status === 'Connected' || Boolean(d.configuredAudienceId) || (d.activeAudienceCount ?? 0) > 0
   ).length;
-  const labeledDatasetsCount = (datasets || []).filter(d => d.duleLabels && d.duleLabels.length > 0).length;
-  const totalDuleLabelCount = (datasets || []).reduce((acc, d) => acc + (d.duleLabels?.length || 0), 0);
+  const labeledDatasetsCount = (datasets || []).filter(d => d.labels && d.labels.length > 0).length;
+  const totalDuleLabelCount = (datasets || []).reduce((acc, d) => acc + (d.labels?.length || 0), 0);
 
   const steps: GuidedStepDefinition[] = [
     {
       stepNumber: 1,
       shortLabel: 'XDM Schemas',
+      overviewSummary: 'Define a standardized data blueprint for customer traits and behavioral events before any records enter.',
       title: 'Create Your Data Blueprint (Schemas - XDM)',
       domain: 'Step 1 · Data Blueprint',
       icon: <Layers className="w-5 h-5" />,
@@ -155,6 +186,7 @@ export const GetStartedGuidedView: React.FC = () => {
     {
       stepNumber: 2,
       shortLabel: 'Datasets & DULE',
+      overviewSummary: 'Bind datasets to your schema, tag DULE privacy labels (C/I/S/R), and upload or stream customer records.',
       title: 'Create Datasets, Apply DULE Labels & Ingest Data',
       domain: 'Step 2 · Ingestion & Governance Labeling',
       icon: <Database className="w-5 h-5" />,
@@ -183,7 +215,7 @@ export const GetStartedGuidedView: React.FC = () => {
         { label: 'Configure DULE Policies', tab: 'governance' },
         { label: 'Explore Inbound Sources', tab: 'sources' }
       ],
-      workspaceCountLabel: 'Datasets & Labels',
+      workspaceCountLabel: 'Datasets & Sources',
       workspaceCount: datasets.length + ingestionSources.length,
       workspaceReadyText:
         `${datasets.length} dataset(s) (${labeledDatasetsCount} labeled · ${totalDuleLabelCount} DULE labels) · ${ingestionSources.length} source(s).`
@@ -191,6 +223,7 @@ export const GetStartedGuidedView: React.FC = () => {
     {
       stepNumber: 3,
       shortLabel: 'Identity Graph',
+      overviewSummary: 'Link anonymous cookies, emails, phones, and CRM IDs together into one stitched customer identity.',
       title: 'Stitch Cross-Channel IDs (Identity Graph)',
       domain: 'Step 3 · Identity Resolution',
       icon: <GitMerge className="w-5 h-5" />,
@@ -221,6 +254,7 @@ export const GetStartedGuidedView: React.FC = () => {
     {
       stepNumber: 4,
       shortLabel: 'Customer 360',
+      overviewSummary: 'Inspect unified customer records combining attributes, lifetime spend, event timelines, and consent flags.',
       title: 'Inspect Unified Customer 360 Profiles & Consent',
       domain: 'Step 4 · Unified Customers & Consent Check',
       icon: <Users className="w-5 h-5" />,
@@ -250,6 +284,7 @@ export const GetStartedGuidedView: React.FC = () => {
     {
       stepNumber: 5,
       shortLabel: 'Audience Segments',
+      overviewSummary: 'Group unified profiles into real-time segments using behavioral rules, attributes, and DULE consent gates.',
       title: 'Build Dynamic Audience Segments',
       domain: 'Step 5 · Audience Segmentation',
       icon: <Sliders className="w-5 h-5" />,
@@ -284,11 +319,12 @@ export const GetStartedGuidedView: React.FC = () => {
     {
       stepNumber: 6,
       shortLabel: 'Activate Destinations',
+      overviewSummary: 'Connect ad networks, email tools, or cloud storage and push DULE-cleared audiences to live destinations.',
       title: 'Activate Audiences to Outbound Destinations',
       domain: 'Step 6 · Final Activation',
       icon: <Send className="w-5 h-5" />,
       beginnerExplanation:
-        'Activation is the final step where your CDP delivers real business value. Connect an outbound Destination—such as Braze, Meta Custom Audiences, Google Ads, Snowflake, Amazon S3, or a Webhook—and stream your DULE-cleared segment directly to it.',
+        'Activation is the final step where your CDP delivers real business value. Connect an outbound Destination—such as Google Ads, Meta Custom Audiences, Braze, Snowflake, Amazon S3, or a Webhook—and stream your DULE-cleared segment directly to it.',
       howCdpUsesIt:
         'As customers qualify for your segment in real time, the CDP automatically syndicates permitted identifiers to your marketing tools while blocking any policy-restricted users.',
       whatToSelect: [
@@ -315,13 +351,17 @@ export const GetStartedGuidedView: React.FC = () => {
     }
   ];
 
+  const activeStepDef = steps.find(s => s.stepNumber === viewedStep) || steps[0];
+  const isViewedCompleted = completedSteps.includes(activeStepDef.stepNumber);
+  const nextPendingStepDef = steps.find(s => s.stepNumber === currentActiveStep) || steps[0];
+
   return (
-    <div className="p-4 sm:p-6 space-y-6 max-w-5xl mx-auto overflow-y-auto h-full text-[#1E2229]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto overflow-y-auto h-full text-[#1E2229]">
       {/* Top Blue Gradient Header */}
       <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] shadow-sm p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start space-x-3.5 min-w-0">
           <PageBackButton fallbackTab="home" fallbackLabel="Home" className="mt-0.5 shrink-0" />
-          <div className="w-10 h-10 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0">
             <Compass className="w-5 h-5" />
           </div>
           <div className="min-w-0">
@@ -355,319 +395,437 @@ export const GetStartedGuidedView: React.FC = () => {
         </div>
       </div>
 
-      {/* Beginner End-to-End Architecture Overview */}
-      <div className="bg-white rounded-xl border border-[#E1E5EA] p-5 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="text-sm font-bold text-[#1E2229]">
-              How a Real-Time CDP Works (Big Picture)
-            </h2>
-            <p className="text-xs text-[#475569] mt-0.5">
-              Each step builds on the previous stage. Complete Step 1 first to unlock Step 2, ending with Destination Activation in Step {totalSteps}.
-            </p>
-          </div>
-          <span className="text-xs font-mono font-semibold text-[#0D66D0] tabular-nums shrink-0">
-            Active: {allCompleted ? `All ${totalSteps} Complete` : `Step ${currentActiveStep} of ${totalSteps}`}
-          </span>
-        </div>
-
-        {/* 6-Stage Visual Chain */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-1">
-          {steps.map((s) => {
-            const isDone = completedSteps.includes(s.stepNumber);
-            const isCurrent = s.stepNumber === currentActiveStep;
-            return (
-              <div
-                key={s.stepNumber}
-                className={`px-3 py-2.5 rounded-lg border text-xs transition-colors ${
-                  isDone
-                    ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#0E7A36]'
-                    : isCurrent
-                    ? 'bg-[#EBF3FC] border-[#1473E6] text-[#0D66D0]'
-                    : 'bg-[#F3F4F6] border-[#E1E5EA] text-[#64748B] opacity-70'
-                }`}
-              >
-                <div className="flex items-center justify-between font-mono text-[11px] font-bold">
-                  <span>Step 0{s.stepNumber}</span>
-                  {isDone ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#0E7A36]" />
-                  ) : !isCurrent ? (
-                    <Lock className="w-3 h-3 text-[#64748B]" />
-                  ) : null}
-                </div>
-                <p className="font-semibold mt-1 truncate" title={s.shortLabel}>
-                  {s.shortLabel}
+      {/* ==================== PHASE 1: LANDING FIRST SECTION ONLY ==================== */}
+      {viewMode === 'overview' && (
+        <div className="space-y-6">
+          <section className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h2 className="text-base font-bold text-white">
+                  How a Real-Time CDP Works
+                </h2>
+                <p className="text-xs sm:text-sm text-blue-100 mt-0.5">
+                  Start with Step 1 and progress one stage at a time. Each step unlocks automatically after you complete the previous one.
                 </p>
               </div>
-            );
-          })}
-        </div>
-      </div>
+              <span className="text-xs font-mono font-semibold text-white bg-white/15 border border-white/25 px-3 py-1 rounded-md tabular-nums whitespace-nowrap shrink-0 self-start sm:self-center">
+                {allCompleted ? `All ${totalSteps} Steps Completed` : `Next Up: Step ${currentActiveStep} of ${totalSteps}`}
+              </span>
+            </div>
 
-      {/* Sequential Vertical Track (One Step Per Section) */}
-      <div className="space-y-4">
-        {steps.map((step) => {
-          const isCompleted = completedSteps.includes(step.stepNumber);
-          const isCurrent = step.stepNumber === currentActiveStep;
-          const isLocked = step.stepNumber > currentActiveStep;
-          const isReviewExpanded = expandedReviewedSteps.includes(step.stepNumber);
+            <div className="p-6">
 
-          /* LOCKED / GREYED OUT STEP */
-          if (isLocked) {
-            return (
-              <section
-                key={step.stepNumber}
-                aria-disabled="true"
-                className="bg-[#F1F3F6] rounded-xl border border-[#D8DEE6] p-5 opacity-60 select-none transition-opacity"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-start space-x-3.5">
-                    <div className="w-9 h-9 rounded-lg bg-[#E2E8F0] border border-[#CBD5E1] text-[#64748B] flex items-center justify-center font-mono text-sm font-bold shrink-0">
-                      {step.stepNumber}
-                    </div>
-                    <div>
-                      <div className="text-xs font-medium text-[#64748B]">
-                        {step.domain} · Locked
+            {/* 6 Vertically Elongated Cards Stacked in a Single Horizontal Line */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 items-stretch">
+              {steps.map((s) => {
+                const isDone = completedSteps.includes(s.stepNumber);
+                const isCurrent = !allCompleted && s.stepNumber === currentActiveStep;
+                const isUnlocked = isDone || isCurrent;
+
+                return (
+                  <button
+                    key={s.stepNumber}
+                    type="button"
+                    disabled={!isUnlocked}
+                    onClick={() => isUnlocked && handleProceedToFlow(s.stepNumber)}
+                    aria-disabled={!isUnlocked}
+                    className={`text-left p-4 rounded-xl border min-h-[270px] flex flex-col justify-between transition-all ${
+                      isDone
+                        ? 'bg-[#F5FAFF] border-[#7DD3FC] hover:border-[#0284C7] cursor-pointer shadow-2xs'
+                        : isCurrent
+                        ? 'bg-[#F5F9FF] border-[#1473E6] hover:bg-[#EBF3FC] cursor-pointer shadow-xs'
+                        : 'bg-[#F8FAFC] border-[#E2E8F0] opacity-70 cursor-not-allowed'
+                    }`}
+                  >
+                    <div className="space-y-3.5">
+                      {/* Top Step Indicator & Status */}
+                      <div className="flex items-center justify-between gap-1 text-[11px] font-mono font-semibold tabular-nums">
+                        <span
+                          className={
+                            isDone
+                              ? 'text-[#0284C7]'
+                              : isCurrent
+                              ? 'text-[#0D66D0]'
+                              : 'text-[#64748B]'
+                          }
+                        >
+                          Step 0{s.stepNumber}
+                        </span>
+                        {isDone ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
+                        ) : isCurrent ? (
+                          <span className="text-[#0D66D0] font-sans text-[11px]">Ready</span>
+                        ) : (
+                          <Lock className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
+                        )}
                       </div>
-                      <h3 className="text-sm font-bold text-[#475569] mt-0.5">
-                        {step.title}
-                      </h3>
-                      <p className="text-xs text-[#64748B] mt-1">
-                        Complete Step {step.stepNumber - 1} first to unlock this section.
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#E2E8F0] text-[#475569] text-xs font-semibold shrink-0 self-start sm:self-center">
-                    <Lock className="w-3.5 h-3.5" />
-                    <span>Locked</span>
-                  </div>
-                </div>
-              </section>
-            );
-          }
-
-          /* COMPLETED STEP (Compact Header + Optional Review Toggle) */
-          if (isCompleted && !isReviewExpanded) {
-            return (
-              <section
-                key={step.stepNumber}
-                className="bg-[#F8FAFC] rounded-xl border border-[#BBF7D0] p-5 transition-colors"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center space-x-3.5 min-w-0">
-                    <div className="w-9 h-9 rounded-lg bg-[#DEFBE6] border border-[#86EFAC] text-[#0E7A36] flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-semibold text-[#0E7A36]">
-                        Step {step.stepNumber} Completed · {step.workspaceCountLabel}: <span className="font-mono tabular-nums">{step.workspaceCount}</span>
+                      {/* Icon Container */}
+                      <div
+                        className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+                          isDone
+                            ? 'bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white shadow-2xs'
+                            : isCurrent
+                            ? 'bg-gradient-to-br from-[#1473E6] to-[#0A3D82] text-white shadow-2xs'
+                            : 'bg-[#E2E8F0] text-[#64748B]'
+                        }`}
+                      >
+                        {s.icon}
                       </div>
-                      <h3 className="text-sm font-bold text-[#1E2229] truncate mt-0.5">
-                        {step.title}
-                      </h3>
+
+                      {/* Title + Beginner Summary */}
+                      <div>
+                        <h3
+                          className={`text-[13px] font-bold leading-snug ${
+                            isUnlocked ? 'text-[#1E2229]' : 'text-[#475569]'
+                          }`}
+                        >
+                          {s.shortLabel}
+                        </h3>
+                        <p
+                          className={`text-[11px] mt-1.5 leading-relaxed ${
+                            isUnlocked ? 'text-[#475569]' : 'text-[#64748B]'
+                          }`}
+                        >
+                          {s.overviewSummary}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab(step.actions[0].tab)}
-                      className="px-3 py-1.5 rounded-lg bg-white hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#1E2229] text-xs font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer"
-                    >
-                      Open Module
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleReviewStep(step.stepNumber)}
-                      className="px-3 py-1.5 rounded-lg bg-white hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#475569] text-xs font-medium inline-flex items-center space-x-1 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
-                    >
-                      <span>Review</span>
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </section>
-            );
-          }
+                    {/* Bottom Metadata Footer */}
+                    <div className="pt-3 mt-4 border-t border-[#E1E5EA]/80 space-y-1 text-[11px]">
+                      <div className="text-[#596780] font-medium tabular-nums">
+                        {s.workspaceCountLabel}: <strong className="font-mono text-[#1E2229]">{s.workspaceCount}</strong>
+                      </div>
+                      <div
+                        className={`font-semibold inline-flex items-center space-x-1 ${
+                          isDone
+                            ? 'text-[#0284C7]'
+                            : isCurrent
+                            ? 'text-[#1473E6]'
+                            : 'text-[#64748B]'
+                        }`}
+                      >
+                        <span>{isDone ? 'Review step' : isCurrent ? 'Start here' : `After Step ${s.stepNumber - 1}`}</span>
+                        {isUnlocked && <ArrowRight className="w-3 h-3" />}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            </div>
+          </section>
 
-          /* CURRENT ACTIVE STEP (or Completed Step Expanded for Review) */
-          return (
-            <section
-              key={step.stepNumber}
-              className={`bg-white rounded-xl border shadow-sm overflow-hidden ${
-                isCurrent ? 'border-[#1473E6]' : 'border-[#86EFAC]'
-              }`}
+          {/* Center-Aligned Proceed Button Outside the Container */}
+          <div className="flex flex-col items-center justify-center gap-2 pt-1 pb-2">
+            <button
+              type="button"
+              onClick={() => handleProceedToFlow()}
+              className="px-8 py-2.5 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-sm font-semibold inline-flex items-center justify-center space-x-2 shadow-sm transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
-              {/* Blue Gradient Step Header */}
-              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center space-x-3.5 min-w-0">
-                  <div className="w-9 h-9 rounded-lg bg-white text-[#0D66D0] flex items-center justify-center font-mono text-sm font-bold shrink-0">
-                    {isCompleted ? <Check className="w-5 h-5 text-[#0E7A36]" /> : step.stepNumber}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs text-blue-100 font-medium">
-                      {step.domain} · {isCompleted ? 'Completed' : 'Active Step'}
-                    </div>
-                    <h3 className="text-base font-bold text-white mt-0.5">
-                      {step.title}
-                    </h3>
-                  </div>
-                </div>
+              <span>Proceed</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="text-xs text-[#596780] text-center">
+              {allCompleted
+                ? 'All 6 steps completed — click Proceed to review any stage.'
+                : `Next: Step ${nextPendingStepDef.stepNumber} — ${nextPendingStepDef.shortLabel}`}
+            </p>
+          </div>
+        </div>
+      )}
 
-                <div className="flex items-center space-x-3 shrink-0">
-                  <span className="text-xs font-mono font-semibold text-white bg-white/15 border border-white/25 px-3 py-1 rounded-lg tabular-nums">
-                    {step.workspaceCountLabel}: {step.workspaceCount}
-                  </span>
-                  {isCompleted && (
-                    <button
-                      type="button"
-                      onClick={() => toggleReviewStep(step.stepNumber)}
-                      className="px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-medium inline-flex items-center space-x-1 cursor-pointer"
-                    >
-                      <span>Collapse</span>
-                      <ChevronUp className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+      {/* ==================== PHASE 2: ONE-STEP-AT-A-TIME MULTI-STEP FLOW ==================== */}
+      {viewMode === 'step' && (
+        <div className="space-y-5">
+          {/* Compact Stepper Bar with Return to Big Picture */}
+          <div className="bg-white rounded-xl border border-[#E1E5EA] p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setGuidedOpenMode('overview');
+                setViewMode('overview');
+              }}
+              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#0D66D0] hover:underline whitespace-nowrap shrink-0 cursor-pointer self-start lg:self-center"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>All 6 Steps Overview</span>
+            </button>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+              {steps.map((s) => {
+                const isDone = completedSteps.includes(s.stepNumber);
+                const isViewing = s.stepNumber === viewedStep;
+                const isUnlocked = isDone || s.stepNumber === currentActiveStep;
+
+                return (
+                  <button
+                    key={s.stepNumber}
+                    type="button"
+                    disabled={!isUnlocked}
+                    onClick={() => isUnlocked && setViewedStep(s.stepNumber)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 border transition-colors ${
+                      isViewing
+                        ? 'bg-[#1473E6] text-white border-[#1473E6]'
+                        : isDone
+                        ? 'bg-[#E0F2FE] text-[#0369A1] border-[#7DD3FC] hover:bg-[#BAE6FD] cursor-pointer'
+                        : isUnlocked
+                        ? 'bg-[#EBF3FC] text-[#0D66D0] border-[#BFDBFE] cursor-pointer'
+                        : 'bg-[#F8FAFC] text-[#94A3B8] border-[#E2E8F0] cursor-not-allowed'
+                    }`}
+                  >
+                    {isDone && !isViewing ? (
+                      <Check className="w-3.5 h-3.5 shrink-0" />
+                    ) : !isUnlocked ? (
+                      <Lock className="w-3 h-3 shrink-0" />
+                    ) : null}
+                    <span className="font-mono">Step {s.stepNumber}:</span>
+                    <span>{s.shortLabel}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Active Single Step Card */}
+          <section className="bg-white rounded-xl border border-[#1473E6]/35 shadow-sm overflow-hidden">
+            {/* Blue Gradient Step Header */}
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center space-x-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-white text-[#0D66D0] flex items-center justify-center shrink-0 shadow-2xs">
+                  {isViewedCompleted ? <CheckCircle2 className="w-5 h-5 text-[#0284C7]" /> : activeStepDef.icon}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs text-blue-100 font-medium">
+                    {activeStepDef.domain} · {isViewedCompleted ? 'Completed' : `Step ${activeStepDef.stepNumber} of ${totalSteps}`}
+                  </div>
+                  <h2 className="text-base font-bold text-white mt-0.5">
+                    {activeStepDef.title}
+                  </h2>
                 </div>
               </div>
 
-              {/* Active Step Body */}
-              <div className="p-5 sm:p-6 space-y-5">
-                {/* Beginner Concept Explanation */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="space-y-1.5">
-                    <h4 className="text-xs font-bold text-[#1E2229] uppercase tracking-wide">
-                      What This Means (For Beginners)
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#334155] leading-relaxed">
-                      {step.beginnerExplanation}
-                    </p>
-                  </div>
+              <span className="text-xs font-mono font-semibold text-white bg-white/15 border border-white/25 px-3 py-1 rounded-lg tabular-nums whitespace-nowrap shrink-0 self-start sm:self-center">
+                {activeStepDef.workspaceCountLabel}: {activeStepDef.workspaceCount}
+              </span>
+            </div>
 
-                  <div className="space-y-1.5">
-                    <h4 className="text-xs font-bold text-[#1E2229] uppercase tracking-wide">
-                      Why Real-Time CDP Needs This
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#334155] leading-relaxed">
-                      {step.howCdpUsesIt}
-                    </p>
-                    <p className="text-xs font-medium text-[#0D66D0] pt-1">
-                      {step.workspaceReadyText}
-                    </p>
-                  </div>
+            {/* Active Step Body */}
+            <div className="p-6 space-y-5">
+              {/* Concrete Action Checklist */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wide">
+                  What You Should Do &amp; Select in This Step
+                </h3>
+
+                <div className="space-y-2.5">
+                  {activeStepDef.whatToSelect.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start space-x-3 p-3.5 rounded-lg bg-[#F8FAFC] border border-[#E1E5EA]"
+                    >
+                      <span className="px-2 py-0.5 rounded-md bg-[#EBF3FC] border border-[#BFDBFE]/70 text-[#0D66D0] font-mono text-[11px] font-bold flex items-center justify-center whitespace-nowrap shrink-0 mt-0.5">
+                        Step {idx + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold text-[#1E2229]">{item.label}</p>
+                        <p className="text-xs text-[#475569] mt-0.5 leading-relaxed">{item.detail}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="border-t border-[#E1E5EA]" />
-
-                {/* Concrete Action Checklist: What to Select & Do */}
-                <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-[#1E2229] uppercase tracking-wide">
-                    What You Should Do &amp; Select in This Step
-                  </h4>
-
-                  <div className="space-y-2.5">
-                    {step.whatToSelect.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start space-x-3 p-3 rounded-lg bg-[#F8FAFC] border border-[#E1E5EA]"
-                      >
-                        <span className="w-5 h-5 rounded-md bg-[#EBF3FC] text-[#0D66D0] font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                          {idx + 1}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-[#1E2229]">
-                            {item.label}
-                          </p>
-                          <p className="text-xs text-[#475569] mt-0.5 leading-relaxed">
-                            {item.detail}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                {activeStepDef.extraGuidanceNote && (
+                  <div className="p-3.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-xs text-[#78350F] leading-relaxed">
+                    <strong className="font-bold">Privacy Selection Tip: </strong>
+                    {activeStepDef.extraGuidanceNote}
                   </div>
+                )}
+              </div>
 
-                  {step.extraGuidanceNote && (
-                    <div className="p-3.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-xs text-[#78350F] leading-relaxed">
-                      <strong className="font-bold">Privacy Selection Tip: </strong>
-                      {step.extraGuidanceNote}
-                    </div>
+              {/* Center-Aligned Step Action Button(s) */}
+              <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                {activeStepDef.actions.map((act) => (
+                  <button
+                    key={act.tab}
+                    type="button"
+                    onClick={() => launchGuidedStepAction(activeStepDef.stepNumber, act.tab)}
+                    className={`px-4 py-2.5 rounded-lg text-xs font-semibold inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+                      act.primary
+                        ? 'bg-[#EBF3FC] hover:bg-[#DCEAF9] text-[#0D66D0] border border-[#BFDBFE] shadow-2xs'
+                        : 'bg-white hover:bg-[#F2F4F7] text-[#1E2229] border border-[#D5D5D5]'
+                    }`}
+                  >
+                    <span>{act.label}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                ))}
+              </div>
+
+              {/* Footer: Sequential Step Controls */}
+              <div className="pt-4 border-t border-[#E1E5EA] flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  {activeStepDef.stepNumber > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setViewedStep(activeStepDef.stepNumber - 1)}
+                      className="px-3.5 py-2 rounded-lg bg-white hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#1E2229] text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap shrink-0 cursor-pointer transition-colors"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Previous Step</span>
+                    </button>
                   )}
                 </div>
 
-                {/* Action Footer: Try in Module + Complete Step */}
-                <div className="pt-4 border-t border-[#E1E5EA] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {step.actions.map((act) => (
-                      <button
-                        key={act.tab}
-                        type="button"
-                        onClick={() => setActiveTab(act.tab)}
-                        className={`px-3.5 py-2 rounded-lg text-xs font-semibold inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
-                          act.primary
-                            ? 'bg-[#EBF3FC] hover:bg-[#DCEAF9] text-[#0D66D0] border border-[#BFDBFE]'
-                            : 'bg-white hover:bg-[#F2F4F7] text-[#1E2229] border border-[#D5D5D5]'
-                        }`}
-                      >
-                        <span>{act.label}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    ))}
-                  </div>
-
-                  {!isCompleted && (
+                <div className="flex items-center space-x-2 shrink-0 ml-auto">
+                  {!isViewedCompleted ? (
                     <button
                       type="button"
-                      onClick={() => handleCompleteStep(step.stepNumber)}
+                      onClick={() => handleCompleteStep(activeStepDef.stepNumber)}
                       className="px-4 py-2 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold inline-flex items-center justify-center space-x-1.5 whitespace-nowrap shrink-0 shadow-xs transition-colors cursor-pointer"
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       <span>
-                        {step.stepNumber < totalSteps
-                          ? `Complete Step ${step.stepNumber} & Unlock Step ${step.stepNumber + 1}`
+                        {activeStepDef.stepNumber < totalSteps
+                          ? `Complete Step ${activeStepDef.stepNumber} & Proceed to Step ${activeStepDef.stepNumber + 1}`
                           : `Complete Step ${totalSteps} & Finish Guide`}
                       </span>
                     </button>
-                  )}
+                  ) : activeStepDef.stepNumber < totalSteps &&
+                    (completedSteps.includes(activeStepDef.stepNumber) || activeStepDef.stepNumber < currentActiveStep) ? (
+                    <button
+                      type="button"
+                      onClick={() => setViewedStep(activeStepDef.stepNumber + 1)}
+                      className="px-4 py-2 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold inline-flex items-center space-x-1.5 whitespace-nowrap shrink-0 shadow-xs transition-colors cursor-pointer"
+                    >
+                      <span>Next: Step {activeStepDef.stepNumber + 1}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  ) : null}
                 </div>
               </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {/* All Steps Completed Summary */}
-      {allCompleted && (
-        <div className="bg-white rounded-xl border border-[#86EFAC] p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start space-x-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#DEFBE6] border border-[#86EFAC] text-[#0E7A36] flex items-center justify-center shrink-0">
-              <Award className="w-5 h-5" />
             </div>
-            <div>
-              <h3 className="text-base font-bold text-[#1E2229]">
-                Guided Onboarding Complete
-              </h3>
-              <p className="text-xs text-[#475569] mt-1 leading-relaxed max-w-2xl">
-                You have completed all {totalSteps} Real-Time CDP steps—from modeling XDM schemas and labeling datasets with DULE to stitching Identity Graphs, inspecting Customer 360 profiles, building segments, and activating to destinations.
-              </p>
-            </div>
-          </div>
+          </section>
 
-          <div className="flex items-center space-x-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => setActiveTab('dashboard')}
-              className="px-4 py-2 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-colors"
-            >
-              Go to Overview
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('destinations')}
-              className="px-4 py-2 rounded-lg bg-white hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#1E2229] text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-colors"
-            >
-              Destinations
-            </button>
+          {/* All Steps Completed Summary */}
+          {allCompleted && activeStepDef.stepNumber === totalSteps && (
+            <div className="bg-white rounded-xl border border-[#93C5FD] p-6 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start space-x-3.5">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0EA5E9] to-[#1473E6] text-white flex items-center justify-center shrink-0">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#1E2229]">
+                    Guided Onboarding Complete
+                  </h3>
+                  <p className="text-xs text-[#475569] mt-1 leading-relaxed max-w-2xl">
+                    You have completed all {totalSteps} Real-Time CDP steps—from modeling XDM schemas and labeling datasets with DULE to stitching Identity Graphs, inspecting Customer 360 profiles, building segments, and activating to destinations.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('dashboard')}
+                  className="px-4 py-2 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-colors"
+                >
+                  Go to Overview
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('destinations')}
+                  className="px-4 py-2 rounded-lg bg-white hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#1E2229] text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-colors"
+                >
+                  Destinations
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Main Pre-Collapsed "Read More" Accordion Positioned Outside Step Container Towards Bottom */}
+          <div className="pt-4 pb-2">
+            <div className="rounded-xl border border-[#E1E5EA] bg-white shadow-2xs overflow-hidden">
+              <button
+                type="button"
+                aria-expanded={readMoreOpen}
+                onClick={() => setReadMoreOpen(prev => !prev)}
+                className="w-full px-5 py-3.5 flex items-center justify-between gap-3 text-left hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+              >
+                <div className="flex items-center space-x-2.5 min-w-0">
+                  <BookOpen className="w-4 h-4 text-[#0D66D0] shrink-0" />
+                  <span className="text-xs font-bold text-[#1E2229]">Read More</span>
+                  <span className="text-[11px] text-[#64748B] truncate">
+                    Beginner guide &amp; why Real-Time CDP needs Step {activeStepDef.stepNumber}
+                  </span>
+                </div>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#475569] shrink-0 transition-transform duration-200 ${
+                    readMoreOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {readMoreOpen && (
+                <div className="p-4 bg-[#F8FAFC] border-t border-[#E1E5EA] space-y-2.5">
+                  {/* Sub-accordion 1: What This Means (For Beginners) */}
+                  <div className="rounded-lg border border-[#E1E5EA] bg-white overflow-hidden">
+                    <button
+                      type="button"
+                      aria-expanded={beginnersOpen}
+                      onClick={() => setBeginnersOpen(prev => !prev)}
+                      className="w-full px-4 py-3 flex items-center justify-between gap-2 text-left hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+                    >
+                      <span className="text-xs font-bold text-[#1E2229] uppercase tracking-wide">
+                        What This Means (For Beginners)
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-[#475569] shrink-0 transition-transform duration-200 ${
+                          beginnersOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    {beginnersOpen && (
+                      <div className="px-4 pb-3.5 pt-2.5 bg-white border-t border-[#E1E5EA]">
+                        <p className="text-xs sm:text-sm text-[#334155] leading-relaxed">
+                          {activeStepDef.beginnerExplanation}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Sub-accordion 2: Why Real-Time CDP Needs This */}
+                  <div className="rounded-lg border border-[#E1E5EA] bg-white overflow-hidden">
+                    <button
+                      type="button"
+                      aria-expanded={whyCdpOpen}
+                      onClick={() => setWhyCdpOpen(prev => !prev)}
+                      className="w-full px-4 py-3 flex items-center justify-between gap-2 text-left hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+                    >
+                      <span className="text-xs font-bold text-[#1E2229] uppercase tracking-wide">
+                        Why Real-Time CDP Needs This
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-[#475569] shrink-0 transition-transform duration-200 ${
+                          whyCdpOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    {whyCdpOpen && (
+                      <div className="px-4 pb-3.5 pt-2.5 bg-white border-t border-[#E1E5EA] space-y-1.5">
+                        <p className="text-xs sm:text-sm text-[#334155] leading-relaxed">
+                          {activeStepDef.howCdpUsesIt}
+                        </p>
+                        <p className="text-xs font-medium text-[#0D66D0]">
+                          {activeStepDef.workspaceReadyText}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

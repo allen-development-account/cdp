@@ -442,7 +442,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                   step === 1
                     ? 'bg-[#1473E6] text-white'
                     : step > 1
-                    ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#A2E8B4]'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]'
                     : 'bg-[#E1E5EA] text-[#596780]'
                 }`}
               >
@@ -468,7 +468,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                   step === 2
                     ? 'bg-[#1473E6] text-white'
                     : step > 2
-                    ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#A2E8B4]'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]'
                     : 'bg-[#E1E5EA] text-[#596780]'
                 }`}
               >
@@ -496,7 +496,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                   step === 3
                     ? 'bg-[#1473E6] text-white'
                     : step > 3
-                    ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#A2E8B4]'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]'
                     : 'bg-[#E1E5EA] text-[#596780]'
                 }`}
               >
@@ -608,7 +608,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                         <span className="text-[#8C9BAE] font-medium">Format: {option.defaultFormat}</span>
                         <div className="flex items-center gap-1 font-bold text-[#1473E6]">
                           {isSelected ? (
-                            <span className="flex items-center gap-1 text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.5 rounded border border-[#A2E8B4]">
+                            <span className="flex items-center gap-1 text-[#0D66D0] bg-[#EBF3FC] px-2 py-0.5 rounded border border-[#BFDBFE]">
                               <Check className="w-3 h-3 stroke-[3]" />
                               <span>Selected</span>
                             </span>
@@ -746,7 +746,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                     {uploadedFile && (
                       <div className="bg-[#F0F7FF] border border-[#B3D4FA] rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center space-x-2.5">
-                          <div className="w-8 h-8 rounded bg-[#107C41] flex items-center justify-center text-white shrink-0">
+                          <div className="w-8 h-8 rounded bg-gradient-to-br from-[#0EA5E9] to-[#1473E6] flex items-center justify-center text-white shrink-0">
                             <FileSpreadsheet className="w-4 h-4" />
                           </div>
                           <div>
@@ -778,7 +778,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                         <button
                           type="button"
                           onClick={() => loadPresetFile('loyalty_xlsx')}
-                          className="px-2.5 py-1 bg-white hover:bg-[#EBF3FC] text-[#107C41] border border-[#C5DCFA] rounded text-[11px] font-semibold transition-colors flex items-center gap-1.5 shadow-2xs"
+                          className="px-2.5 py-1 bg-white hover:bg-[#EBF3FC] text-[#0284C7] border border-[#C5DCFA] rounded text-[11px] font-semibold transition-colors flex items-center gap-1.5 shadow-2xs"
                         >
                           <FileSpreadsheet className="w-3 h-3" />
                           <span>Sample: loyalty_club_rewards_q3.xlsx (1,850 rows)</span>
@@ -786,7 +786,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                         <button
                           type="button"
                           onClick={() => loadPresetFile('inventory_xlsx')}
-                          className="px-2.5 py-1 bg-white hover:bg-[#EBF3FC] text-[#107C41] border border-[#C5DCFA] rounded text-[11px] font-semibold transition-colors flex items-center gap-1.5 shadow-2xs"
+                          className="px-2.5 py-1 bg-white hover:bg-[#EBF3FC] text-[#0284C7] border border-[#C5DCFA] rounded text-[11px] font-semibold transition-colors flex items-center gap-1.5 shadow-2xs"
                         >
                           <FileSpreadsheet className="w-3 h-3" />
                           <span>Sample: omnichannel_store_fulfillments.xlsx (940 rows)</span>
@@ -1224,7 +1224,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                   <button
                     type="button"
                     onClick={() => applyPreset(['C1', 'C4', 'I2'])}
-                    className="px-2.5 py-1 bg-white hover:bg-[#EEF2FF] border border-[#D0D7DE] rounded text-[11px] font-medium text-[#4F46E5] shadow-2xs transition-colors"
+                    className="px-2.5 py-1 bg-white hover:bg-[#EFF6FF] border border-[#D0D7DE] rounded text-[11px] font-medium text-[#1D4ED8] shadow-2xs transition-colors"
                   >
                     Web Clickstream (C1, C4, I2)
                   </button>
@@ -1238,21 +1238,21 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
                   <button
                     type="button"
                     onClick={() => applyPreset(['C4', 'C5', 'I2', 'S1'])}
-                    className="px-2.5 py-1 bg-white hover:bg-[#FFF1F2] border border-[#D0D7DE] rounded text-[11px] font-medium text-[#E11D48] shadow-2xs transition-colors"
+                    className="px-2.5 py-1 bg-white hover:bg-[#E0F2FE] border border-[#D0D7DE] rounded text-[11px] font-medium text-[#0284C7] shadow-2xs transition-colors"
                   >
                     Mobile Telemetry (C4, C5, I2, S1)
                   </button>
                   <button
                     type="button"
                     onClick={() => applyPreset(['I1', 'C1', 'C4', 'S3', 'S4'])}
-                    className="px-2.5 py-1 bg-white hover:bg-[#FFF1F2] border border-[#D0D7DE] rounded text-[11px] font-medium text-[#D7373F] shadow-2xs transition-colors"
+                    className="px-2.5 py-1 bg-white hover:bg-[#EBF3FC] border border-[#D0D7DE] rounded text-[11px] font-medium text-[#0A3D82] shadow-2xs transition-colors"
                   >
                     Strict Sensitive / HIPAA / PCI
                   </button>
                   <button
                     type="button"
                     onClick={() => applyPreset([])}
-                    className="px-2.5 py-1 text-[#8C9BAE] hover:text-[#D7373F] text-[11px]"
+                    className="px-2.5 py-1 text-[#8C9BAE] hover:text-[#0A3D82] text-[11px]"
                   >
                     Clear All
                   </button>
@@ -1459,7 +1459,7 @@ export const BringInDatasetModal: React.FC<BringInDatasetModalProps> = ({
             ) : (
               <button
                 type="submit"
-                className="px-5 py-2 text-xs font-bold text-white bg-[#0E7A36] hover:bg-[#0A5A27] rounded-lg shadow-xs transition-all flex items-center space-x-1.5"
+                className="px-5 py-2 text-xs font-bold text-white bg-gradient-to-r from-[#1473E6] to-[#0A3D82] hover:from-[#0D66D0] hover:to-[#072B5C] rounded-lg shadow-xs transition-all flex items-center space-x-1.5"
               >
                 <Check className="w-4 h-4 stroke-[2.5]" />
                 <span>Bring In Dataset & Complete Setup</span>

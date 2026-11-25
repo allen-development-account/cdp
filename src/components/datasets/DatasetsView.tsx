@@ -98,9 +98,9 @@ export const DatasetsView: React.FC = () => {
     switch (category) {
       case 'Contract':
         return {
-          badge: 'bg-[#EEF2FF] text-[#4F46E5] border-[#C7D2FE]',
-          actionBadge: 'bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]',
-          accent: 'text-[#4F46E5]'
+          badge: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]',
+          actionBadge: 'bg-[#EBF3FC] text-[#0A3D82] border-[#93C5FD]',
+          accent: 'text-[#1D4ED8]'
         };
       case 'Identity':
         return {
@@ -110,15 +110,15 @@ export const DatasetsView: React.FC = () => {
         };
       case 'Sensitive':
         return {
-          badge: 'bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]',
-          actionBadge: 'bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]',
-          accent: 'text-[#E11D48]'
+          badge: 'bg-[#EBF3FC] text-[#0A3D82] border-[#93C5FD]',
+          actionBadge: 'bg-[#EFF6FF] text-[#1E3A8A] border-[#93C5FD]',
+          accent: 'text-[#0A3D82]'
         };
       case 'Regulatory':
         return {
-          badge: 'bg-[#DEFBE6] text-[#0E7A36] border-[#B4F0C3]',
-          actionBadge: 'bg-[#DEFBE6] text-[#0E7A36] border-[#B4F0C3]',
-          accent: 'text-[#0E7A36]'
+          badge: 'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
+          actionBadge: 'bg-[#E0F2FE] text-[#0284C7] border-[#BAE6FD]',
+          accent: 'text-[#0284C7]'
         };
       default:
         return {
@@ -189,7 +189,7 @@ export const DatasetsView: React.FC = () => {
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-white/15 text-white border border-white/25 shadow-2xs">
                   XLR8 DATA MANAGEMENT
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40 shadow-2xs">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/15 text-sky-200 border border-sky-200/40 shadow-2xs">
                   Adobe RT-CDP DULE Compliant
                 </span>
               </div>
@@ -255,12 +255,12 @@ export const DatasetsView: React.FC = () => {
         <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E1E5EA] shadow-2xs">
           <div className="flex items-center justify-between text-xs text-[#596780] mb-1">
             <span className="font-semibold">DULE Labeled Datasets</span>
-            <ShieldCheck className="w-4 h-4 text-[#0E7A36]" />
+            <ShieldCheck className="w-4 h-4 text-[#0284C7]" />
           </div>
           <div className="text-2xl font-bold text-[#1E2229]">
             {labeledCount} <span className="text-xs font-normal text-[#596780]">/ {datasets.length}</span>
           </div>
-          <div className="text-[11px] text-[#0E7A36] font-medium mt-1">
+          <div className="text-[11px] text-[#0284C7] font-medium mt-1">
             100% policy-audited metadata
           </div>
         </div>
@@ -268,10 +268,10 @@ export const DatasetsView: React.FC = () => {
         <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E1E5EA] shadow-2xs">
           <div className="flex items-center justify-between text-xs text-[#596780] mb-1">
             <span className="font-semibold">Active Governance Labels</span>
-            <Tag className="w-4 h-4 text-[#4F46E5]" />
+            <Tag className="w-4 h-4 text-[#1D4ED8]" />
           </div>
           <div className="text-2xl font-bold text-[#1E2229]">{ALL_PRIVACY_LABELS.length}</div>
-          <div className="text-[11px] text-[#4F46E5] font-medium mt-1">
+          <div className="text-[11px] text-[#1D4ED8] font-medium mt-1">
             C-12, I-2, S-10, R-4 Taxonomy
           </div>
         </div>
@@ -516,7 +516,7 @@ export const DatasetsView: React.FC = () => {
                             deleteDataset(ds.id);
                           }
                         }}
-                        className="p-2 rounded-lg border border-[#D0D7DE] bg-white hover:bg-[#FFF1F2] hover:border-[#FECDD3] text-[#596780] hover:text-[#D7373F] transition-all"
+                        className="p-2 rounded-lg border border-[#D0D7DE] bg-white hover:bg-[#EFF6FF] hover:border-[#BFDBFE] text-[#0D66D0] hover:text-[#0A3D82] transition-all"
                         title="Delete Dataset"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -614,7 +614,7 @@ export const DatasetsView: React.FC = () => {
                                         const updated = ds.labels.filter(c => c !== lbl.code);
                                         updateDatasetLabels(ds.id, updated);
                                       }}
-                                      className="p-1 text-[#8C9BAE] hover:text-[#D7373F] rounded hover:bg-[#FFF1F2] transition-colors"
+                                      className="p-1 text-[#0D66D0] hover:text-[#0A3D82] rounded hover:bg-[#EFF6FF] transition-colors"
                                       title={`Remove label ${lbl.code} from dataset`}
                                     >
                                       <X className="w-3.5 h-3.5" />
@@ -668,15 +668,15 @@ export const DatasetsView: React.FC = () => {
         <div className="space-y-4">
           
           {/* Educational Intro Card */}
-          <div className="p-5 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs space-y-2">
+          <div className="p-5 bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] shadow-2xs space-y-2">
             <div className="flex items-center space-x-2">
-              <BookOpen className="w-5 h-5 text-[#1473E6]" />
-              <h2 className="text-base font-bold text-[#1E2229]">
+              <BookOpen className="w-5 h-5 text-white shrink-0" />
+              <h2 className="text-base font-bold text-white">
                 Adobe Real-Time CDP Data Usage Labeling Reference Guide & Taxonomy
               </h2>
             </div>
-            <p className="text-xs text-[#596780] leading-relaxed">
-              Adobe Real-Time CDP applies data governance through <strong>Data Usage Labeling and Enforcement (DULE)</strong>.
+            <p className="text-xs text-blue-100 leading-relaxed">
+              Adobe Real-Time CDP applies data governance through <strong className="text-white">Data Usage Labeling and Enforcement (DULE)</strong>.
               Labels are metadata tags applied directly to datasets and schema fields. When downstream marketing and analytics destinations
               attempt to export or process data, the XLR8 Governance Engine evaluates whether the labels violate contractual agreements,
               privacy consent policies, or global regulations (GDPR, CCPA, HIPAA, PCI).
@@ -878,17 +878,17 @@ export const DatasetsView: React.FC = () => {
 
       {/* TAB 3: DULE DOWNSTREAM ENFORCEMENT SIMULATOR */}
       {activeViewTab === 'simulator' && (
-        <div className="p-5 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs space-y-4">
-          <div>
-            <h2 className="text-base font-bold text-[#1E2229]">
+        <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 border-b border-[#0E4DA4]">
+            <h2 className="text-base font-bold text-white">
               Real-Time CDP DULE Activation Enforcement Matrix
             </h2>
-            <p className="text-xs text-[#596780] mt-0.5">
+            <p className="text-xs text-blue-100 mt-0.5">
               How Adobe RT-CDP data usage labels automatically guard against privacy violations across major marketing destinations.
             </p>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="p-5 overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead className="bg-[#F8FAFC] border-y border-[#E1E5EA] text-[#596780] font-bold">
                 <tr>

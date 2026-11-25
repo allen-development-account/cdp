@@ -146,21 +146,21 @@ export const DashboardView: React.FC = () => {
           change="GDPR / CCPA Protected"
           changeType="negative"
           subtitle="Ad Network Suppression Active"
-          icon={<ShieldCheck className="w-4 h-4 text-[#D7373F]" />}
+          icon={<ShieldCheck className="w-4 h-4 text-[#0A3D82]" />}
         />
       </div>
 
       {/* XLR8 GenStudio & Autonomous Copilot Hub (Pro mode) */}
       {uiMode === 'pro' && (
-        <div className="bg-[#FFFFFF] rounded-md border border-[#D0E2F9] p-4 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gradient-to-r from-[#F2F7FE] to-[#FFFFFF]">
+        <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-4 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start space-x-3">
-            <div className="w-9 h-9 rounded bg-[#EBF3FC] border border-[#B9D7F9] flex items-center justify-center text-[#1473E6] shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0">
               <Bot className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                <h3 className="text-xs font-bold text-[#2C2C2C] uppercase tracking-wide">XLR8 GenStudio & Autonomous Copilot</h3>
-                <span className="text-[10px] bg-[#EBF3FC] text-[#0D66D0] font-semibold px-2 py-0.5 rounded border border-[#D0E2F9]">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wide">XLR8 GenStudio & Autonomous Copilot</h3>
+                <span className="text-[10px] bg-white/15 text-white font-semibold px-2 py-0.5 rounded border border-white/25">
                   Natural Language SQL + Self-Healing
                 </span>
                 {activeAnomalies.length > 0 && (
@@ -170,7 +170,7 @@ export const DashboardView: React.FC = () => {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[#1E2229] mt-0.5">
+              <p className="text-xs text-blue-100 mt-0.5">
                 Query federated data lakehouse tables using natural language, calculate churn uplifts, and trigger automated policy remediations.
               </p>
             </div>
@@ -178,7 +178,7 @@ export const DashboardView: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('agentic_studio')}
-            className="bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold px-3.5 py-1.5 rounded shadow-2xs transition-all flex items-center space-x-1.5 shrink-0"
+            className="bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-2xs transition-all flex items-center space-x-1.5 shrink-0 whitespace-nowrap cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Open Sensei Studio</span>
@@ -190,10 +190,10 @@ export const DashboardView: React.FC = () => {
       {/* Main Grid: Profiles Table (col 8) + AI Predictive Risk (col 4) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left: Recently Unified Profiles Table */}
-        <div className="lg:col-span-8 bg-[#FFFFFF] rounded-md border border-[#E1E5EA] shadow-2xs flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-[#E8ECEF] flex items-center justify-between">
+        <div className="lg:col-span-8 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs flex flex-col overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
             <div className="flex items-center space-x-2">
-              <h3 className="text-sm font-bold text-[#2C2C2C]">Real-Time Unified Profiles</h3>
+              <h3 className="text-sm font-bold text-white">Real-Time Unified Profiles</h3>
               <span className="text-[10px] bg-[#DEFBE6] text-[#0E7A36] font-semibold px-2 py-0.5 rounded border border-[#B4F0C3] flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36] animate-pulse" />
                 Live Stream
@@ -201,7 +201,7 @@ export const DashboardView: React.FC = () => {
             </div>
             <button
               onClick={() => setActiveTab('profiles')}
-              className="text-xs text-[#1473E6] hover:text-[#0D66D0] font-semibold flex items-center space-x-1"
+              className="text-xs text-white bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1 rounded-md font-semibold flex items-center space-x-1 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <span>View All Profiles</span>
               <ArrowRight className="w-3 h-3" />
@@ -377,17 +377,19 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* Right: AI Predictive Risk & Recommendations */}
-        <div className="lg:col-span-4 bg-[#FFFFFF] rounded-md border border-[#E1E5EA] shadow-2xs flex flex-col justify-between p-4">
+        <div className="lg:col-span-4 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden flex flex-col justify-between">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <TrendingUp className="w-4 h-4 text-white shrink-0" />
+              <span>Sensei AI Propensity Models</span>
+            </h3>
+            <span className="text-[10px] text-white font-semibold bg-white/15 px-1.5 py-0.5 rounded border border-white/25 shrink-0">
+              Continuous ML
+            </span>
+          </div>
+
+          <div className="p-4 flex-1 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-[#E8ECEF] pb-2.5 mb-4">
-              <h3 className="text-xs font-bold text-[#2C2C2C] uppercase tracking-wider flex items-center gap-1.5">
-                <TrendingUp className="w-4 h-4 text-[#1473E6]" />
-                <span>Sensei AI Propensity Models</span>
-              </h3>
-              <span className="text-[10px] text-[#0D66D0] font-semibold bg-[#EBF3FC] px-1.5 py-0.5 rounded border border-[#D0E2F9]">
-                Continuous ML
-              </span>
-            </div>
 
             {/* Score Gauges */}
             <div className="space-y-3.5">
@@ -436,7 +438,7 @@ export const DashboardView: React.FC = () => {
             {/* Next Best Actions Box */}
             <div className="mt-4 bg-[#F8F9FA] p-3 rounded border border-[#E1E5EA]">
               <p className="text-[10px] font-bold text-[#1E2229] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <Zap className="w-3 h-3 text-[#B25900]" />
+                <Zap className="w-3 h-3 text-[#0284C7]" />
                 Sensei Next-Best-Action Engine
               </p>
               <ul className="space-y-1.5 text-[11px] text-[#1A1D23]">
@@ -465,6 +467,7 @@ export const DashboardView: React.FC = () => {
             <span>Open Segment Builder</span>
             <ArrowRight className="w-3 h-3" />
           </button>
+          </div>
         </div>
       </div>
 
@@ -478,21 +481,23 @@ export const DashboardView: React.FC = () => {
         )}
 
         {/* Activation Destinations Catalog preview */}
-        <div className={`${uiMode === 'pro' ? 'lg:col-span-7' : 'lg:col-span-12'} bg-[#FFFFFF] rounded-md border border-[#E1E5EA] shadow-2xs p-4 flex flex-col justify-between`}>
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="text-xs font-bold text-[#2C2C2C] uppercase tracking-wider">Activated Destinations</h3>
-                <p className="text-[11px] text-[#1E2229]">Streaming connectors with DULE privacy enforcement</p>
-              </div>
-              <button
-                onClick={() => setActiveTab('destinations')}
-                className="text-xs text-[#1473E6] font-semibold hover:text-[#0D66D0] flex items-center space-x-1"
-              >
-                <span>Browse Catalog</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
+        <div className={`${uiMode === 'pro' ? 'lg:col-span-7' : 'lg:col-span-12'} bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden flex flex-col justify-between`}>
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+            <div>
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Activated Destinations</h3>
+              <p className="text-[11px] text-blue-100">Streaming connectors with DULE privacy enforcement</p>
             </div>
+            <button
+              onClick={() => setActiveTab('destinations')}
+              className="text-xs text-white bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1 rounded-md font-semibold flex items-center space-x-1 whitespace-nowrap shrink-0 cursor-pointer transition-colors"
+            >
+              <span>Browse Catalog</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+
+          <div className="p-4 flex-1 flex flex-col justify-between">
+          <div>
 
             {destinations.length === 0 ? (
               <div className="border border-dashed border-[#D0D7DE] rounded-lg p-6 text-center bg-[#F9FAFB] space-y-2">
@@ -513,7 +518,7 @@ export const DashboardView: React.FC = () => {
                     onClick={() => setActiveTab('destinations')}
                     className="border border-[#E1E5EA] rounded p-3 flex flex-col items-center justify-center text-center space-y-1.5 hover:bg-[#F9FAFB] hover:border-[#CBD2DA] transition-all cursor-pointer group"
                   >
-                    <div className="w-8 h-8 rounded bg-[#2C2C2C] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
+                    <div className="w-8 h-8 rounded bg-gradient-to-br from-[#1473E6] to-[#0A3D82] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
                       {dest.name.substring(0, 2).toUpperCase()}
                     </div>
                     <div>
@@ -534,12 +539,13 @@ export const DashboardView: React.FC = () => {
               <span>SYNC FREQ: <strong className="text-[#2C2C2C]">STREAMING</strong></span>
               <span>EDGE LATENCY: <strong className="text-[#2C2C2C]">180ms</strong></span>
             </div>
-            <div className="flex items-center space-x-1 font-semibold text-[#0E7A36]">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#0E7A36]" />
+            <div className="flex items-center space-x-1 font-semibold text-[#0D66D0]">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#0D66D0]" />
               <span>DULE POLICY ENFORCED</span>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

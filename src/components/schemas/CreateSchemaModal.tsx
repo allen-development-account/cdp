@@ -451,8 +451,8 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                         ? 'bg-[#1473E6] text-white shadow-xs'
                         : simplifiedStep > 1
                         ? stripTheme === 'dark'
-                          ? 'bg-[#132E22] text-[#34D399] border border-[#059669]/50 font-bold'
-                          : 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]'
+                          ? 'bg-[#0C2D57] text-[#38BDF8] border border-[#0284C7]/50 font-bold'
+                          : 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]'
                         : stripTheme === 'dark'
                         ? 'bg-[#1E2535] text-[#64748B] border border-[#334155]'
                         : 'bg-[#E1E5EA] text-[#1E2229]'
@@ -490,8 +490,8 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                         ? 'bg-[#1473E6] text-white shadow-xs'
                         : simplifiedStep > 2
                         ? stripTheme === 'dark'
-                          ? 'bg-[#132E22] text-[#34D399] border border-[#059669]/50 font-bold'
-                          : 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]'
+                          ? 'bg-[#0C2D57] text-[#38BDF8] border border-[#0284C7]/50 font-bold'
+                          : 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]'
                         : stripTheme === 'dark'
                         ? 'bg-[#1E2535] text-[#64748B] border border-[#334155]'
                         : 'bg-[#E1E5EA] text-[#1E2229]'
@@ -558,7 +558,7 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                     </>
                   ) : (
                     <>
-                      <Sun className="w-3 h-3 text-[#E68619]" />
+                      <Sun className="w-3 h-3 text-[#0284C7]" />
                       <span className="hidden sm:inline">Light</span>
                     </>
                   )}
@@ -593,7 +593,7 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                         >
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <div className={`p-1.5 rounded ${isSelected ? 'bg-[#1473E6] text-white' : 'bg-[#F2F4F7] text-[#1A1D23]'}`}>
+                              <div className={`p-1.5 rounded ${isSelected ? 'bg-gradient-to-br from-[#1473E6] to-[#0A3D82] text-white' : 'bg-[#EBF3FC] text-[#0D66D0]'}`}>
                                 <Icon className="w-4 h-4" />
                               </div>
                               <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-[#F2F4F7] text-[#1A1D23] uppercase font-mono border border-[#E1E5EA]">
@@ -686,7 +686,7 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                                 e.stopPropagation();
                                 handleRemoveField(f.name);
                               }}
-                              className="text-[#262A33] hover:text-[#D7373F] p-1 transition-colors"
+                              className="text-[#262A33] hover:text-[#0A3D82] p-1 transition-colors"
                               title="Delete attribute"
                             >
                               <Trash2 className="w-3 h-3" />
@@ -836,8 +836,8 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                         </div>
                       </div>
                     </div>
-                    <span className="text-xs font-semibold text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.5 rounded border border-[#B4F0C3] flex items-center space-x-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span className="text-xs font-semibold text-[#0369A1] bg-[#E0F2FE] px-2 py-0.5 rounded border border-[#BAE6FD] flex items-center space-x-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7]" />
                       <span>DULE Validated</span>
                     </span>
                   </div>
@@ -914,7 +914,7 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                       onClick={handleCopyJson}
                       className="flex items-center space-x-1 px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F2F4F7] border border-[#D5D5D5] text-[#1A1D23] text-xs font-medium rounded transition-colors"
                     >
-                      {copiedJson ? <CheckCircle2 className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedJson ? <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7]" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedJson ? 'Copied!' : 'Copy JSON'}</span>
                     </button>
                   </div>
@@ -1003,7 +1003,7 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                               <button
                                 type="button"
                                 onClick={() => handleRemoveField(f.name)}
-                                className="text-[#262A33] hover:text-[#D7373F] p-1 rounded"
+                                className="text-[#262A33] hover:text-[#0A3D82] p-1 rounded"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -1059,7 +1059,7 @@ export const CreateSchemaModal: React.FC<CreateSchemaModalProps> = ({ isOpen, on
                         <span className="text-[10px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
                           {bp.category}
                         </span>
-                        <span className="text-xs font-semibold text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.2 rounded border border-[#B4F0C3]">
+                        <span className="text-xs font-semibold text-[#0369A1] bg-[#E0F2FE] px-2 py-0.2 rounded border border-[#BAE6FD]">
                           {bp.fields.length} Fields
                         </span>
                       </div>

@@ -201,17 +201,17 @@ export const Header: React.FC = () => {
             onClick={() => setShowDuleDropdown(!showDuleDropdown)}
             className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md border text-[11px] font-medium whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
               selectedDuleMode === 'DULE Bypass'
-                ? 'bg-[#B25900]/20 border-[#B25900]/40 text-[#FFBA66] hover:bg-[#B25900]/30'
-                : 'bg-[#0E7A36]/20 border-[#0E7A36]/40 text-[#68D992] hover:bg-[#0E7A36]/30'
+                ? 'bg-[#0284C7]/20 border-[#38BDF8]/40 text-[#BAE6FD] hover:bg-[#0284C7]/30'
+                : 'bg-[#1473E6]/25 border-[#60A5FA]/45 text-[#DBEAFE] hover:bg-[#1473E6]/35'
             }`}
             title="Select DULE Governance Mode"
             aria-label="Select DULE Governance Mode"
             id="dule-mode-dropdown-btn"
           >
             {selectedDuleMode === 'DULE Bypass' ? (
-              <ShieldAlert className="w-3.5 h-3.5 text-[#FFBA66] shrink-0" />
+              <ShieldAlert className="w-3.5 h-3.5 text-[#7DD3FC] shrink-0" />
             ) : (
-              <Shield className="w-3.5 h-3.5 text-[#68D992] shrink-0" />
+              <Shield className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" />
             )}
             <span className="font-mono text-[11px] font-bold tracking-tight whitespace-nowrap">
               {selectedDuleMode}
@@ -268,9 +268,9 @@ export const Header: React.FC = () => {
                       <div className="flex items-start space-x-2.5">
                         <div className="mt-0.5">
                           {opt.isEnforced ? (
-                            <Shield className="w-3.5 h-3.5 text-[#68D992]" />
+                            <Shield className="w-3.5 h-3.5 text-[#60A5FA]" />
                           ) : (
-                            <ShieldAlert className="w-3.5 h-3.5 text-[#FFBA66]" />
+                            <ShieldAlert className="w-3.5 h-3.5 text-[#7DD3FC]" />
                           )}
                         </div>
                         <div>
@@ -282,10 +282,10 @@ export const Header: React.FC = () => {
                             </span>
                             <span className={`text-[9px] px-1.5 py-0.2 rounded font-medium ${
                               opt.badge === 'Default'
-                                ? 'bg-[#1473E6]/20 text-[#64B5F6] border border-[#1473E6]/30'
+                                ? 'bg-[#1473E6]/20 text-[#93C5FD] border border-[#1473E6]/35'
                                 : opt.badge === 'Enforced'
-                                ? 'bg-[#0E7A36]/20 text-[#68D992] border border-[#0E7A36]/30'
-                                : 'bg-[#B25900]/20 text-[#FFBA66] border border-[#B25900]/30'
+                                ? 'bg-[#2563EB]/25 text-[#BFDBFE] border border-[#60A5FA]/35'
+                                : 'bg-[#0284C7]/25 text-[#BAE6FD] border border-[#38BDF8]/35'
                             }`}>
                               {opt.badge}
                             </span>
@@ -325,15 +325,15 @@ export const Header: React.FC = () => {
           onClick={toggleGhostUser}
           className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md transition-all cursor-pointer relative shrink-0 ${
             isGhostUser
-              ? 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-400/40 shadow-xs'
+              ? 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-200 border border-sky-400/40 shadow-xs'
               : 'bg-white/5 hover:bg-white/12 text-[#A0A0A0] hover:text-white border border-white/10 hover:border-white/20'
           }`}
           title={isGhostUser ? 'Ghost User Session Active (Clean slate, zero demo data)' : 'Enable Ghost User Clean Session (Zero demo data)'}
           aria-label="Toggle Ghost User Session"
         >
-          <Ghost className={`w-4 h-4 transition-transform duration-200 ${isGhostUser ? 'text-purple-200 scale-105' : 'text-[#8C9BAE]'}`} />
+          <Ghost className={`w-4 h-4 transition-transform duration-200 ${isGhostUser ? 'text-sky-200 scale-105' : 'text-[#8C9BAE]'}`} />
           {isGhostUser && (
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400 absolute top-1.5 right-1.5 ring-2 ring-[#1E1E1E]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 absolute top-1.5 right-1.5 ring-2 ring-[#1E1E1E]" />
           )}
         </button>
 
@@ -343,13 +343,13 @@ export const Header: React.FC = () => {
           onClick={toggleDemoMode}
           className={`h-8 px-2.5 rounded-lg flex items-center space-x-1.5 backdrop-blur-md transition-all cursor-pointer relative text-[11px] font-semibold whitespace-nowrap shrink-0 ${
             isDemoMode
-              ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 shadow-xs ring-1 ring-emerald-400/20'
+              ? 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 border border-blue-400/40 shadow-xs ring-1 ring-blue-400/20'
               : 'bg-white/5 hover:bg-white/12 text-[#A0A0A0] hover:text-white border border-white/10 hover:border-white/20'
           }`}
           title={isDemoMode ? 'Demo Mode Enabled — Showing sample CDP data (click to return to clean state)' : 'Enable Demo Mode to populate sample enterprise CDP data'}
           aria-label="Toggle Demo Mode"
         >
-          <FlaskConical className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isDemoMode ? 'text-emerald-300 scale-105' : 'text-[#8C9BAE]'}`} />
+          <FlaskConical className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isDemoMode ? 'text-sky-300 scale-105' : 'text-[#8C9BAE]'}`} />
           <span className="hidden sm:inline">{isDemoMode ? 'Demo On' : 'Demo'}</span>
         </button>
 
@@ -377,11 +377,11 @@ export const Header: React.FC = () => {
                   <div key={alert.id} className="p-2 rounded bg-[#303030] border border-[#3E3E3E] text-xs flex items-start space-x-2">
                     <div className="mt-0.5">
                       {alert.level === 'warn' ? (
-                        <ShieldAlert className="w-3.5 h-3.5 text-[#FFBA66]" />
+                        <ShieldAlert className="w-3.5 h-3.5 text-[#93C5FD]" />
                       ) : alert.level === 'ai' ? (
-                        <Layers className="w-3.5 h-3.5 text-[#B388FF]" />
+                        <Layers className="w-3.5 h-3.5 text-[#38BDF8]" />
                       ) : (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#68D992]" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#60A5FA]" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">

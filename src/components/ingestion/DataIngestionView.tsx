@@ -488,12 +488,12 @@ export const DataIngestionView: React.FC = () => {
   const getSourceIcon = (iconName: string) => {
     switch (iconName) {
       case 'globe': return <Globe className="w-4 h-4 text-[#1473E6]" />;
-      case 'smartphone': return <Smartphone className="w-4 h-4 text-[#1473E6]" />;
-      case 'layers': return <Layers className="w-4 h-4 text-[#E68619]" />;
-      case 'database': return <Database className="w-4 h-4 text-[#0E7A36]" />;
-      case 'cloud': return <Cloud className="w-4 h-4 text-[#1473E6]" />;
-      case 'store': return <Store className="w-4 h-4 text-[#0E7A36]" />;
-      default: return <Radio className="w-4 h-4 text-[#1473E6]" />;
+      case 'smartphone': return <Smartphone className="w-4 h-4 text-[#0EA5E9]" />;
+      case 'layers': return <Layers className="w-4 h-4 text-[#0284C7]" />;
+      case 'database': return <Database className="w-4 h-4 text-[#1D4ED8]" />;
+      case 'cloud': return <Cloud className="w-4 h-4 text-[#3B82F6]" />;
+      case 'store': return <Store className="w-4 h-4 text-[#0A3D82]" />;
+      default: return <Radio className="w-4 h-4 text-[#0F58B8]" />;
     }
   };
 
@@ -531,7 +531,7 @@ export const DataIngestionView: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-bold text-white tracking-tight">Data Ingestion & Streaming Pipelines</h2>
-              <span className="text-[10px] bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40 font-bold px-2 py-0.5 rounded uppercase backdrop-blur-xs">
+              <span className="text-[10px] bg-white/15 text-sky-200 border border-sky-200/40 font-bold px-2 py-0.5 rounded uppercase backdrop-blur-xs">
                 Real-Time Stream & Batch
               </span>
             </div>
@@ -547,7 +547,7 @@ export const DataIngestionView: React.FC = () => {
             onClick={() => setActiveTab('xdm_tester')}
             className="px-3.5 py-2 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center space-x-2 border border-white/25 cursor-pointer"
           >
-            <Zap className="w-4 h-4 text-amber-300 fill-amber-300" />
+            <Zap className="w-4 h-4 text-sky-200 fill-sky-200" />
             <span>Live XDM Tester & Edge Simulator</span>
           </button>
 
@@ -625,7 +625,7 @@ export const DataIngestionView: React.FC = () => {
                       {getSourceIcon(method.icon)}
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                         {method.badge}
                       </span>
                     </div>
@@ -643,7 +643,7 @@ export const DataIngestionView: React.FC = () => {
 
                 <div className="mt-4 pt-3 border-t border-[#E1E5EA] space-y-2.5">
                   <div className="flex items-center justify-between text-[10px] text-[#1E2229]">
-                    <span className="font-mono text-[#0E7A36] font-semibold">{method.sla}</span>
+                    <span className="font-mono text-[#0284C7] font-semibold">{method.sla}</span>
                     <span className="truncate max-w-[140px] text-right font-mono text-[#555]">{method.protocol.split('|')[0]}</span>
                   </div>
 
@@ -700,8 +700,8 @@ export const DataIngestionView: React.FC = () => {
                   {sources.length} Active Endpoints
                 </span>
                 {sources.length > 0 && (
-                  <span className="text-[10px] text-[#8CE2A7] font-bold flex items-center gap-1.5 bg-white/15 px-2 py-0.5 rounded border border-[#8CE2A7]/40">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#8CE2A7]" />
+                  <span className="text-[10px] text-sky-200 font-bold flex items-center gap-1.5 bg-white/15 px-2 py-0.5 rounded border border-sky-200/40">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-300" />
                     All Operational
                   </span>
                 )}
@@ -768,7 +768,7 @@ export const DataIngestionView: React.FC = () => {
                     <div className="p-1.5 rounded bg-[#F2F4F7] border border-[#E1E5EA]">
                       {getSourceIcon(src.icon)}
                     </div>
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                       {src.type}
                     </span>
                   </div>
@@ -794,25 +794,25 @@ export const DataIngestionView: React.FC = () => {
         {/* Accordion Toggle Header */}
         <button
           onClick={() => setIsPresetAccordionOpen(!isPresetAccordionOpen)}
-          className={`w-full px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left transition-colors focus:outline-none bg-[#F8FAFC] hover:bg-[#F1F5F9] cursor-pointer ${
-            isPresetAccordionOpen ? 'border-b border-[#CBD5E1]' : ''
+          className={`w-full px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left transition-all focus:outline-none bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] hover:brightness-105 text-white cursor-pointer ${
+            isPresetAccordionOpen ? 'border-b border-[#0E4DA4]' : ''
           }`}
         >
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-lg bg-[#5C6573] border border-white/60 flex items-center justify-center text-white shadow-xs shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center text-white shadow-xs shrink-0">
               <Wrench className="w-4.5 h-4.5" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider bg-[#5C6573] text-white px-2 py-0.5 rounded shadow-2xs">
+              <div className="flex items-center flex-wrap gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider bg-white/20 text-white border border-white/25 px-2 py-0.5 rounded shadow-2xs">
                   Step 4 (Optional)
                 </span>
-                <h3 className="text-sm font-bold text-[#1E2229]">Developer Tools, Edge Decisioning & Live Simulator</h3>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white text-[#5C6573] border border-[#CBD5E1] shadow-2xs">
+                <h3 className="text-sm font-bold text-white">Developer Tools, Edge Decisioning & Live Simulator</h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/15 text-white border border-white/25 shadow-2xs">
                   Advanced Diagnostics
                 </span>
               </div>
-              <p className="text-[11px] text-[#5C6573] font-medium mt-0.5">
+              <p className="text-[11px] text-blue-100 font-medium mt-0.5">
                 {isPresetAccordionOpen
                   ? 'Active developer mode. Click header to collapse edge console and simulation tools.'
                   : 'Click to expand Edge Console, cURL snippets, Web SDK playground, and preset scenario simulators.'}
@@ -821,9 +821,9 @@ export const DataIngestionView: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-2 shrink-0">
-            <span className="text-xs font-bold px-3.5 py-1.5 bg-white text-[#1E2229] hover:bg-[#F2F4F7] border border-[#D0D7DE] rounded-md transition-all shadow-xs flex items-center gap-1.5">
+            <span className="text-xs font-bold px-3.5 py-1.5 bg-white text-[#0D66D0] hover:bg-[#F2F4F7] rounded-md transition-all shadow-xs flex items-center gap-1.5 whitespace-nowrap">
               <span>{isPresetAccordionOpen ? 'Hide Developer Tools' : 'Open Developer Tools'}</span>
-              {isPresetAccordionOpen ? <ChevronUp className="w-3.5 h-3.5 text-[#1473E6]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#1473E6]" />}
+              {isPresetAccordionOpen ? <ChevronUp className="w-3.5 h-3.5 text-[#0D66D0]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#0D66D0]" />}
             </span>
           </div>
         </button>
@@ -871,7 +871,7 @@ export const DataIngestionView: React.FC = () => {
                           onClick={() => handlePresetChange(idx)}
                           className={`p-2.5 rounded border text-left transition-all ${
                             isSelected
-                              ? 'bg-[#DEFBE6] border-[#0E7A36] text-[#2C2C2C] ring-1 ring-[#0E7A36]'
+                              ? 'bg-[#EBF3FC] border-[#1473E6] text-[#1E2229] ring-1 ring-[#1473E6]'
                               : 'bg-[#F2F4F7] border-[#E1E5EA] hover:bg-[#E1E5EA] text-[#2C2C2C]'
                           }`}
                         >
@@ -975,7 +975,7 @@ export const DataIngestionView: React.FC = () => {
                     </div>
                     {lastResult && (
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded shadow-2xs ${
-                        lastResult.success ? 'bg-white text-[#0E7A36]' : 'bg-white text-[#D7373F]'
+                        lastResult.success ? 'bg-white text-[#0D66D0]' : 'bg-white text-[#0A3D82]'
                       }`}>
                         {lastResult.isMerged ? 'MERGED PROFILES' : lastResult.isNew ? 'NEW PROFILE' : 'PROFILE UPDATED'}
                       </span>
@@ -988,11 +988,11 @@ export const DataIngestionView: React.FC = () => {
                     <div className="space-y-3.5 flex-1">
                       <div className={`p-3.5 rounded border ${
                         lastResult.isMerged
-                          ? 'bg-[#F1E8FF] border-[#D0B3FF] text-[#5C2B97]'
-                          : 'bg-[#DEFBE6] border-[#B4F0C3] text-[#0E7A36]'
+                          ? 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1D4ED8]'
+                          : 'bg-[#E0F2FE] border-[#BAE6FD] text-[#0369A1]'
                       }`}>
                         <div className="flex items-start space-x-2">
-                          <CheckCircle2 className="w-4 h-4 text-[#0E7A36] mt-0.5 shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-[#0284C7] mt-0.5 shrink-0" />
                           <div>
                             <p className="font-bold text-xs">{lastResult.message}</p>
                             <p className="text-[11px] text-[#1A1D23] mt-0.5">

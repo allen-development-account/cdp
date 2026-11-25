@@ -294,25 +294,25 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
             <Database className="w-3.5 h-3.5 text-[#1473E6]" />
           </div>
           <p className="text-xl font-bold text-[#2C2C2C] mt-1 font-mono">{warehouses.length} Clouds</p>
-          <span className="text-[10px] text-[#0E7A36] font-semibold mt-1 block">Snowflake, Databricks, BigQuery, Redshift</span>
+          <span className="text-[10px] text-[#0369A1] font-semibold mt-1 block">Snowflake, Databricks, BigQuery, Redshift</span>
         </div>
 
         <div className="bg-[#FFFFFF] p-4 rounded border border-[#E1E5EA] shadow-2xs">
           <div className="flex items-center justify-between text-[#1E2229] text-xs font-medium">
             <span className="text-[10px] uppercase font-bold text-[#1E2229]">Zero-Copy Ingestion Savings</span>
-            <DollarSign className="w-3.5 h-3.5 text-[#0E7A36]" />
+            <DollarSign className="w-3.5 h-3.5 text-[#0284C7]" />
           </div>
-          <p className="text-xl font-bold text-[#0E7A36] mt-1 font-mono">$6,130/mo</p>
+          <p className="text-xl font-bold text-[#0369A1] mt-1 font-mono">$6,130/mo</p>
           <span className="text-[10px] text-[#1E2229] font-semibold mt-1 block">Zero Ingestion/Storage Overhead</span>
         </div>
 
         <div className="bg-[#FFFFFF] p-4 rounded border border-[#E1E5EA] shadow-2xs">
           <div className="flex items-center justify-between text-[#1E2229] text-xs font-medium">
             <span className="text-[10px] uppercase font-bold text-[#1E2229]">Pushdown Execution SLA</span>
-            <Zap className="w-3.5 h-3.5 text-amber-500" />
+            <Zap className="w-3.5 h-3.5 text-[#0EA5E9]" />
           </div>
           <p className="text-xl font-bold text-[#2C2C2C] mt-1 font-mono">&lt; 120ms</p>
-          <span className="text-[10px] text-[#0E7A36] font-semibold mt-1 block">Pushdown Query Optimization</span>
+          <span className="text-[10px] text-[#1D4ED8] font-semibold mt-1 block">Pushdown Query Optimization</span>
         </div>
 
         <div className="bg-[#FFFFFF] p-4 rounded border border-[#E1E5EA] shadow-2xs">
@@ -381,11 +381,11 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Compositions Directory */}
           <div className="lg:col-span-4 space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-4 py-3 shadow-2xs flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-white">
                 Federated Compositions
               </span>
-              <span className="text-[10px] bg-[#EBF3FC] text-[#1473E6] border border-[#C5DCFA] font-bold px-2 py-0.5 rounded">
+              <span className="text-[10px] bg-white/15 text-white border border-white/25 font-bold px-2 py-0.5 rounded tabular-nums">
                 {federatedCompositions.length} Active
               </span>
             </div>
@@ -405,7 +405,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className="w-2 h-2 rounded-full bg-[#0E7A36]" />
+                        <span className="w-2 h-2 rounded-full bg-[#0284C7]" />
                         <h3 className="text-xs font-bold text-[#2C2C2C] leading-snug line-clamp-1">
                           {comp.name}
                         </h3>
@@ -423,7 +423,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                       <span className="text-[#1E2229] font-semibold">
                         Audience: <strong className="text-[#1473E6] font-mono font-bold">{comp.estimatedAudienceSize.toLocaleString()}</strong>
                       </span>
-                      <span className="text-[#0E7A36] font-semibold bg-[#DEFBE6] px-1.5 py-0.5 rounded border border-[#A1ECC4]">
+                      <span className="text-[#0369A1] font-semibold bg-[#E0F2FE] px-1.5 py-0.5 rounded border border-[#BAE6FD]">
                         Zero-Copy
                       </span>
                     </div>
@@ -436,24 +436,24 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
           {/* Right Column: Visual Pipeline Canvas & Pushdown SQL */}
           <div className="lg:col-span-8 space-y-4">
             {selectedComposition ? (
-              <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-5">
+              <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
                 {/* Composition Summary Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E1E5EA]">
+                <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="text-base font-bold text-[#2C2C2C]">{selectedComposition.name}</h3>
-                      <span className="text-[10px] font-bold bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] px-2 py-0.5 rounded uppercase">
+                    <div className="flex items-center flex-wrap gap-2">
+                      <h3 className="text-base font-bold text-white">{selectedComposition.name}</h3>
+                      <span className="text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] px-2 py-0.5 rounded uppercase">
                         {selectedComposition.schedule}
                       </span>
                     </div>
-                    <p className="text-xs text-[#1E2229] mt-1">{selectedComposition.description}</p>
+                    <p className="text-xs text-blue-100 mt-1">{selectedComposition.description}</p>
                   </div>
 
                   <div className="flex items-center space-x-2 shrink-0">
                     <button
                       onClick={() => handleExecutePushdown(selectedComposition)}
                       disabled={executingCompositionId === selectedComposition.id}
-                      className="flex items-center space-x-1.5 bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold px-3.5 py-2 rounded shadow-2xs transition-all disabled:opacity-50"
+                      className="flex items-center space-x-1.5 bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold px-3.5 py-2 rounded-lg shadow-2xs transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer"
                     >
                       {executingCompositionId === selectedComposition.id ? (
                         <>
@@ -462,7 +462,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                         </>
                       ) : (
                         <>
-                          <Play className="w-3.5 h-3.5 fill-white" />
+                          <Play className="w-3.5 h-3.5 fill-[#0D66D0]" />
                           <span>Run Pushdown Test</span>
                         </>
                       )}
@@ -470,7 +470,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
 
                     <button
                       onClick={() => deleteFederatedComposition(selectedComposition.id)}
-                      className="p-2 text-[#1E2229] hover:text-[#D7373F] hover:bg-rose-50 rounded transition-all"
+                      className="p-2 bg-white/15 border border-white/25 text-white hover:text-sky-200 hover:bg-white/25 hover:border-white/40 rounded-lg transition-all cursor-pointer"
                       title="Delete Composition"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -478,10 +478,12 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                   </div>
                 </div>
 
+                <div className="p-5 space-y-5">
+
                 {/* Savings Banner */}
-                <div className="bg-[#DEFBE6]/40 p-3.5 rounded border border-[#A1ECC4] flex items-center justify-between">
+                <div className="bg-[#E0F2FE]/50 p-3.5 rounded border border-[#BAE6FD] flex items-center justify-between">
                   <div className="flex items-center space-x-2.5">
-                    <DollarSign className="w-4 h-4 text-[#0E7A36]" />
+                    <DollarSign className="w-4 h-4 text-[#0284C7]" />
                     <div>
                       <span className="text-xs font-bold text-[#2C2C2C]">Zero-Copy TCO Advantage</span>
                       <p className="text-[10px] text-[#1E2229]">
@@ -489,7 +491,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs font-mono font-bold text-[#0E7A36] bg-white px-2.5 py-1 rounded border border-[#A1ECC4] shadow-2xs">
+                  <span className="text-xs font-mono font-bold text-[#0369A1] bg-white px-2.5 py-1 rounded border border-[#BAE6FD] shadow-2xs">
                     $0.00 Ingestion Fee
                   </span>
                 </div>
@@ -556,6 +558,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                     {selectedComposition.pushdownSql}
                   </pre>
                 </div>
+                </div>
               </div>
             ) : (
               <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-8 text-center text-[#1E2229]">
@@ -579,7 +582,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                   <div>
                     <div className="flex items-center space-x-2">
                       <h3 className="text-sm font-bold text-[#2C2C2C]">{wh.name}</h3>
-                      <span className="text-[10px] font-bold bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] px-2 py-0.5 rounded">
                         {wh.status}
                       </span>
                     </div>
@@ -602,7 +605,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                   </button>
                   <button
                     onClick={() => deleteWarehouseConnection(wh.id)}
-                    className="p-1.5 text-[#1E2229] hover:text-[#D7373F] hover:bg-rose-50 rounded transition-all"
+                    className="p-1.5 text-[#0D66D0] hover:text-[#0A3D82] hover:bg-[#EBF3FC] rounded transition-all"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -662,20 +665,20 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
 
       {/* SQL Console Tab */}
       {activeSubTab === 'sql_console' && (
-        <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E1E5EA]">
+        <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-[#2C2C2C]">Interactive Zero-Copy SQL Pushdown Console</h3>
-              <p className="text-xs text-[#1E2229]">
+              <h3 className="text-sm font-bold text-white">Interactive Zero-Copy SQL Pushdown Console</h3>
+              <p className="text-xs text-blue-100 mt-0.5">
                 Execute live ANSI SQL pushdown queries against connected warehouses with instantaneous result previews and scan telemetry.
               </p>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 shrink-0">
               <select
                 value={consoleWarehouseId}
                 onChange={(e) => setConsoleWarehouseId(e.target.value)}
-                className="bg-[#FFFFFF] text-xs font-semibold px-3 py-1.5 rounded border border-[#E1E5EA] text-[#2C2C2C] focus:border-[#1473E6] focus:outline-none"
+                className="bg-white/15 border border-white/25 text-xs font-semibold px-3 py-1.5 rounded-lg text-white focus:outline-none [&>option]:text-[#1E2229]"
               >
                 {warehouses.map(w => (
                   <option key={w.id} value={w.id}>{w.name} ({w.type})</option>
@@ -685,7 +688,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
               <button
                 onClick={handleRunConsoleSql}
                 disabled={isConsoleRunning}
-                className="flex items-center space-x-1.5 bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold px-4 py-1.5 rounded shadow-2xs transition-all disabled:opacity-50"
+                className="flex items-center space-x-1.5 bg-white hover:bg-[#F2F4F7] text-[#0D66D0] text-xs font-semibold px-4 py-1.5 rounded-lg shadow-2xs transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer"
               >
                 {isConsoleRunning ? (
                   <>
@@ -694,13 +697,15 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                   </>
                 ) : (
                   <>
-                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <Play className="w-3.5 h-3.5 fill-[#0D66D0]" />
                     <span>Execute SQL (Zero-Copy)</span>
                   </>
                 )}
               </button>
             </div>
           </div>
+
+          <div className="p-5 space-y-4">
 
           <textarea
             value={consoleSql}
@@ -721,7 +726,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                     <span>Download CSV</span>
                   </button>
                 </div>
-                <span className="text-[10px] text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.5 rounded font-mono font-bold border border-[#A1ECC4]">
+                <span className="text-[10px] text-[#0369A1] bg-[#E0F2FE] px-2 py-0.5 rounded font-mono font-bold border border-[#BAE6FD]">
                   Latency: 118ms | Bytes Scanned: 1.4 GB ($0.00 ETL Fee)
                 </span>
               </div>
@@ -742,9 +747,9 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                         <td className="p-2 font-bold text-[#1473E6]">{row.CUSTOMER_CRM_ID}</td>
                         <td className="p-2 text-[#2C2C2C]">${row.NET_REVENUE.toLocaleString()}</td>
                         <td className="p-2 text-[#1E2229]">{row.PRODUCT_CATEGORY}</td>
-                        <td className="p-2 font-bold text-[#0E7A36]">${row.HISTORICAL_LIFETIME_VALUE.toLocaleString()}</td>
+                        <td className="p-2 font-bold text-[#0369A1]">${row.HISTORICAL_LIFETIME_VALUE.toLocaleString()}</td>
                         <td className="p-2">
-                          <span className="bg-[#DEFBE6] text-[#0E7A36] px-1.5 py-0.5 rounded text-[10px] font-bold border border-[#A1ECC4]">
+                          <span className="bg-[#E0F2FE] text-[#0369A1] px-1.5 py-0.5 rounded text-[10px] font-bold border border-[#BAE6FD]">
                             {row.MARGIN_TIER}
                           </span>
                         </td>
@@ -755,19 +760,21 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
               </div>
             </div>
           )}
+          </div>
         </div>
       )}
 
       {/* Reverse ETL Tab */}
       {activeSubTab === 'reverse_etl' && (
-        <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4">
-          <div className="pb-3 border-b border-[#E1E5EA]">
-            <h3 className="text-sm font-bold text-[#2C2C2C]">Reverse ETL & Destination Activation Cadence</h3>
-            <p className="text-xs text-[#1E2229]">
+        <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 border-b border-[#0E4DA4]">
+            <h3 className="text-sm font-bold text-white">Reverse ETL & Destination Activation Cadence</h3>
+            <p className="text-xs text-blue-100 mt-0.5">
               Synchronize federated audience segments directly from warehouse pushdown outputs into advertising networks, CRM suites, and engagement platforms.
             </p>
           </div>
 
+          <div className="p-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {destinations.map((dest) => (
               <div key={dest.id} className="p-4 rounded border border-[#E1E5EA] bg-[#FFFFFF] shadow-2xs flex items-center justify-between">
@@ -781,11 +788,12 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                   </div>
                 </div>
 
-                <span className="text-[10px] font-bold bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] px-2 py-0.5 rounded">
                   Zero-Copy Stream Ready
                 </span>
               </div>
             ))}
+          </div>
           </div>
         </div>
       )}
@@ -796,7 +804,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
           <div className="bg-[#FFFFFF] rounded max-w-lg w-full border border-[#E1E5EA] shadow-xl p-6 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-[#E1E5EA]">
               <div className="flex items-center space-x-2.5">
-                <div className="p-2 bg-[#DEFBE6] text-[#0E7A36] rounded border border-[#A1ECC4]">
+                <div className="p-2 bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white rounded border border-[#0284C7]">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
@@ -819,7 +827,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
               </div>
               <div className="bg-[#F2F4F7] p-3 rounded border border-[#E1E5EA]">
                 <span className="text-[10px] text-[#1E2229] block uppercase font-bold">Execution Latency</span>
-                <span className="text-lg font-mono font-bold text-[#0E7A36]">{executionResult.executionTimeMs} ms</span>
+                <span className="text-lg font-mono font-bold text-[#0284C7]">{executionResult.executionTimeMs} ms</span>
               </div>
               <div className="bg-[#F2F4F7] p-3 rounded border border-[#E1E5EA]">
                 <span className="text-[10px] text-[#1E2229] block uppercase font-bold">Warehouse Data Scanned</span>
@@ -827,7 +835,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
               </div>
               <div className="bg-[#F2F4F7] p-3 rounded border border-[#E1E5EA]">
                 <span className="text-[10px] text-[#1E2229] block uppercase font-bold">Data Movement Ingress Fee</span>
-                <span className="text-sm font-mono font-bold text-[#0E7A36]">$0.00 (Zero-Copy)</span>
+                <span className="text-sm font-mono font-bold text-[#0369A1]">$0.00 (Zero-Copy)</span>
               </div>
             </div>
 

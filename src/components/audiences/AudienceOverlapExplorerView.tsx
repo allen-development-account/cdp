@@ -369,7 +369,7 @@ export const AudienceOverlapExplorerView: React.FC = () => {
       {/* Require at least 2 segments for Venn Analysis */}
       {audiences.length < 2 ? (
         <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-sm p-10 text-center space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-[#F2EBF9] border border-[#E1D0F5] text-[#7B2CBF] flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#E0F2FE] to-[#DBEAFE] border border-[#BFDBFE] text-[#1D4ED8] flex items-center justify-center mx-auto">
             <Split className="w-7 h-7" />
           </div>
           <div className="max-w-lg mx-auto space-y-1.5">
@@ -484,23 +484,23 @@ export const AudienceOverlapExplorerView: React.FC = () => {
             <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[#596780]">Overlap Ratio (A ∩ B)</span>
-                <Split className="w-4 h-4 text-[#7B2CBF]" />
+                <Split className="w-4 h-4 text-[#0284C7]" />
               </div>
               <div className="mt-2 flex items-baseline space-x-2">
-                <span className="text-2xl font-bold font-mono text-[#7B2CBF]">
+                <span className="text-2xl font-bold font-mono text-[#1D4ED8]">
                   {overlapRateA}%
                 </span>
                 <span className="text-xs text-[#596780]">of Segment A</span>
               </div>
               <div className="w-full bg-[#E1E5EA] h-1.5 rounded-full mt-2 overflow-hidden">
-                <div className="bg-[#7B2CBF] h-full transition-all duration-500" style={{ width: `${Math.min(100, overlapRateA)}%` }} />
+                <div className="bg-gradient-to-r from-[#0EA5E9] to-[#1D4ED8] h-full transition-all duration-500" style={{ width: `${Math.min(100, overlapRateA)}%` }} />
               </div>
             </div>
 
             <div className={`rounded border shadow-2xs p-4 ${fatigueRisk.bg} ${fatigueRisk.border}`}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[#1E2229]">Syndication Fatigue</span>
-                <AlertTriangle className={`w-4 h-4 ${fatigueRisk.color}`} />
+                <AlertTriangle className="w-4 h-4 text-[#0A3D82]" />
               </div>
               <div className="mt-2 flex items-baseline space-x-2">
                 <span className={`text-xl font-bold uppercase ${fatigueRisk.color}`}>
@@ -536,15 +536,15 @@ export const AudienceOverlapExplorerView: React.FC = () => {
           </div>
 
           {exclusionSuccessMsg && (
-            <div className="p-3 bg-[#DEFBE6] border border-[#B4F0C3] text-[#0E7A36] rounded-lg text-xs font-medium flex items-center justify-between">
+            <div className="p-3 bg-[#EBF3FC] border border-[#BFDBFE] text-[#0A3D82] rounded-lg text-xs font-medium flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-[#0E7A36]" />
+                <CheckCircle2 className="w-4 h-4 text-[#0D66D0]" />
                 <span>{exclusionSuccessMsg}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveTab('audiences')}
-                className="text-xs font-bold underline hover:text-[#0A5626] cursor-pointer"
+                className="text-xs font-bold underline hover:text-[#1473E6] cursor-pointer"
               >
                 Open in Audience Builder &rarr;
               </button>
@@ -553,21 +553,22 @@ export const AudienceOverlapExplorerView: React.FC = () => {
 
           {/* Main Analysis Section: Interactive Venn Diagram & Selected Region Trait Diagnostics */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-7 bg-white rounded border border-[#E1E5EA] shadow-2xs p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-[#E1E5EA] pb-3">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
                     Interactive Venn Membership Map
                   </h3>
-                  <p className="text-[11px] text-[#596780]">
+                  <p className="text-[11px] text-blue-100 mt-0.5">
                     Click any Venn region or chip below to inspect matching profiles and validated region stats.
                   </p>
                 </div>
-                <span className="text-xs font-mono bg-[#F2F4F7] px-2.5 py-1 rounded border border-[#E1E5EA] text-[#1E2229]">
+                <span className="text-xs font-mono bg-white/15 px-2.5 py-1 rounded border border-white/25 text-white shrink-0 self-start sm:self-center">
                   Universe: {profiles.length} Profiles
                 </span>
               </div>
 
+              <div className="p-6">
               <div className="relative bg-[#FAFBFD] rounded-xl border border-[#E1E5EA] p-6 flex flex-col items-center justify-center min-h-[340px] select-none">
                 {!isThreeWay ? (
                   <div className="relative w-full max-w-md h-64 flex items-center justify-center">
@@ -842,25 +843,28 @@ export const AudienceOverlapExplorerView: React.FC = () => {
                   )}
                 </div>
               </div>
+              </div>
             </div>
 
             {/* Right: Selected Region Persona Diagnostics */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider flex items-center space-x-1.5">
-                    <Sparkles className="w-4 h-4 text-[#E68619]" />
-                    <span>Region Persona Diagnostics</span>
-                  </h3>
-                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
-                    {displayedProfiles.shortLabel} • {regionStats.count}
-                  </span>
+              <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4]">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-1.5">
+                      <Sparkles className="w-4 h-4 text-white shrink-0" />
+                      <span>Region Persona Diagnostics</span>
+                    </h3>
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-white/15 text-white border border-white/25 shrink-0">
+                      {displayedProfiles.shortLabel} • {regionStats.count}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-blue-100 mt-1">
+                    Computed directly across the {regionStats.count} profile{regionStats.count === 1 ? '' : 's'} in <strong className="text-white">{displayedProfiles.shortLabel}</strong>.
+                  </p>
                 </div>
-                <p className="text-[11px] text-[#596780]">
-                  Computed directly across the {regionStats.count} profile{regionStats.count === 1 ? '' : 's'} in <strong>{displayedProfiles.shortLabel}</strong>.
-                </p>
 
-                <div className="space-y-3">
+                <div className="p-5 space-y-3">
                   <div className="p-3 bg-[#F8FAFC] rounded border border-[#E1E5EA] flex items-center justify-between">
                     <div>
                       <span className="text-[10px] font-bold text-[#596780] uppercase">Average Customer Spend</span>
@@ -900,7 +904,7 @@ export const AudienceOverlapExplorerView: React.FC = () => {
                       <span className="text-[10px] font-bold text-[#596780] uppercase">Top Product Category</span>
                       <p className="text-sm font-bold text-[#1E2229]">{regionStats.topCategory}</p>
                     </div>
-                    <Tag className="w-4 h-4 text-[#596780]" />
+                    <Tag className="w-4 h-4 text-[#0284C7]" />
                   </div>
                 </div>
               </div>
@@ -920,20 +924,22 @@ export const AudienceOverlapExplorerView: React.FC = () => {
           </div>
 
           {/* Matching Profiles Drilldown Table */}
-          <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E1E5EA] pb-3">
+          <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider flex items-center space-x-2">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2">
                   <span>{displayedProfiles.title}</span>
-                  <span className="text-xs font-mono bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA] px-2 py-0.5 rounded">
+                  <span className="text-xs font-mono bg-white/15 text-white border border-white/25 px-2 py-0.5 rounded">
                     {displayedProfiles.profiles.length} Profiles
                   </span>
                 </h3>
-                <p className="text-[11px] text-[#596780] mt-0.5">
+                <p className="text-[11px] text-blue-100 mt-0.5">
                   Live inspection of unified customer profiles satisfying the selected Venn region.
                 </p>
               </div>
             </div>
+
+            <div className="p-5">
 
             {displayedProfiles.profiles.length === 0 ? (
               <div className="py-8 text-center border border-dashed border-[#D0D7DE] rounded-lg bg-[#FAFBFD]">
@@ -987,13 +993,13 @@ export const AudienceOverlapExplorerView: React.FC = () => {
                         </td>
                         <td className="py-2.5 px-3">
                           {isProfileDuleTargetable(p) ? (
-                            <span className="text-[10px] text-[#0E7A36] font-semibold flex items-center space-x-1">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span className="text-[10px] text-[#0D66D0] font-semibold flex items-center space-x-1">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7]" />
                               <span>DULE Cleared</span>
                             </span>
                           ) : (
-                            <span className="text-[10px] text-[#D7373F] font-semibold flex items-center space-x-1">
-                              <AlertTriangle className="w-3.5 h-3.5" />
+                            <span className="text-[10px] text-[#0A3D82] font-semibold flex items-center space-x-1">
+                              <AlertTriangle className="w-3.5 h-3.5 text-[#1E40AF]" />
                               <span>Restricted</span>
                             </span>
                           )}
@@ -1017,6 +1023,7 @@ export const AudienceOverlapExplorerView: React.FC = () => {
                 </table>
               </div>
             )}
+            </div>
           </div>
         </>
       )}

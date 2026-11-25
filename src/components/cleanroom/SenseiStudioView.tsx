@@ -137,7 +137,7 @@ export const SenseiStudioView: React.FC = () => {
                       </div>
 
                       <div className="text-right">
-                        <span className="text-sm font-bold text-[#5C2B97] font-mono">{model.similarityScore}%</span>
+                        <span className="text-sm font-bold text-[#0D66D0] font-mono">{model.similarityScore}%</span>
                         <p className="text-[9px] uppercase font-bold text-[#1E2229]">Similarity</p>
                       </div>
                     </div>
@@ -173,7 +173,7 @@ export const SenseiStudioView: React.FC = () => {
                             </div>
                             <div className="w-full bg-[#E1E5EA] rounded-full h-1.5 overflow-hidden">
                               <div
-                                className="bg-[#5C2B97] h-1.5 rounded-full"
+                                className="bg-[#1473E6] h-1.5 rounded-full"
                                 style={{ width: `${feat.importance * 100}%` }}
                               />
                             </div>
@@ -188,7 +188,7 @@ export const SenseiStudioView: React.FC = () => {
                     <span className="text-xs text-[#1E2229]">Auto-Refreshed Daily at Midnight</span>
                     <button
                       onClick={() => addTerminalLog('ai', 'SENSEI', `Exported Lookalike Segment "${model.name}" to Meta & Google Ad Connectors`)}
-                      className="text-xs font-semibold bg-[#F1E8FF] hover:bg-[#E3D3FF] text-[#5C2B97] border border-[#D0B3FF] px-3 py-1.5 rounded transition-all"
+                      className="text-xs font-semibold bg-[#EBF3FC] hover:bg-[#DBEAFE] text-[#0D66D0] border border-[#BFDBFE] px-3 py-1.5 rounded transition-all"
                     >
                       Export Segment
                     </button>
@@ -211,7 +211,7 @@ export const SenseiStudioView: React.FC = () => {
                       <div>
                         <div className="flex items-center space-x-2">
                           <h3 className="text-sm font-bold text-[#2C2C2C]">{cr.partnerName}</h3>
-                          <span className="text-[10px] bg-[#F1E8FF] text-[#5C2B97] font-bold px-2 py-0.5 rounded border border-[#D0B3FF]">
+                          <span className="text-[10px] bg-[#EBF3FC] text-[#0D66D0] font-bold px-2 py-0.5 rounded border border-[#BFDBFE]">
                             {cr.status}
                           </span>
                         </div>
@@ -220,7 +220,7 @@ export const SenseiStudioView: React.FC = () => {
                         </p>
                       </div>
 
-                      <div className="p-2 bg-[#DEFBE6] text-[#0E7A36] rounded border border-[#A1ECC4]">
+                      <div className="p-2 bg-[#EBF3FC] text-[#0D66D0] rounded border border-[#BFDBFE]">
                         <Lock className="w-4 h-4" />
                       </div>
                     </div>
@@ -234,14 +234,14 @@ export const SenseiStudioView: React.FC = () => {
 
                       <div className="bg-[#F2F4F7] p-2.5 rounded border border-[#E1E5EA]">
                         <span className="text-[10px] text-[#1E2229] font-medium">Epsilon (ε) Privacy Budget</span>
-                        <p className="text-xs font-bold text-[#5C2B97] font-mono mt-0.5">ε = {cr.epsilonPrivacyBudget}</p>
+                        <p className="text-xs font-bold text-[#0D66D0] font-mono mt-0.5">ε = {cr.epsilonPrivacyBudget}</p>
                       </div>
                     </div>
 
                     {/* Matched Overlap Count */}
-                    <div className="mt-4 p-3 bg-[#F1E8FF] rounded border border-[#D0B3FF] flex items-center justify-between">
+                    <div className="mt-4 p-3 bg-[#EBF3FC] rounded border border-[#BFDBFE] flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-[#5C2B97]">Co-Targetable Identity Overlap</span>
+                        <span className="text-[10px] uppercase font-bold text-[#0D66D0]">Co-Targetable Identity Overlap</span>
                         <p className="text-lg font-bold text-[#2C2C2C] font-mono mt-0.5">
                           {cr.resultOverlapCount.toLocaleString()} Matches
                         </p>
@@ -259,7 +259,7 @@ export const SenseiStudioView: React.FC = () => {
 
                   {/* Footer Security Pill */}
                   <div className="mt-4 pt-3 border-t border-[#E1E5EA] flex items-center justify-between text-xs text-[#1E2229]">
-                    <span className="flex items-center space-x-1 text-[#0E7A36] font-semibold">
+                    <span className="flex items-center space-x-1 text-[#0D66D0] font-semibold">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       <span>Zero Raw PII Shared • Encrypted Hashing</span>
                     </span>

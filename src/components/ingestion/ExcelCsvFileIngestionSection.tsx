@@ -199,15 +199,15 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
       return { label: 'Primary Identity', color: 'bg-[#EBF3FC] text-[#0D66D0] border-[#C5DCFA]', icon: Key };
     }
     if (lower.includes('consent') || lower.includes('opt_out') || lower.includes('gdpr') || lower.includes('ccpa')) {
-      return { label: 'Consent (R-Series)', color: 'bg-[#DEFBE6] text-[#0E7A36] border-[#B4F0C3]', icon: ShieldCheck };
+      return { label: 'Consent (R-Series)', color: 'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]', icon: ShieldCheck };
     }
     if (lower.includes('spend') || lower.includes('revenue') || lower.includes('amount') || lower.includes('price')) {
-      return { label: 'Financial (S3)', color: 'bg-[#FEF3D6] text-[#B25E02] border-[#FCE2A6]', icon: Layers };
+      return { label: 'Financial (S3)', color: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]', icon: Layers };
     }
     if (lower.includes('city') || lower.includes('country') || lower.includes('geo')) {
-      return { label: 'Location (S1)', color: 'bg-[#F2EBF9] text-[#7B2CBF] border-[#E1D0F5]', icon: ShieldCheck };
+      return { label: 'Location (S1)', color: 'bg-[#DBEAFE] text-[#0A3D82] border-[#93C5FD]', icon: ShieldCheck };
     }
-    return { label: 'Profile Trait', color: 'bg-[#F2F4F7] text-[#555] border-[#E1E5EA]', icon: Users };
+    return { label: 'Profile Trait', color: 'bg-[#F8FAFC] text-[#1473E6] border-[#E1E5EA]', icon: Users };
   };
 
   // Handle file reading using SheetJS (XLSX)
@@ -472,16 +472,16 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
               </p>
 
               <div className="flex items-center space-x-2 mt-4">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   .XLSX
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   .XLS
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
                   .CSV
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F2F4F7] text-[#555] border-[#E1E5EA]">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]">
                   .JSON
                 </span>
               </div>
@@ -490,7 +490,7 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
             {/* Selected File Information Card */}
             <div className="p-3.5 bg-[#FFFFFF] rounded-lg border border-[#E1E5EA] flex items-center justify-between">
               <div className="flex items-center space-x-3 overflow-hidden">
-                <div className="w-8 h-8 rounded bg-[#DEFBE6] text-[#0E7A36] flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white flex items-center justify-center shrink-0">
                   <FileSpreadsheet className="w-4 h-4" />
                 </div>
                 <div className="truncate">
@@ -530,21 +530,22 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
           </div>
 
           {/* Right Column: Schema Target & Dataset Destination (7 cols) */}
-          <div className="lg:col-span-7 bg-[#F9FAFC] border border-[#E1E5EA] rounded-xl p-5 flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-[#E1E5EA]">
-                <div className="flex items-center space-x-2">
-                  <Database className="w-4 h-4 text-[#1473E6]" />
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
-                    Schema Binding & Ingestion Settings
-                  </h4>
-                </div>
-                <span className="text-[11px] font-semibold text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.5 rounded border border-[#B4F0C3]">
-                  Ready to Ingest
-                </span>
+          <div className="lg:col-span-7 bg-[#F9FAFC] border border-[#E1E5EA] rounded-xl overflow-hidden flex flex-col justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <Database className="w-4 h-4 text-white shrink-0" />
+                <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                  Schema Binding & Ingestion Settings
+                </h4>
               </div>
+              <span className="text-[11px] font-semibold text-[#0369A1] bg-[#E0F2FE] px-2 py-0.5 rounded border border-[#BAE6FD] shrink-0">
+                Ready to Ingest
+              </span>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-[#1E2229] mb-1.5">
                     Target Canonical XDM Schema
@@ -648,20 +649,21 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
                 </button>
               )}
             </div>
+            </div>
           </div>
         </div>
 
         {/* Success Confirmation Card (When Ingestion Completes) */}
         {ingestSuccessResult && (
-          <div className="p-4 bg-[#DEFBE6] border border-[#B4F0C3] rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-in fade-in duration-300">
+          <div className="p-4 bg-[#EBF3FC] border border-[#BFDBFE] rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-in fade-in duration-300">
             <div className="flex items-start space-x-3">
-              <CheckCircle2 className="w-6 h-6 text-[#0E7A36] shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-6 h-6 text-[#0284C7] shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-[#0E7A36]">
+                <h4 className="text-sm font-bold text-[#0A3D82]">
                   File Ingestion Successful! {ingestSuccessResult.totalIngested} Records Ingested
                 </h4>
                 <p className="text-xs text-[#1E2229] mt-0.5">
-                  Dataset <strong className="font-semibold text-[#0E7A36]">"{ingestSuccessResult.datasetName}"</strong> has been registered with active DULE governance labels and deterministic profile stitching completed at {ingestSuccessResult.timestamp}.
+                  Dataset <strong className="font-semibold text-[#0D66D0]">"{ingestSuccessResult.datasetName}"</strong> has been registered with active DULE governance labels and deterministic profile stitching completed at {ingestSuccessResult.timestamp}.
                 </p>
               </div>
             </div>
@@ -674,7 +676,7 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
                   }
                   setActiveTab('profiles');
                 }}
-                className="px-3.5 py-1.5 bg-[#0E7A36] hover:bg-[#0B632B] text-white font-bold text-xs rounded-md shadow-2xs transition-colors flex items-center space-x-1.5 cursor-pointer"
+                className="px-3.5 py-1.5 bg-[#1473E6] hover:bg-[#0D66D0] text-white font-bold text-xs rounded-md shadow-2xs transition-colors flex items-center space-x-1.5 cursor-pointer"
               >
                 <span>View Customer Profiles</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -682,7 +684,7 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
 
               <button
                 onClick={() => setActiveTab('datasets')}
-                className="px-3 py-1.5 bg-white text-[#0E7A36] hover:bg-[#F2F7FE] border border-[#B4F0C3] font-bold text-xs rounded-md shadow-2xs transition-colors cursor-pointer"
+                className="px-3 py-1.5 bg-white text-[#0D66D0] hover:bg-[#F2F7FE] border border-[#BFDBFE] font-bold text-xs rounded-md shadow-2xs transition-colors cursor-pointer"
               >
                 Inspect Dataset
               </button>
@@ -692,14 +694,14 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
 
         {/* Spreadsheet Data Preview Table */}
         <div className="border border-[#E1E5EA] rounded-xl overflow-hidden bg-white">
-          <div className="px-5 py-3 bg-[#F9FAFC] border-b border-[#E1E5EA] flex items-center justify-between">
+          <div className="px-5 py-3 bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white border-b border-[#0E4DA4] flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Table className="w-4 h-4 text-[#1473E6]" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
+              <Table className="w-4 h-4 text-white shrink-0" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white">
                 Spreadsheet Data Preview ({fileData.length} Total Rows)
               </h4>
             </div>
-            <span className="text-[11px] text-[#666]">
+            <span className="text-[11px] text-blue-100">
               Showing first {Math.min(fileData.length, 6)} rows
             </span>
           </div>
@@ -725,7 +727,7 @@ export const ExcelCsvFileIngestionSection: React.FC = () => {
                     {columns.map((col) => (
                       <td key={col} className="py-2 px-3 text-[#2C2C2C] whitespace-nowrap font-mono text-[11px]">
                         {typeof row[col] === 'boolean' ? (
-                          <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${row[col] ? 'bg-[#DEFBE6] text-[#0E7A36]' : 'bg-[#F2F4F7] text-[#666]'}`}>
+                          <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${row[col] ? 'bg-[#E0F2FE] text-[#0369A1]' : 'bg-[#F2F4F7] text-[#666]'}`}>
                             {row[col] ? 'TRUE' : 'FALSE'}
                           </span>
                         ) : typeof row[col] === 'number' ? (

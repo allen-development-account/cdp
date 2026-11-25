@@ -189,10 +189,10 @@ export const GuidedIngestionSetupWizard: React.FC<GuidedIngestionSetupWizardProp
   const getSourceIcon = (icon: string) => {
     switch (icon) {
       case 'globe': return <Globe className="w-5 h-5 text-[#1473E6]" />;
-      case 'smartphone': return <Smartphone className="w-5 h-5 text-[#0E7A36]" />;
-      case 'store': return <Store className="w-5 h-5 text-[#E68619]" />;
-      case 'database': return <Database className="w-5 h-5 text-[#5C2B97]" />;
-      default: return <Radio className="w-5 h-5 text-[#1473E6]" />;
+      case 'smartphone': return <Smartphone className="w-5 h-5 text-[#0EA5E9]" />;
+      case 'store': return <Store className="w-5 h-5 text-[#1D4ED8]" />;
+      case 'database': return <Database className="w-5 h-5 text-[#0A3D82]" />;
+      default: return <Radio className="w-5 h-5 text-[#0284C7]" />;
     }
   };
 
@@ -345,12 +345,12 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
               currentStep === 1
                 ? 'border-[#1473E6] text-[#1473E6] bg-[#F2F7FE]'
                 : currentStep > 1
-                ? 'border-[#0E7A36] text-[#0E7A36]'
+                ? 'border-[#0284C7] text-[#0284C7]'
                 : 'border-transparent text-[#1E2229]'
             }`}
           >
             <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-              currentStep === 1 ? 'bg-[#1473E6] text-white' : currentStep > 1 ? 'bg-[#0E7A36] text-white' : 'bg-[#E1E5EA] text-[#1E2229]'
+              currentStep === 1 ? 'bg-[#1473E6] text-white' : currentStep > 1 ? 'bg-[#0284C7] text-white' : 'bg-[#E1E5EA] text-[#1E2229]'
             }`}>
               {currentStep > 1 ? '✓' : '1'}
             </span>
@@ -363,12 +363,12 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
               currentStep === 2
                 ? 'border-[#1473E6] text-[#1473E6] bg-[#F2F7FE]'
                 : currentStep > 2
-                ? 'border-[#0E7A36] text-[#0E7A36]'
+                ? 'border-[#0284C7] text-[#0284C7]'
                 : 'border-transparent text-[#1E2229]'
             }`}
           >
             <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-              currentStep === 2 ? 'bg-[#1473E6] text-white' : currentStep > 2 ? 'bg-[#0E7A36] text-white' : 'bg-[#E1E5EA] text-[#1E2229]'
+              currentStep === 2 ? 'bg-[#1473E6] text-white' : currentStep > 2 ? 'bg-[#0284C7] text-white' : 'bg-[#E1E5EA] text-[#1E2229]'
             }`}>
               {currentStep > 2 ? '✓' : '2'}
             </span>
@@ -416,9 +416,9 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
                           </div>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
                             tmpl.type === 'Streaming'
-                              ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]'
+                              ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]'
                               : tmpl.type === 'Webhook'
-                              ? 'bg-[#F1E8FF] text-[#5C2B97] border border-[#D0B3FF]'
+                              ? 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]'
                               : 'bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]'
                           }`}>
                             {tmpl.type}
@@ -536,7 +536,7 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
                       }}
                       className="px-3 py-1.5 bg-white border border-[#D5D5D5] hover:bg-[#F2F4F7] rounded text-xs font-semibold text-[#2C2C2C] shrink-0 flex items-center space-x-1"
                     >
-                      {copiedSnippet ? <Check className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5 text-[#1E2229]" />}
+                      {copiedSnippet ? <Check className="w-3.5 h-3.5 text-[#0284C7]" /> : <Copy className="w-3.5 h-3.5 text-[#1E2229]" />}
                       <span>Copy</span>
                     </button>
                   </div>
@@ -581,7 +581,7 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
                         onClick={handleCopySnippet}
                         className="absolute top-2 right-2 px-2 py-1 bg-[#2D2D2D] hover:bg-[#3D3D3D] text-white rounded text-[10px] font-semibold flex items-center space-x-1"
                       >
-                        {copiedSnippet ? <Check className="w-3 h-3 text-[#0E7A36]" /> : <Copy className="w-3 h-3 text-white" />}
+                        {copiedSnippet ? <Check className="w-3 h-3 text-[#38BDF8]" /> : <Copy className="w-3 h-3 text-white" />}
                         <span>{copiedSnippet ? 'Copied!' : 'Copy'}</span>
                       </button>
                     </div>
@@ -591,7 +591,7 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
                   <div className="p-4 rounded border border-[#C5DCFA] bg-[#F2F7FE] space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <div className={`w-3 h-3 rounded-full ${isVerifying ? 'bg-[#E68619] animate-ping' : 'bg-[#1473E6]'}`} />
+                        <div className={`w-3 h-3 rounded-full ${isVerifying ? 'bg-[#38BDF8] animate-ping' : 'bg-[#1473E6]'}`} />
                         <h4 className="text-xs font-bold text-[#2C2C2C]">
                           Edge Ingress Pipeline Listener
                         </h4>
@@ -603,17 +603,17 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
 
                     <div className="space-y-1.5 text-xs text-[#1E2229]">
                       <div className="flex items-center space-x-2">
-                        <span className={verificationProgress >= 1 ? 'text-[#0E7A36] font-bold' : 'text-[#1E2229]'}>
+                        <span className={verificationProgress >= 1 ? 'text-[#0284C7] font-bold' : 'text-[#1E2229]'}>
                           {verificationProgress >= 1 ? '✓' : '○'} 1. Handshake with Edge Gateway ({ingressEndpoint.slice(0, 38)}...)
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className={verificationProgress >= 2 ? 'text-[#0E7A36] font-bold' : 'text-[#1E2229]'}>
+                        <span className={verificationProgress >= 2 ? 'text-[#0284C7] font-bold' : 'text-[#1E2229]'}>
                           {verificationProgress >= 2 ? '✓' : '○'} 2. Validating XDM Schema contract ({targetSchema})
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className={verificationProgress >= 3 ? 'text-[#0E7A36] font-bold' : 'text-[#1E2229]'}>
+                        <span className={verificationProgress >= 3 ? 'text-[#0284C7] font-bold' : 'text-[#1E2229]'}>
                           {verificationProgress >= 3 ? '✓' : '○'} 3. Deterministic Identity Graph resolution & stitching
                         </span>
                       </div>
@@ -640,12 +640,12 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
                 </>
               ) : (
                 /* Celebration & Success State */
-                <div className="p-6 rounded border border-[#B4F0C3] bg-[#DEFBE6] text-center space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-[#0E7A36] text-white flex items-center justify-center mx-auto shadow-md">
+                <div className="p-6 rounded border border-[#BFDBFE] bg-[#EBF3FC] text-center space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#38BDF8] to-[#0D66D0] text-white flex items-center justify-center mx-auto shadow-md">
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-[#0E7A36]">
+                    <h3 className="text-base font-bold text-[#0A3D82]">
                       First Ingestion Stream Successfully Connected!
                     </h3>
                     <p className="text-xs text-[#2C2C2C] mt-1 max-w-md mx-auto">
@@ -653,10 +653,10 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
                     </p>
                   </div>
 
-                  <div className="bg-white p-3 rounded border border-[#B4F0C3] max-w-md mx-auto text-left text-xs font-mono space-y-1">
+                  <div className="bg-white p-3 rounded border border-[#BFDBFE] max-w-md mx-auto text-left text-xs font-mono space-y-1">
                     <div className="flex justify-between text-[#1E2229]">
                       <span>Source Status:</span>
-                      <strong className="text-[#0E7A36]">Healthy (Active)</strong>
+                      <strong className="text-[#0284C7]">Healthy (Active)</strong>
                     </div>
                     <div className="flex justify-between text-[#1E2229]">
                       <span>Latency:</span>
@@ -670,7 +670,7 @@ print("Ingestion Status:", response.status_code) # 200 OK`;
 
                   <button
                     onClick={onClose}
-                    className="px-6 py-2 bg-[#0E7A36] hover:bg-[#0A5D28] text-white font-bold text-xs rounded shadow-2xs transition-all inline-flex items-center space-x-1.5"
+                    className="px-6 py-2 bg-[#1473E6] hover:bg-[#0D66D0] text-white font-bold text-xs rounded shadow-2xs transition-all inline-flex items-center space-x-1.5"
                   >
                     <span>Go to Ingestion Cockpit</span>
                     <ArrowRight className="w-3.5 h-3.5" />

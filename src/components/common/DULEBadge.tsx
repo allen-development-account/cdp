@@ -17,32 +17,32 @@ export const DULEBadge: React.FC<DULEBadgeProps> = ({
     switch (classification) {
       case 'Sensitive':
         return {
-          bg: 'bg-[#FFEBEB] border-[#FFCCD0] text-[#D7373F]',
-          icon: <ShieldAlert className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
+          bg: 'bg-[#DBEAFE] border-[#93C5FD] text-[#0A3D82]',
+          icon: <ShieldAlert className={size === 'sm' ? 'w-3 h-3 text-[#0A3D82]' : 'w-3.5 h-3.5 text-[#0A3D82]'} />,
           label: 'PII / Sensitive'
         };
       case 'Health':
         return {
-          bg: 'bg-[#FFF1D9] border-[#FFE2B0] text-[#B25900]',
-          icon: <Activity className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
+          bg: 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1D4ED8]',
+          icon: <Activity className={size === 'sm' ? 'w-3 h-3 text-[#1D4ED8]' : 'w-3.5 h-3.5 text-[#1D4ED8]'} />,
           label: 'Health Data (DULE)'
         };
       case 'Financial':
         return {
-          bg: 'bg-[#DEFBE6] border-[#B4F0C3] text-[#0E7A36]',
-          icon: <DollarSign className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
+          bg: 'bg-[#E0F2FE] border-[#7DD3FC] text-[#0369A1]',
+          icon: <DollarSign className={size === 'sm' ? 'w-3 h-3 text-[#0284C7]' : 'w-3.5 h-3.5 text-[#0284C7]'} />,
           label: 'Financial Data'
         };
       case 'Behavioral':
         return {
-          bg: 'bg-[#EBF3FC] border-[#D0E2F9] text-[#0D66D0]',
-          icon: <Eye className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
+          bg: 'bg-[#EBF3FC] border-[#BFDBFE] text-[#0D66D0]',
+          icon: <Eye className={size === 'sm' ? 'w-3 h-3 text-[#1473E6]' : 'w-3.5 h-3.5 text-[#1473E6]'} />,
           label: 'Behavioral Event'
         };
       default:
         return {
-          bg: 'bg-[#F2F4F7] border-[#E1E5EA] text-[#1A1D23]',
-          icon: <Shield className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
+          bg: 'bg-[#F0F7FF] border-[#C5DCFA] text-[#0F58B8]',
+          icon: <Shield className={size === 'sm' ? 'w-3 h-3 text-[#0F58B8]' : 'w-3.5 h-3.5 text-[#0F58B8]'} />,
           label: 'Standard DULE'
         };
     }

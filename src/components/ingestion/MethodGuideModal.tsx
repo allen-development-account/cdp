@@ -84,7 +84,7 @@ export const MethodGuideModal: React.FC<MethodGuideModalProps> = ({
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="text-sm font-bold text-[#2C2C2C]">{method.title}</h3>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   {method.badge}
                 </span>
                 <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-[#F2F4F7] text-[#1E2229] border border-[#E1E5EA]">
@@ -149,8 +149,8 @@ export const MethodGuideModal: React.FC<MethodGuideModalProps> = ({
               >
                 {copied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-[#0E7A36]" />
-                    <span className="text-[#0E7A36]">Copied Snippet</span>
+                    <Check className="w-3.5 h-3.5 text-[#0284C7]" />
+                    <span className="text-[#0284C7]">Copied Snippet</span>
                   </>
                 ) : (
                   <>
@@ -190,11 +190,11 @@ export const MethodGuideModal: React.FC<MethodGuideModalProps> = ({
             </div>
 
             {testResult && (
-              <div className="p-3 bg-[#DEFBE6] border border-[#B4F0C3] rounded flex items-start justify-between gap-3">
+              <div className="p-3 bg-[#EBF3FC] border border-[#BFDBFE] rounded flex items-start justify-between gap-3">
                 <div className="flex items-start space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#0E7A36] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-bold text-xs text-[#0E7A36]">{testResult.message}</p>
+                    <p className="font-bold text-xs text-[#0A3D82]">{testResult.message}</p>
                     <p className="text-[11px] text-[#1A1D23] mt-0.5">
                       Unified Profile ID: <span className="font-mono font-bold text-[#2C2C2C]">{testResult.profileId}</span>
                     </p>
@@ -206,7 +206,7 @@ export const MethodGuideModal: React.FC<MethodGuideModalProps> = ({
                     setActiveTab('profiles');
                     onClose();
                   }}
-                  className="px-2.5 py-1 bg-white border border-[#B4F0C3] hover:bg-[#DEFBE6] text-[#0E7A36] font-bold text-[11px] rounded transition-colors whitespace-nowrap"
+                  className="px-2.5 py-1 bg-white border border-[#BFDBFE] hover:bg-[#E0F2FE] text-[#0D66D0] font-bold text-[11px] rounded transition-colors whitespace-nowrap"
                 >
                   View Profile 360
                 </button>

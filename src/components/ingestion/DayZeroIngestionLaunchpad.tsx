@@ -34,7 +34,7 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
       {/* Launchpad Header */}
       <div className="p-5 border-b border-[#E1E5EA] bg-[#F8F9FA] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start space-x-3.5">
-          <div className="w-10 h-10 rounded bg-[#DEFBE6] border border-[#B4F0C3] flex items-center justify-center text-[#0E7A36] shrink-0 shadow-2xs">
+          <div className="w-10 h-10 rounded bg-gradient-to-br from-[#38BDF8] to-[#0284C7] border border-[#7DD3FC] flex items-center justify-center text-white shrink-0 shadow-2xs">
             <Radio className="w-5 h-5 animate-pulse" />
           </div>
           <div>
@@ -42,7 +42,7 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
               <h3 className="text-sm font-bold text-[#2C2C2C]">
                 Sandbox Initialized • Awaiting First Ingestion Stream
               </h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                 Day 0 Clean State
               </span>
             </div>
@@ -67,7 +67,7 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
             className="px-3 py-1.5 bg-white hover:bg-[#F2F4F7] text-[#2C2C2C] font-semibold text-xs rounded border border-[#D5D5D5] transition-colors flex items-center space-x-1.5"
             title="Fire an instant event to see immediate normalization & identity stitching"
           >
-            <Play className="w-3.5 h-3.5 text-[#0E7A36]" />
+            <Play className="w-3.5 h-3.5 text-[#0284C7]" />
             <span>1-Click Test Event</span>
           </button>
 
@@ -138,7 +138,7 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
                 <div className="p-2 rounded bg-[#EBF3FC] text-[#1473E6] border border-[#C5DCFA]">
                   <Globe className="w-5 h-5" />
                 </div>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   Streaming
                 </span>
               </div>
@@ -169,20 +169,20 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
           </div>
 
           {/* Pathway 2: Mobile SDK */}
-          <div className="p-4 rounded border border-[#E1E5EA] hover:border-[#0E7A36] bg-white hover:bg-[#F8F9FA] transition-all flex flex-col justify-between group">
+          <div className="p-4 rounded border border-[#E1E5EA] hover:border-[#0EA5E9] bg-white hover:bg-[#F8F9FA] transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <div className="p-2 rounded bg-[#E0F2FE] text-[#0284C7] border border-[#BAE6FD]">
                   <Smartphone className="w-5 h-5" />
                 </div>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                   Streaming
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-[#0E7A36] uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#0284C7] uppercase tracking-wider">
                 Mobile Telemetry
               </span>
-              <h5 className="text-xs font-bold text-[#2C2C2C] mt-0.5 group-hover:text-[#0E7A36] transition-colors">
+              <h5 className="text-xs font-bold text-[#2C2C2C] mt-0.5 group-hover:text-[#0284C7] transition-colors">
                 Native Mobile SDK (iOS & Android)
               </h5>
               <p className="text-[11px] text-[#1E2229] mt-1.5 line-clamp-3 leading-relaxed">
@@ -206,20 +206,20 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
           </div>
 
           {/* Pathway 3: Enterprise CRM & Commerce */}
-          <div className="p-4 rounded border border-[#E1E5EA] hover:border-[#E68619] bg-white hover:bg-[#F8F9FA] transition-all flex flex-col justify-between group">
+          <div className="p-4 rounded border border-[#E1E5EA] hover:border-[#1D4ED8] bg-white hover:bg-[#F8F9FA] transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded bg-[#FFF4E5] text-[#E68619] border border-[#FFE1B5]">
+                <div className="p-2 rounded bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]">
                   <Store className="w-5 h-5" />
                 </div>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#F1E8FF] text-[#5C2B97] border border-[#D0B3FF]">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]">
                   Webhook
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-[#E68619] uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#1D4ED8] uppercase tracking-wider">
                 CRM & Commerce
               </span>
-              <h5 className="text-xs font-bold text-[#2C2C2C] mt-0.5 group-hover:text-[#E68619] transition-colors">
+              <h5 className="text-xs font-bold text-[#2C2C2C] mt-0.5 group-hover:text-[#1D4ED8] transition-colors">
                 Salesforce CRM & Shopify Webhook
               </h5>
               <p className="text-[11px] text-[#1E2229] mt-1.5 line-clamp-3 leading-relaxed">
@@ -243,20 +243,20 @@ export const DayZeroIngestionLaunchpad: React.FC<DayZeroIngestionLaunchpadProps>
           </div>
 
           {/* Pathway 4: Data Warehouse & Streaming API */}
-          <div className="p-4 rounded border border-[#E1E5EA] hover:border-[#5C2B97] bg-white hover:bg-[#F8F9FA] transition-all flex flex-col justify-between group">
+          <div className="p-4 rounded border border-[#E1E5EA] hover:border-[#0A3D82] bg-white hover:bg-[#F8F9FA] transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded bg-[#F1E8FF] text-[#5C2B97] border border-[#D0B3FF]">
+                <div className="p-2 rounded bg-[#DBEAFE] text-[#0A3D82] border border-[#93C5FD]">
                   <Database className="w-5 h-5" />
                 </div>
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
                   Batch / Kafka
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-[#5C2B97] uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#0A3D82] uppercase tracking-wider">
                 Warehouse & Kafka
               </span>
-              <h5 className="text-xs font-bold text-[#2C2C2C] mt-0.5 group-hover:text-[#5C2B97] transition-colors">
+              <h5 className="text-xs font-bold text-[#2C2C2C] mt-0.5 group-hover:text-[#0A3D82] transition-colors">
                 Snowflake & Streaming REST Ingress
               </h5>
               <p className="text-[11px] text-[#1E2229] mt-1.5 line-clamp-3 leading-relaxed">

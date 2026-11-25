@@ -96,7 +96,7 @@ export const JsonSchemaViewerModal: React.FC<JsonSchemaViewerModalProps> = ({ sc
               onClick={handleCopy}
               className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#F2F4F7] text-[#1473E6] text-xs font-medium rounded transition-colors border border-[#1473E6] shadow-2xs"
             >
-              {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5 text-[#1473E6]" />}
+              {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7]" /> : <Copy className="w-3.5 h-3.5 text-[#1473E6]" />}
               <span>{copied ? 'Copied!' : 'Copy JSON'}</span>
             </button>
             <button

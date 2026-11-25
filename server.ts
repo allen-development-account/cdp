@@ -267,14 +267,16 @@ app.post("/api/v1/destinations/verify-connection", (req, res) => {
     endpoint,
     connectedUserEmail,
     oauthAuthorized,
+    customFields = {},
   } = req.body || {};
 
   const idLower = String(destinationId || destinationName || "").toLowerCase();
   const trimmedAccount = String(accountId || "").trim();
   const trimmedMcc = String(managerAccountId || "").trim();
+  const fields: Record<string, string> = typeof customFields === "object" && customFields ? customFields : {};
   const warnings: string[] = [];
 
-  if (idLower.includes("google_ads") || idLower.includes("google_customer") || idLower.includes("doubleclick")) {
+  if (idLower.includes("google_ads") || idLower.includes("google_customer")) {
     const cleanCustomerId = trimmedAccount.replace(/^AW-/i, "");
     const customerIdRegex = /^\d{3}-\d{3}-\d{4}$/;
     if (!trimmedAccount || (!customerIdRegex.test(cleanCustomerId) && !/^AW-\d{8,12}$/i.test(trimmedAccount))) {
@@ -311,11 +313,95 @@ app.post("/api/v1/destinations/verify-connection", (req, res) => {
     });
   }
 
+  if (idLower.includes("doubleclick") || idLower.includes("floodlight")) {
+    if (!/^\d{5,12}$/.test(trimmedAccount)) {
+      return res.status(400).json({
+        verified: false,
+        error: "CM360 Advertiser ID (src=) must be a 5-12 digit numeric ID (e.g. 9482014).",
+      });
+    }
+    if (!String(fields.floodlightGroup || "").trim() || !String(fields.activityTag || "").trim()) {
+      return res.status(400).json({
+        verified: false,
+        error: "Both Floodlight Group Tag (type=) and Activity Tag (cat=) are required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 26).toFixed(1)),
+      apiVersion: "Google Campaign Manager 360 Floodlight API v4",
+      oauthScope: "https://www.googleapis.com/auth/dfareporting",
+      accountLabel: `src=${trimmedAccount} · ${fields.floodlightGroup}/${fields.activityTag}`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("bing_ads")) {
+    if (!/^\d{6,12}$/.test(trimmedAccount)) {
+      return res.status(400).json({
+        verified: false,
+        error: "Microsoft Advertising UET Tag ID must be a 6-12 digit numeric ID (e.g. 135001234).",
+      });
+    }
+    if (!String(fields.msAdsAccountId || "").trim()) {
+      return res.status(400).json({
+        verified: false,
+        error: "Microsoft Ads Account ID is required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 25).toFixed(1)),
+      apiVersion: "Microsoft Advertising Campaign Management API v13",
+      oauthScope: "https://ads.microsoft.com/msads.manage",
+      accountLabel: `UET ${trimmedAccount} · ${fields.msAdsAccountId}`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("google_analytics_4")) {
+    if (!/^G-[A-Z0-9]{6,14}$/i.test(trimmedAccount)) {
+      return res.status(400).json({
+        verified: false,
+        error: "Invalid GA4 Measurement ID. Expected format G-XXXXXXXXXX.",
+      });
+    }
+    if (!String(fields.ga4ApiSecret || "").trim()) {
+      return res.status(400).json({
+        verified: false,
+        error: "GA4 Measurement Protocol API Secret is required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 21).toFixed(1)),
+      apiVersion: "Google Analytics 4 Measurement Protocol v2",
+      oauthScope: "measurement_protocol:collect",
+      accountLabel: `${trimmedAccount.toUpperCase()} (Stream ${fields.streamId || "Web"})`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
   if (idLower.includes("meta") || idLower.includes("facebook")) {
     if (!trimmedAccount || trimmedAccount.length < 5) {
       return res.status(400).json({
         verified: false,
-        error: "Meta Ad Account ID (act_...) or Pixel Dataset ID is required.",
+        error: "Meta Ad Account ID (act_...) or numeric Pixel ID is required.",
+      });
+    }
+    if (idLower.includes("facebook_pixel") && !/^\d{10,20}$/.test(trimmedAccount)) {
+      return res.status(400).json({
+        verified: false,
+        error: "Meta Pixel ID must be a 10-20 digit numeric identifier.",
+      });
+    }
+    if (idLower.includes("meta_capi") && !String(fields.pixelDatasetId || "").trim()) {
+      return res.status(400).json({
+        verified: false,
+        error: "Meta Pixel / Dataset ID is required for Conversions API.",
       });
     }
     const latencyMs = Number((performance.now() - start + 28).toFixed(1));
@@ -324,27 +410,130 @@ app.post("/api/v1/destinations/verify-connection", (req, res) => {
       latencyMs,
       apiVersion: "Meta Graph API v20.0 (Conversions & Custom Audiences)",
       oauthScope: "ads_management, business_management",
-      accountLabel: trimmedAccount,
+      accountLabel: fields.pixelDatasetId ? `${trimmedAccount} · Pixel ${fields.pixelDatasetId}` : trimmedAccount,
       operatorEmail: connectedUserEmail || "meta-bm-admin@enterprise-cdp.io",
       warnings,
       verifiedAt: new Date().toISOString(),
     });
   }
 
-  if (idLower.includes("s3") || idLower.includes("snowflake")) {
-    if (!trimmedAccount && !endpoint) {
+  if (idLower.includes("braze")) {
+    if (!trimmedAccount || !String(fields.brazeClusterUrl || "").startsWith("https://") || !String(fields.brazeApiKey || "").trim()) {
       return res.status(400).json({
         verified: false,
-        error: "Cloud Bucket URI (s3://...) or Warehouse Account Locator is required.",
+        error: "Braze App Group Identifier, HTTPS Cluster Endpoint, and REST API Key are required.",
       });
     }
-    const latencyMs = Number((performance.now() - start + 24).toFixed(1));
     return res.json({
       verified: true,
-      latencyMs,
-      apiVersion: "Cloud Storage IAM / Zero-Copy Egress v2",
+      latencyMs: Number((performance.now() - start + 24).toFixed(1)),
+      apiVersion: "Braze REST API (/users/track & CDI)",
+      oauthScope: "users.track, segments.list",
+      accountLabel: `${trimmedAccount} (${fields.brazeClusterUrl})`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("klaviyo")) {
+    const pk = String(fields.klaviyoPrivateKey || "").trim();
+    if (!trimmedAccount || !pk.startsWith("pk_")) {
+      return res.status(400).json({
+        verified: false,
+        error: "Target Klaviyo List/Segment ID and a valid Private API Key (starting with pk_) are required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 22).toFixed(1)),
+      apiVersion: "Klaviyo Profiles & Lists API (rev 2024-10-15)",
+      oauthScope: "lists:write, profiles:write",
+      accountLabel: `List ${trimmedAccount} · ${fields.smsOptInRegion || "TCPA Enforced"}`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("marketo")) {
+    if (!/^\d{3}-[A-Z0-9]{3}-\d{3}$/i.test(trimmedAccount)) {
+      return res.status(400).json({
+        verified: false,
+        error: "Invalid Marketo Munchkin ID. Expected format XXX-XXX-XXX (e.g. 492-XLR-801).",
+      });
+    }
+    if (!String(fields.marketoClientId || "").trim() || !String(fields.marketoClientSecret || "").trim()) {
+      return res.status(400).json({
+        verified: false,
+        error: "Marketo LaunchPoint Client ID and Client Secret are required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 29).toFixed(1)),
+      apiVersion: "Marketo Engage REST API v1",
+      oauthScope: "lead_database:read_write",
+      accountLabel: `Munchkin ${trimmedAccount.toUpperCase()}`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("aws_s3") || idLower.includes("s3")) {
+    if (!/^s3:\/\/[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]/i.test(trimmedAccount)) {
+      return res.status(400).json({
+        verified: false,
+        error: "Invalid Amazon S3 Bucket URI. Expected format s3://bucket-name/prefix/.",
+      });
+    }
+    if (fields.iamRoleArn && !/^arn:aws:iam::\d{12}:role\/.+/i.test(String(fields.iamRoleArn).trim())) {
+      return res.status(400).json({
+        verified: false,
+        error: "Invalid AWS IAM Role ARN. Expected format arn:aws:iam::123456789012:role/RoleName.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 24).toFixed(1)),
+      apiVersion: "Amazon S3 Cross-Account STS + SSE-KMS",
       oauthScope: "s3:PutObject, kms:GenerateDataKey",
-      accountLabel: trimmedAccount || endpoint,
+      accountLabel: `${trimmedAccount} (${fields.awsRegion || "us-east-1"})`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("snowflake")) {
+    if (!trimmedAccount || !String(fields.databaseSchema || "").includes(".")) {
+      return res.status(400).json({
+        verified: false,
+        error: "Snowflake Account Locator and Database.Schema (e.g. XLR8_PROD.CLEANROOM_EGRESS) are required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 26).toFixed(1)),
+      apiVersion: "Snowflake SQL API v2 (Zero-Copy Clean Room)",
+      oauthScope: "USAGE ON SHARE, INSERT",
+      accountLabel: `${trimmedAccount} · ${fields.databaseSchema}`,
+      warnings,
+      verifiedAt: new Date().toISOString(),
+    });
+  }
+
+  if (idLower.includes("webhook")) {
+    const urlToCheck = String(endpoint || "").trim();
+    if (!trimmedAccount || !/^https?:\/\/.+/i.test(urlToCheck)) {
+      return res.status(400).json({
+        verified: false,
+        error: "Webhook Integration ID and a valid http(s):// Egress URL are required.",
+      });
+    }
+    return res.json({
+      verified: true,
+      latencyMs: Number((performance.now() - start + 19).toFixed(1)),
+      apiVersion: "XLR8 Real-Time HTTPS Webhook v2 (HMAC-SHA256)",
+      oauthScope: "webhook:egress",
+      accountLabel: `${trimmedAccount} -> ${urlToCheck}`,
       warnings,
       verifiedAt: new Date().toISOString(),
     });
@@ -361,7 +550,7 @@ app.post("/api/v1/destinations/verify-connection", (req, res) => {
   return res.json({
     verified: true,
     latencyMs,
-    apiVersion: "XLR8 Partner API v2.4",
+    apiVersion: `${destinationName || "XLR8 Partner"} API v2.4`,
     oauthScope: "destination:write, audience:sync",
     accountLabel: trimmedAccount || endpoint,
     operatorEmail: connectedUserEmail || "cdp-operator@enterprise-cdp.io",

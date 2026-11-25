@@ -167,7 +167,18 @@ export const ProfileExplorerView: React.FC = () => {
       </div>
 
       {/* Profiles Table Container */}
-      <div className="bg-[#FFFFFF] rounded-md border border-[#E1E5EA] shadow-2xs overflow-hidden">
+      <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+        <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 className="text-xs font-bold text-white uppercase tracking-wider">Unified Customer Directory</h2>
+            <p className="text-[11px] text-blue-100 mt-0.5">
+              Click any customer profile row to inspect identity graph edges, consent flags, and behavioral timeline.
+            </p>
+          </div>
+          <span className="text-xs font-mono bg-white/15 border border-white/25 text-white px-2.5 py-1 rounded shrink-0 self-start sm:self-center tabular-nums">
+            Showing {filteredProfiles.length} of {profiles.length} Profiles
+          </span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#F8F9FA] text-[10px] font-semibold text-[#1E2229] uppercase tracking-wider border-b border-[#E8ECEF]">
@@ -282,13 +293,13 @@ export const ProfileExplorerView: React.FC = () => {
                     {/* Privacy / DULE status */}
                     <td className="px-4 py-3">
                       {isBlocked ? (
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-[#FFEBEB] border border-[#FFCCD0] text-[#D7373F] rounded font-medium text-[10px]">
-                          <ShieldAlert className="w-3 h-3" />
+                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-[#EFF6FF] border border-[#93C5FD] text-[#0A3D82] rounded font-medium text-[10px]">
+                          <ShieldAlert className="w-3 h-3 text-[#0A3D82]" />
                           <span>Suppressed</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-[#DEFBE6] border border-[#B4F0C3] text-[#0E7A36] rounded font-medium text-[10px]">
-                          <CheckCircle2 className="w-3 h-3" />
+                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-[#E0F2FE] border border-[#BAE6FD] text-[#0369A1] rounded font-medium text-[10px]">
+                          <CheckCircle2 className="w-3 h-3 text-[#0284C7]" />
                           <span>Targetable</span>
                         </span>
                       )}

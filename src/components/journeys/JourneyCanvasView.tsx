@@ -28,11 +28,11 @@ export const JourneyCanvasView: React.FC = () => {
 
   const getStepIcon = (type: JourneyStep['type']) => {
     switch (type) {
-      case 'trigger': return <Zap className="w-4 h-4 text-[#1473E6]" />;
-      case 'delay': return <Clock className="w-4 h-4 text-[#C76A00]" />;
-      case 'condition': return <GitFork className="w-4 h-4 text-[#7A3EB0]" />;
-      case 'action': return <Mail className="w-4 h-4 text-[#0E7A36]" />;
-      default: return <Layers className="w-4 h-4 text-[#1E2229]" />;
+      case 'trigger': return <Zap className="w-4 h-4 text-[#0EA5E9]" />;
+      case 'delay': return <Clock className="w-4 h-4 text-[#0284C7]" />;
+      case 'condition': return <GitFork className="w-4 h-4 text-[#1D4ED8]" />;
+      case 'action': return <Mail className="w-4 h-4 text-[#0A3D82]" />;
+      default: return <Layers className="w-4 h-4 text-[#1473E6]" />;
     }
   };
 
@@ -48,7 +48,7 @@ export const JourneyCanvasView: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-bold text-white">Multi-Step Journey Orchestration Canvas</h2>
-              <span className="text-[10px] bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40 font-bold px-2 py-0.5 rounded uppercase">
+              <span className="text-[10px] bg-white/15 text-sky-200 border border-sky-200/40 font-bold px-2 py-0.5 rounded uppercase">
                 XLR8 Journey Orchestration Engine
               </span>
             </div>
@@ -86,9 +86,12 @@ export const JourneyCanvasView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Journey List */}
         <div className="lg:col-span-4 space-y-3">
-          <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider px-1">
-            Orchestrated Campaigns ({journeys.length})
-          </h3>
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-4 py-3 shadow-2xs">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+              Orchestrated Campaigns ({journeys.length})
+            </h3>
+            <p className="text-[11px] text-blue-100 mt-0.5">Select a journey to inspect live trigger stages</p>
+          </div>
 
           <div className="space-y-2.5">
             {journeys.map(j => {
@@ -127,27 +130,29 @@ export const JourneyCanvasView: React.FC = () => {
         </div>
 
         {/* Right: Visual Flow Tree Stack */}
-        <div className="lg:col-span-8 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-[#E1E5EA] pb-4">
+        <div className="lg:col-span-8 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="text-base font-bold text-[#2C2C2C]">{activeJourney.name}</h3>
-                <span className="text-[10px] bg-[#F2F4F7] text-[#1A1D23] font-mono px-2 py-0.5 rounded border border-[#E1E5EA]">
+                <h3 className="text-base font-bold text-white">{activeJourney.name}</h3>
+                <span className="text-[10px] bg-white/15 text-white font-mono px-2 py-0.5 rounded border border-white/25">
                   {activeJourney.id}
                 </span>
               </div>
-              <p className="text-xs text-[#1E2229] mt-0.5">{activeJourney.description}</p>
+              <p className="text-xs text-blue-100 mt-0.5">{activeJourney.description}</p>
             </div>
 
-            <div className="flex items-center space-x-3 text-xs font-mono">
-              <span className="bg-[#EBF3FC] text-[#1473E6] border border-[#C5DCFA] px-3 py-1.5 rounded font-bold">
+            <div className="flex items-center space-x-2 text-xs font-mono shrink-0">
+              <span className="bg-white/15 text-white border border-white/25 px-3 py-1.5 rounded font-bold tabular-nums">
                 {activeJourney.totalEntered} Total Entered
               </span>
-              <span className="bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] px-3 py-1.5 rounded font-bold">
+              <span className="bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] px-3 py-1.5 rounded font-bold tabular-nums">
                 {activeJourney.totalConverted} Converted
               </span>
             </div>
           </div>
+
+          <div className="p-6 space-y-6">
 
           {/* Visual Stacked Flow Tree */}
           <div className="space-y-4 max-w-2xl mx-auto py-2">
@@ -210,10 +215,11 @@ export const JourneyCanvasView: React.FC = () => {
           {/* Canvas Footer Notice */}
           <div className="p-3.5 bg-[#F2F4F7] rounded border border-[#E1E5EA] flex items-center justify-between text-xs text-[#1A1D23]">
             <div className="flex items-center space-x-2">
-              <CheckCircle2 className="w-4 h-4 text-[#0E7A36]" />
+              <CheckCircle2 className="w-4 h-4 text-[#0D66D0]" />
               <span>Real-time triggers evaluate incoming streams in &lt; 5ms with automatic deduplication.</span>
             </div>
             <span className="text-[#1E2229] font-mono">Status: {activeJourney.status}</span>
+          </div>
           </div>
         </div>
       </div>

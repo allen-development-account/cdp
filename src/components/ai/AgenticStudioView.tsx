@@ -157,10 +157,10 @@ export const AgenticStudioView: React.FC = () => {
               activeSubTab === 'anomalies' ? 'bg-white text-[#0D66D0] shadow-2xs' : 'text-blue-100 hover:text-white'
             }`}
           >
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+            <AlertTriangle className="w-3.5 h-3.5 text-sky-300" />
             <span>Autonomous Anomalies</span>
             {activeAnomaliesCount > 0 && (
-              <span className="text-[10px] bg-[#D7373F] text-white font-bold px-1.5 py-0.2 rounded">
+              <span className="text-[10px] bg-[#0284C7] text-white font-bold px-1.5 py-0.2 rounded">
                 {activeAnomaliesCount}
               </span>
             )}
@@ -184,14 +184,14 @@ export const AgenticStudioView: React.FC = () => {
           <div className="bg-[#2C2C2C] rounded border border-[#3E3E3E] p-5 shadow-xs text-white">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-[#B085F5] animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
                 <h3 className="text-sm font-bold text-white flex items-center space-x-1.5">
                   <span>Natural Language Query & Reasoning Engine</span>
                 </h3>
               </div>
               <div className="flex items-center space-x-2 text-xs">
                 <span className="text-[#999999]">Context:</span>
-                <span className="text-[#D0B3FF] font-mono bg-[#3E3E3E] px-2 py-0.5 rounded border border-[#505050]">
+                <span className="text-[#93C5FD] font-mono bg-[#3E3E3E] px-2 py-0.5 rounded border border-[#505050]">
                   Real-Time Profiles + Snowflake Zero-Copy + DULE Engine
                 </span>
               </div>
@@ -250,19 +250,20 @@ export const AgenticStudioView: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column: Reasoning Chain & Metadata */}
               <div className="space-y-6">
-                <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-5 shadow-2xs">
-                  <div className="flex items-center justify-between pb-3 border-b border-[#E1E5EA]">
-                    <span className="text-xs font-bold text-[#2C2C2C]">Agent Reasoning Pipeline</span>
-                    <span className="text-[10px] bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] font-bold px-2 py-0.5 rounded">
+                <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">Agent Reasoning Pipeline</span>
+                    <span className="text-[10px] bg-[#DEFBE6] text-[#0E7A36] border border-[#A1ECC4] font-bold px-2 py-0.5 rounded shrink-0">
                       {Math.round(activeSession.confidenceScore * 100)}% Confidence
                     </span>
                   </div>
 
+                  <div className="p-5">
                   {/* Steps */}
                   <div className="space-y-3 mt-4">
                     {activeSession.reasoningChain.map((step, idx) => (
                       <div key={idx} className="flex items-start space-x-2.5 text-xs">
-                        <div className="w-5 h-5 rounded bg-[#F1E8FF] border border-[#D0B3FF] text-[#5C2B97] flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
+                        <div className="w-5 h-5 rounded bg-[#EBF3FC] border border-[#BFDBFE] text-[#0D66D0] flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
                           {idx + 1}
                         </div>
                         <p className="text-[#1A1D23] leading-relaxed">{step}</p>
@@ -280,33 +281,36 @@ export const AgenticStudioView: React.FC = () => {
                     </div>
                     <div className="bg-[#F2F4F7] p-2.5 rounded border border-[#E1E5EA]">
                       <span className="text-[10px] text-[#1E2229] font-medium">Execution Latency</span>
-                      <p className="text-sm font-bold text-[#5C2B97] font-mono mt-0.5">
+                      <p className="text-sm font-bold text-[#0D66D0] font-mono mt-0.5">
                         {activeSession.executionTimeMs} ms
                       </p>
                     </div>
                   </div>
 
                   {/* Governance Tag */}
-                  <div className="mt-4 p-3 bg-[#DEFBE6]/60 rounded border border-[#A1ECC4] flex items-center space-x-2">
-                    <ShieldCheck className="w-4 h-4 text-[#0E7A36] shrink-0" />
+                  <div className="mt-4 p-3 bg-[#EBF3FC]/70 rounded border border-[#BFDBFE] flex items-center space-x-2">
+                    <ShieldCheck className="w-4 h-4 text-[#0D66D0] shrink-0" />
                     <div>
-                      <p className="text-[11px] font-bold text-[#0E7A36]">DULE Governance Policy: {activeSession.duleComplianceStatus}</p>
+                      <p className="text-[11px] font-bold text-[#0D66D0]">DULE Governance Policy: {activeSession.duleComplianceStatus}</p>
                       <p className="text-[10px] text-[#2C2C2C]">All sensitive PII tags masked for reverse ETL destination pipelines.</p>
                     </div>
+                  </div>
                   </div>
                 </div>
 
                 {/* Session History Mini-List */}
-                <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-5 shadow-2xs">
-                  <h4 className="text-xs font-bold text-[#2C2C2C] mb-3">Prompt History & Blueprints</h4>
-                  <div className="space-y-2">
+                <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3 border-b border-[#0E4DA4]">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">Prompt History & Blueprints</h4>
+                  </div>
+                  <div className="p-5 space-y-2">
                     {agentPrompts.map((sess) => (
                       <button
                         key={sess.id}
                         onClick={() => setSelectedSessionId(sess.id)}
                         className={`w-full text-left p-2.5 rounded border transition-all text-xs ${
                           sess.id === activeSession.id
-                            ? 'bg-[#F1E8FF] border-[#D0B3FF] text-[#5C2B97] font-medium'
+                            ? 'bg-[#EBF3FC] border-[#BFDBFE] text-[#0D66D0] font-medium'
                             : 'bg-[#F2F4F7] border-[#E1E5EA] text-[#1A1D23] hover:bg-[#E1E5EA]'
                         }`}
                       >
@@ -327,7 +331,7 @@ export const AgenticStudioView: React.FC = () => {
                 <div className="bg-[#1E1E1E] rounded border border-[#3E3E3E] p-5 shadow-xs text-white">
                   <div className="flex items-center justify-between pb-3 border-b border-[#3E3E3E]">
                     <div className="flex items-center space-x-2">
-                      <Terminal className="w-4 h-4 text-[#B085F5]" />
+                      <Terminal className="w-4 h-4 text-[#60A5FA]" />
                       <span className="text-xs font-bold text-[#E0E0E0]">
                         Generated XLR8 PQL (Profile Query Language)
                       </span>
@@ -336,18 +340,18 @@ export const AgenticStudioView: React.FC = () => {
                       onClick={() => handleCopy(activeSession.generatedPql, 'pql')}
                       className="text-xs text-[#B0B0B0] hover:text-white flex items-center space-x-1 bg-[#2C2C2C] px-2 py-1 rounded border border-[#3E3E3E]"
                     >
-                      {copiedCode === 'pql' ? <Check className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedCode === 'pql' ? <Check className="w-3.5 h-3.5 text-[#38BDF8]" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedCode === 'pql' ? 'Copied' : 'Copy PQL'}</span>
                     </button>
                   </div>
-                  <pre className="mt-3 p-3 bg-[#121212] rounded text-xs font-mono text-[#D0B3FF] overflow-x-auto border border-[#2C2C2C]">
+                  <pre className="mt-3 p-3 bg-[#121212] rounded text-xs font-mono text-[#93C5FD] overflow-x-auto border border-[#2C2C2C]">
                     {activeSession.generatedPql}
                   </pre>
 
                   {/* SQL Pushdown Tab */}
                   <div className="flex items-center justify-between mt-5 pt-4 border-t border-[#3E3E3E]">
                     <div className="flex items-center space-x-2">
-                      <Database className="w-4 h-4 text-[#529E72]" />
+                      <Database className="w-4 h-4 text-[#38BDF8]" />
                       <span className="text-xs font-bold text-[#E0E0E0]">
                         Zero-Copy ANSI SQL Pushdown (Snowflake / BigQuery)
                       </span>
@@ -356,37 +360,40 @@ export const AgenticStudioView: React.FC = () => {
                       onClick={() => handleCopy(activeSession.generatedSql, 'sql')}
                       className="text-xs text-[#B0B0B0] hover:text-white flex items-center space-x-1 bg-[#2C2C2C] px-2 py-1 rounded border border-[#3E3E3E]"
                     >
-                      {copiedCode === 'sql' ? <Check className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedCode === 'sql' ? <Check className="w-3.5 h-3.5 text-[#38BDF8]" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedCode === 'sql' ? 'Copied' : 'Copy SQL'}</span>
                     </button>
                   </div>
-                  <pre className="mt-3 p-3 bg-[#121212] rounded text-xs font-mono text-[#76D69D] overflow-x-auto border border-[#2C2C2C]">
+                  <pre className="mt-3 p-3 bg-[#121212] rounded text-xs font-mono text-[#7DD3FC] overflow-x-auto border border-[#2C2C2C]">
                     {activeSession.generatedSql}
                   </pre>
                 </div>
 
                 {/* 1-Click Operational Deployment Card */}
-                <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-5 shadow-2xs">
-                  <h4 className="text-xs font-bold text-[#2C2C2C] mb-3">1-Click Operational Activation</h4>
+                <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3 border-b border-[#0E4DA4]">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">1-Click Operational Activation</h4>
+                  </div>
+                  <div className="p-5">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {/* Deploy to Audience */}
                     <button
                       onClick={() => handleDeployToAudience(activeSession)}
                       className={`p-3 rounded border text-left transition-all flex flex-col justify-between ${
                         deployedAudienceId
-                          ? 'bg-[#DEFBE6] border-[#A1ECC4] text-[#0E7A36]'
-                          : 'bg-[#F2F4F7] hover:bg-[#F1E8FF] border-[#E1E5EA] hover:border-[#D0B3FF] text-[#2C2C2C]'
+                          ? 'bg-[#E0F2FE] border-[#7DD3FC] text-[#0369A1]'
+                          : 'bg-[#F2F4F7] hover:bg-[#EBF3FC] border-[#E1E5EA] hover:border-[#BFDBFE] text-[#2C2C2C]'
                       }`}
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <Layers className="w-4 h-4 text-[#5C2B97]" />
-                          {deployedAudienceId && <CheckCircle2 className="w-4 h-4 text-[#0E7A36]" />}
+                          <Layers className="w-4 h-4 text-[#1D4ED8]" />
+                          {deployedAudienceId && <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />}
                         </div>
                         <p className="text-xs font-bold">Deploy to Streaming Engine</p>
                         <p className="text-[10px] text-[#1E2229] mt-0.5">Publish segment into real-time audience catalog</p>
                       </div>
-                      <span className="text-[10px] font-bold text-[#5C2B97] mt-2 flex items-center space-x-1">
+                      <span className="text-[10px] font-bold text-[#1D4ED8] mt-2 flex items-center space-x-1">
                         <span>{deployedAudienceId ? 'Deployed ✓' : 'Commit Audience'}</span>
                         <ChevronRight className="w-3 h-3" />
                       </span>
@@ -419,20 +426,21 @@ export const AgenticStudioView: React.FC = () => {
                         setCampaignTargetAudience(activeSession.generatedAudienceName);
                         setActiveSubTab('campaign_gen');
                       }}
-                      className="p-3 rounded border bg-[#F2F4F7] hover:bg-[#FFF0D4] border-[#E1E5EA] hover:border-[#FFD085] text-[#2C2C2C] text-left transition-all flex flex-col justify-between"
+                      className="p-3 rounded border bg-[#F2F4F7] hover:bg-[#E0F2FE] border-[#E1E5EA] hover:border-[#BAE6FD] text-[#2C2C2C] text-left transition-all flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <Sparkles className="w-4 h-4 text-[#C76A00]" />
+                          <Sparkles className="w-4 h-4 text-[#0284C7]" />
                         </div>
                         <p className="text-xs font-bold">Generate AI Copy Variants</p>
                         <p className="text-[10px] text-[#1E2229] mt-0.5">Synthesize email/SMS campaign creatives</p>
                       </div>
-                      <span className="text-[10px] font-bold text-[#C76A00] mt-2 flex items-center space-x-1">
+                      <span className="text-[10px] font-bold text-[#0284C7] mt-2 flex items-center space-x-1">
                         <span>Create Variants</span>
                         <ChevronRight className="w-3 h-3" />
                       </span>
                     </button>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -444,16 +452,16 @@ export const AgenticStudioView: React.FC = () => {
       {/* Sub-Tab 2: Autonomous Anomaly Agent & Self-Healing */}
       {activeSubTab === 'anomalies' && (
         <div className="space-y-6">
-          <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-5 shadow-2xs flex items-center justify-between">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="text-sm font-bold text-[#2C2C2C]">Continuous Drift & Integrity Sentinel</h3>
-              <p className="text-xs text-[#1E2229] mt-0.5">
+              <h3 className="text-sm font-bold text-white">Continuous Drift & Integrity Sentinel</h3>
+              <p className="text-xs text-blue-100 mt-0.5">
                 Real-time autonomous agent monitoring payload schemas, identity stitching entropy, and destination match rates.
               </p>
             </div>
-            <div className="flex items-center space-x-3 text-xs">
-              <span className="flex items-center space-x-1 text-[#1E2229]">
-                <span className="w-2 h-2 rounded-full bg-[#0E7A36]" />
+            <div className="flex items-center space-x-3 text-xs shrink-0">
+              <span className="flex items-center space-x-1.5 bg-white/15 border border-white/25 text-white px-3 py-1 rounded-md font-semibold">
+                <span className="w-2 h-2 rounded-full bg-sky-300" />
                 <span>Engine: Active (60s SLA)</span>
               </span>
             </div>
@@ -533,8 +541,8 @@ export const AgenticStudioView: React.FC = () => {
                         <span>Self-Heal & Deploy Fix</span>
                       </button>
                     ) : (
-                      <span className="text-xs font-bold text-[#0E7A36] flex items-center space-x-1">
-                        <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-xs font-bold text-[#0D66D0] flex items-center space-x-1">
+                        <CheckCircle2 className="w-4 h-4 text-[#0D66D0]" />
                         <span>Remediation Live</span>
                       </span>
                     )}
@@ -550,14 +558,18 @@ export const AgenticStudioView: React.FC = () => {
       {activeSubTab === 'campaign_gen' && (
         <div className="space-y-6">
           {/* Configuration Card */}
-          <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] p-5 shadow-2xs">
-            <div className="flex items-center space-x-2 mb-3">
-              <Sparkles className="w-4 h-4 text-[#5C2B97]" />
-              <h3 className="text-sm font-bold text-[#2C2C2C]">Predictive Campaign Variant Generator</h3>
+          <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-4 border-b border-[#0E4DA4]">
+              <div className="flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-white shrink-0" />
+                <h3 className="text-sm font-bold text-white">Predictive Campaign Variant Generator</h3>
+              </div>
+              <p className="text-xs text-blue-100 mt-1">
+                Synthesize multi-variant personalized copy tailored to audience traits, predicting uplift metrics using propensity neural scoring.
+              </p>
             </div>
-            <p className="text-xs text-[#1E2229] mb-4">
-              Synthesize multi-variant personalized copy tailored to audience traits, predicting uplift metrics using propensity neural scoring.
-            </p>
+
+            <div className="p-5">
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -599,6 +611,7 @@ export const AgenticStudioView: React.FC = () => {
                   </>
                 )}
               </button>
+            </div>
             </div>
           </div>
 

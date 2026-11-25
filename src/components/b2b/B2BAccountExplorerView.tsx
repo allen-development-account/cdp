@@ -141,7 +141,7 @@ export const B2BAccountExplorerView: React.FC = () => {
         <div className="bg-[#FFFFFF] p-4 rounded border border-[#E1E5EA] shadow-2xs">
           <div className="flex items-center justify-between text-[#1E2229] text-xs font-medium">
             <span className="text-[10px] uppercase font-bold text-[#1E2229]">Total Pipeline</span>
-            <DollarSign className="w-3.5 h-3.5 text-[#0E7A36]" />
+            <DollarSign className="w-3.5 h-3.5 text-[#0284C7]" />
           </div>
           <p className="text-xl font-bold text-[#2C2C2C] mt-1 font-mono">
             ${totalPipeline.toLocaleString()}
@@ -163,7 +163,7 @@ export const B2BAccountExplorerView: React.FC = () => {
         <div className="bg-[#FFFFFF] p-4 rounded border border-[#E1E5EA] shadow-2xs">
           <div className="flex items-center justify-between text-[#1E2229] text-xs font-medium">
             <span className="text-[10px] uppercase font-bold text-[#1E2229]">Avg Intent Surge</span>
-            <Zap className="w-3.5 h-3.5 text-[#E68619]" />
+            <Zap className="w-3.5 h-3.5 text-[#1D4ED8]" />
           </div>
           <p className="text-xl font-bold text-[#2C2C2C] mt-1 font-mono">
             {avgIntent} / 100
@@ -229,7 +229,7 @@ export const B2BAccountExplorerView: React.FC = () => {
                 {/* Card Header */}
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded bg-[#2C2C2C] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                    <div className="w-10 h-10 rounded bg-gradient-to-br from-[#0EA5E9] to-[#0A3D82] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
                       {account.accountName.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
@@ -237,7 +237,7 @@ export const B2BAccountExplorerView: React.FC = () => {
                         <h3 className="text-sm font-bold text-[#2C2C2C]">{account.accountName}</h3>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                           account.accountTier === 'Strategic VIP'
-                            ? 'bg-[#F1E8FF] text-[#5C2B97] border-[#D0B3FF]'
+                            ? 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]'
                             : account.accountTier === 'Enterprise'
                             ? 'bg-[#EBF3FC] text-[#0D66D0] border-[#C5DCFA]'
                             : 'bg-[#F2F4F7] text-[#1A1D23] border-[#D5D5D5]'
@@ -257,7 +257,7 @@ export const B2BAccountExplorerView: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <div className="text-right">
                       <div className="flex items-center space-x-1 justify-end">
-                        <Zap className={`w-3.5 h-3.5 ${isHighIntent ? 'text-[#E68619]' : 'text-[#1E2229]'}`} />
+                        <Zap className={`w-3.5 h-3.5 ${isHighIntent ? 'text-[#0284C7]' : 'text-[#64748B]'}`} />
                         <span className="text-xs font-bold text-[#2C2C2C]">{account.intentScore}</span>
                       </div>
                       <span className="text-[9px] uppercase font-bold text-[#1E2229]">Surge Index</span>
@@ -297,7 +297,7 @@ export const B2BAccountExplorerView: React.FC = () => {
                         key={idx}
                         className="bg-[#F2F4F7] border border-[#E1E5EA] px-2.5 py-1 rounded flex items-center space-x-1.5 text-xs text-[#2C2C2C]"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7]" />
                         <span className="font-semibold">{member.fullName}</span>
                         <span className="text-[10px] text-[#1E2229]">({member.role})</span>
                       </div>
@@ -323,16 +323,16 @@ export const B2BAccountExplorerView: React.FC = () => {
               {/* Footer Action */}
               <div className="mt-4 pt-3 border-t border-[#E1E5EA] flex items-center justify-between text-xs">
                 <span className={`font-semibold flex items-center space-x-1 ${
-                  isAtRisk ? 'text-[#D7373F]' : 'text-[#0E7A36]'
+                  isAtRisk ? 'text-[#0A3D82]' : 'text-[#0D66D0]'
                 }`}>
                   {isAtRisk ? (
                     <>
-                      <ShieldAlert className="w-3.5 h-3.5" />
+                      <ShieldAlert className="w-3.5 h-3.5 text-[#0A3D82]" />
                       <span>Health: {account.healthScore}/100 (At-Risk)</span>
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#0284C7]" />
                       <span>Health: {account.healthScore}/100 (Healthy)</span>
                     </>
                   )}
@@ -414,7 +414,7 @@ export const B2BAccountExplorerView: React.FC = () => {
                 {/* Pipeline Opportunities */}
                 <div>
                   <h4 className="text-xs uppercase tracking-wider font-bold text-[#1E2229] mb-3 flex items-center space-x-2">
-                    <DollarSign className="w-4 h-4 text-[#0E7A36]" />
+                    <DollarSign className="w-4 h-4 text-[#0284C7]" />
                     <span>Active Opportunities ({selectedAccount.opportunities.length})</span>
                   </h4>
 

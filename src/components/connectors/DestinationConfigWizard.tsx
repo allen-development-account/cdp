@@ -7,6 +7,11 @@ import {
 } from '../../types/cdp';
 import { BrandIcon } from './BrandLogos';
 import {
+  CatalogDestinationMeta,
+  getDestinationAdapter,
+  PayloadFormatType,
+} from './destinationAdapters';
+import {
   CheckCircle2,
   ShieldCheck,
   AlertTriangle,
@@ -24,21 +29,9 @@ import {
   RefreshCw,
   Check,
   Lock,
-  ExternalLink,
 } from 'lucide-react';
 
-export interface CatalogDestinationMeta {
-  id: string;
-  name: string;
-  brandKey: string;
-  type: 'Extension' | 'Connection';
-  category: string;
-  status: 'Connected' | 'Available';
-  description: string;
-  targetPlatform: string;
-  supportedIdentities: string[];
-  enforcedPolicies: string[];
-}
+export type { CatalogDestinationMeta };
 
 interface DestinationConfigWizardProps {
   isOpen: boolean;
@@ -57,77 +50,6 @@ interface DestinationConfigWizardProps {
   onTestEgress: (url: string, payload: any) => Promise<any>;
 }
 
-type VendorFamily = 'google_ads' | 'meta' | 'linkedin' | 'cloud_storage' | 'martech' | 'generic';
-
-function detectVendorFamily(card: CatalogDestinationMeta): VendorFamily {
-  const key = `${card.id} ${card.name}`.toLowerCase();
-  if (key.includes('google_ads') || key.includes('google customer') || key.includes('google ads') || key.includes('doubleclick')) {
-    return 'google_ads';
-  }
-  if (key.includes('meta') || key.includes('facebook')) {
-    return 'meta';
-  }
-  if (key.includes('linkedin')) {
-    return 'linkedin';
-  }
-  if (card.category === 'Cloud storage' || key.includes('s3') || key.includes('snowflake')) {
-    return 'cloud_storage';
-  }
-  if (card.category === 'Email' || key.includes('braze') || key.includes('klaviyo') || key.includes('marketo')) {
-    return 'martech';
-  }
-  return 'generic';
-}
-
-function getDefaultPayloadFormat(family: VendorFamily): 'standard' | 'meta_capi' | 'google_ads' | 's3_batch' {
-  if (family === 'google_ads') return 'google_ads';
-  if (family === 'meta') return 'meta_capi';
-  if (family === 'cloud_storage') return 's3_batch';
-  return 'standard';
-}
-
-function getDefaultMappings(family: VendorFamily): DestinationFieldMapping[] {
-  if (family === 'google_ads') {
-    return [
-      { sourceXdmField: 'personalEmail.address', targetField: 'hashed_email', transform: 'SHA-256 (Lowercase)', isIdentity: true, enabled: true },
-      { sourceXdmField: 'mobilePhone.number', targetField: 'hashed_phone_number', transform: 'E.164 + SHA-256', isIdentity: true, enabled: true },
-      { sourceXdmField: 'identityMap.deviceId', targetField: 'mobile_id', transform: 'Direct Value', isIdentity: true, enabled: false },
-      { sourceXdmField: 'person.name.firstName', targetField: 'address_info.hashed_first_name', transform: 'SHA-256 (Lowercase)', isIdentity: false, enabled: true },
-      { sourceXdmField: 'person.name.lastName', targetField: 'address_info.hashed_last_name', transform: 'SHA-256 (Lowercase)', isIdentity: false, enabled: true },
-      { sourceXdmField: 'homeAddress.countryCode', targetField: 'address_info.country_code', transform: 'Direct Value', isIdentity: false, enabled: true },
-    ];
-  }
-  if (family === 'meta') {
-    return [
-      { sourceXdmField: 'personalEmail.address', targetField: 'user_data.em', transform: 'SHA-256 (Lowercase)', isIdentity: true, enabled: true },
-      { sourceXdmField: 'mobilePhone.number', targetField: 'user_data.ph', transform: 'E.164 + SHA-256', isIdentity: true, enabled: true },
-      { sourceXdmField: 'person.name.firstName', targetField: 'user_data.fn', transform: 'SHA-256 (Lowercase)', isIdentity: false, enabled: true },
-      { sourceXdmField: 'person.name.lastName', targetField: 'user_data.ln', transform: 'SHA-256 (Lowercase)', isIdentity: false, enabled: true },
-    ];
-  }
-  if (family === 'linkedin') {
-    return [
-      { sourceXdmField: 'personalEmail.address', targetField: 'EMAIL_SHA256', transform: 'SHA-256 (Lowercase)', isIdentity: true, enabled: true },
-      { sourceXdmField: 'person.name.firstName', targetField: 'FIRSTNAME', transform: 'Direct Value', isIdentity: false, enabled: true },
-      { sourceXdmField: 'person.name.lastName', targetField: 'LASTNAME', transform: 'Direct Value', isIdentity: false, enabled: true },
-      { sourceXdmField: 'attributes.jobTitle', targetField: 'TITLE', transform: 'Direct Value', isIdentity: false, enabled: true },
-    ];
-  }
-  if (family === 'cloud_storage') {
-    return [
-      { sourceXdmField: 'identityMap.crmId', targetField: 'profile_id', transform: 'Direct Value', isIdentity: true, enabled: true },
-      { sourceXdmField: 'personalEmail.address', targetField: 'email_sha256', transform: 'SHA-256 (Lowercase)', isIdentity: true, enabled: true },
-      { sourceXdmField: 'attributes.totalSpend', targetField: 'total_spend_usd', transform: 'Direct Value', isIdentity: false, enabled: true },
-      { sourceXdmField: 'attributes.customerTier', targetField: 'customer_tier', transform: 'Direct Value', isIdentity: false, enabled: true },
-    ];
-  }
-  return [
-    { sourceXdmField: 'identityMap.crmId', targetField: 'external_id', transform: 'Direct Value', isIdentity: true, enabled: true },
-    { sourceXdmField: 'personalEmail.address', targetField: 'email', transform: 'SHA-256 (Lowercase)', isIdentity: true, enabled: true },
-    { sourceXdmField: 'attributes.customerTier', targetField: 'loyalty_tier', transform: 'Direct Value', isIdentity: false, enabled: true },
-  ];
-}
-
 const XDM_SOURCE_OPTIONS = [
   { value: 'personalEmail.address', label: 'personalEmail.address (Primary Email)' },
   { value: 'mobilePhone.number', label: 'mobilePhone.number (Phone E.164)' },
@@ -138,7 +60,7 @@ const XDM_SOURCE_OPTIONS = [
   { value: 'homeAddress.city', label: 'homeAddress.city' },
   { value: 'homeAddress.countryCode', label: 'homeAddress.countryCode' },
   { value: 'attributes.customerTier', label: 'attributes.customerTier' },
-  { source: 'attributes.totalSpend', value: 'attributes.totalSpend', label: 'attributes.totalSpend ($)' },
+  { value: 'attributes.totalSpend', label: 'attributes.totalSpend ($)' },
   { value: 'attributes.jobTitle', label: 'attributes.jobTitle' },
 ];
 
@@ -155,16 +77,17 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
   onNavigateToAudiences,
   onTestEgress,
 }) => {
-  const family = useMemo(() => detectVendorFamily(card), [card]);
+  const adapter = useMemo(() => getDestinationAdapter(card), [card]);
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(initialStep);
 
   // Step 1: Authentication & Connection Setup
   const [connectionName, setConnectionName] = useState('');
   const [connectionDesc, setConnectionDesc] = useState('');
-  const [accountType, setAccountType] = useState('AdWords');
+  const [accountType, setAccountType] = useState('');
   const [accountId, setAccountId] = useState('');
   const [managerAccountId, setManagerAccountId] = useState('');
+  const [customFields, setCustomFields] = useState<Record<string, string>>({});
   const [connectedUserEmail, setConnectedUserEmail] = useState('marketing-ops@enterprise-cdp.io');
   const [oauthAuthorized, setOauthAuthorized] = useState(false);
   const [showAdvancedAuth, setShowAdvancedAuth] = useState(false);
@@ -194,7 +117,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
   const [syncFrequency, setSyncFrequency] = useState<'Real-Time' | 'Hourly' | 'Daily'>('Hourly');
   const [exportMode, setExportMode] = useState<'Incremental' | 'Full Snapshot'>('Incremental');
   const [startDate, setStartDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [payloadFormat, setPayloadFormat] = useState<'standard' | 'meta_capi' | 'google_ads' | 's3_batch'>('google_ads');
+  const [payloadFormat, setPayloadFormat] = useState<PayloadFormatType>('standard');
   const [isTestingEgress, setIsTestingEgress] = useState(false);
   const [egressResult, setEgressResult] = useState<{
     status: number;
@@ -212,31 +135,17 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
     setStep(initialStep);
     setConnectionName(existingDestination?.connectionName || `${card.name} — Production`);
     setConnectionDesc(existingDestination?.description || card.description);
-    setAccountType(
-      existingDestination?.accountType ||
-        (family === 'google_ads'
-          ? 'AdWords'
-          : family === 'meta'
-          ? 'Meta Business Manager'
-          : family === 'linkedin'
-          ? 'LinkedIn Campaign Manager'
-          : family === 'cloud_storage'
-          ? 'AWS S3 / IAM Role'
-          : 'Partner REST API')
-    );
-    setAccountId(
-      existingDestination?.accountId ||
-        (family === 'google_ads'
-          ? '123-456-7890'
-          : family === 'meta'
-          ? 'act_8841209341'
-          : family === 'linkedin'
-          ? 'urn:li:sponsoredAccount:509421882'
-          : family === 'cloud_storage'
-          ? 's3://xlr8-cdp-exports-prod/audiences/'
-          : 'ws_prod_0192')
-    );
+    setAccountType(existingDestination?.accountType || adapter.accountTypes[0]?.value || 'Partner REST API');
+    setAccountId(existingDestination?.accountId || adapter.accountIdDefault);
     setManagerAccountId(existingDestination?.managerAccountId || '');
+
+    // Populate vendor-specific fields from existingDestination or adapter defaults
+    const nextCustomFields: Record<string, string> = {};
+    adapter.extraFields.forEach(f => {
+      nextCustomFields[f.key] = existingDestination?.customFields?.[f.key] ?? f.defaultValue ?? '';
+    });
+    setCustomFields(nextCustomFields);
+
     setConnectedUserEmail(existingDestination?.connectedUserEmail || 'marketing-ops@enterprise-cdp.io');
     setOauthAuthorized(Boolean(existingDestination?.authStatus === 'Authenticated'));
     setApiEndpoint(existingDestination?.endpoint || 'https://httpbin.org/post');
@@ -244,37 +153,51 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
       existingDestination?.authStatus === 'Authenticated'
         ? {
             verified: true,
-            apiVersion: family === 'google_ads' ? 'Google Ads API v18 (Customer Match)' : 'XLR8 Partner API v2.4',
-            oauthScope: family === 'google_ads' ? 'https://www.googleapis.com/auth/adwords' : 'destination:write',
-            latencyMs: 29,
+            apiVersion: card.targetPlatform,
+            oauthScope: adapter.authType === 'OAuth 2.0' ? 'destination:oauth_write' : 'destination:api_key',
+            latencyMs: 28,
             accountLabel: existingDestination.accountId || existingDestination.targetPlatform,
           }
         : null
     );
 
-    const firstAud = audiences[0];
-    setSelectedAudienceId(firstAud?.id || '');
+    const boundAud = existingDestination?.configuredAudienceId
+      ? audiences.find(a => a.id === existingDestination.configuredAudienceId) || audiences[0]
+      : audiences[0];
+    setSelectedAudienceId(boundAud?.id || '');
     setExternalListName(
       existingDestination?.scheduleConfig?.externalListName ||
-        (firstAud ? `XLR8_${firstAud.name.replace(/[^a-zA-Z0-9]+/g, '_')}` : 'XLR8_VIP_Customer_Match')
+        (boundAud ? `XLR8_${boundAud.name.replace(/[^a-zA-Z0-9]+/g, '_')}` : 'XLR8_VIP_Audience_List')
     );
-    setFieldMappings(existingDestination?.fieldMappings?.length ? existingDestination.fieldMappings : getDefaultMappings(family));
+    setFieldMappings(
+      existingDestination?.fieldMappings?.length ? existingDestination.fieldMappings : adapter.defaultMappings
+    );
     setSyncFrequency(
       (existingDestination?.syncFrequency as 'Real-Time' | 'Hourly' | 'Daily') ||
         (card.type === 'Extension' ? 'Real-Time' : 'Hourly')
     );
+    setExportMode(existingDestination?.scheduleConfig?.exportMode || 'Incremental');
     setStartDate(existingDestination?.scheduleConfig?.startDate || new Date().toISOString().split('T')[0]);
-    setPayloadFormat(getDefaultPayloadFormat(family));
+    setPayloadFormat(adapter.defaultPayloadFormat);
     setEgressResult(null);
     setErrorMsg(null);
     setSuccessMsg(null);
-  }, [isOpen, card, existingDestination, family, audiences, initialStep]);
+  }, [isOpen, card, existingDestination, adapter, audiences, initialStep]);
 
   if (!isOpen) return null;
 
   const selectedAudience = audiences.find(a => a.id === selectedAudienceId);
   const enabledIdentityCount = fieldMappings.filter(m => m.enabled && m.isIdentity).length;
   const enabledMappingCount = fieldMappings.filter(m => m.enabled).length;
+
+  const updateCustomField = (key: string, value: string) => {
+    setCustomFields(prev => ({ ...prev, [key]: value }));
+    // Require re-verification if credentials change
+    if (verifyResult?.verified) {
+      setVerifyResult(null);
+      setOauthAuthorized(false);
+    }
+  };
 
   const handleAudienceSelect = (aud: AudienceSegment) => {
     setSelectedAudienceId(aud.id);
@@ -283,11 +206,32 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
     }
   };
 
+  const validateRequiredVendorInputs = (): string | null => {
+    if (!connectionName.trim()) {
+      return 'Connection Name is required.';
+    }
+    if (!accountId.trim()) {
+      return `${adapter.accountIdLabel.replace(/\s*\*$/, '')} is required.`;
+    }
+    for (const field of adapter.extraFields) {
+      if (field.required && !String(customFields[field.key] || '').trim()) {
+        return `${field.label.replace(/\s*\*$/, '')} is required for ${card.name}.`;
+      }
+    }
+    return null;
+  };
+
   const handleAuthorizeAndVerify = async () => {
+    const clientValidationError = validateRequiredVendorInputs();
+    if (clientValidationError) {
+      setOauthAuthorized(false);
+      setVerifyResult({ verified: false, error: clientValidationError });
+      return;
+    }
+
     setIsVerifying(true);
     setErrorMsg(null);
     setVerifyResult(null);
-    const nextAuth = true;
     setOauthAuthorized(true);
 
     try {
@@ -302,7 +246,8 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
           accountType,
           endpoint: apiEndpoint,
           connectedUserEmail,
-          oauthAuthorized: nextAuth,
+          oauthAuthorized: true,
+          customFields,
         }),
       });
       const data = await res.json();
@@ -327,6 +272,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
     return {
       ...(existingDestination || {}),
       id: destId,
+      catalogId: card.id,
       name: card.name,
       icon: card.brandKey,
       category:
@@ -334,11 +280,13 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
           ? 'Ad Networks'
           : card.category === 'Cloud storage'
           ? 'Cloud Storage'
+          : card.id === 'custom_http_webhook_dest'
+          ? 'Webhooks'
           : 'MarTech',
       type:
         card.category === 'Cloud storage'
           ? 'data_warehouse'
-          : card.category === 'Advertising'
+          : card.category === 'Advertising' || card.category === 'Social' || card.category === 'DMP'
           ? 'ad_network'
           : 'messaging',
       status: 'Connected',
@@ -351,7 +299,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
       syncFrequency,
       endpoint: apiEndpoint.trim() || undefined,
       targetPlatform: card.targetPlatform,
-      authType: family === 'cloud_storage' ? 'Service Account (GCP/AWS)' : family === 'martech' ? 'API Key Token' : 'OAuth 2.0',
+      authType: adapter.authType,
       authStatus: oauthAuthorized || verifyResult?.verified ? 'Authenticated' : 'Configured',
       supportedIdentities: card.supportedIdentities,
       activeAudienceCount: activeCount,
@@ -360,6 +308,9 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
       managerAccountId: managerAccountId.trim() || undefined,
       connectionName: connectionName.trim() || card.name,
       connectedUserEmail: connectedUserEmail.trim() || undefined,
+      customFields,
+      configuredAudienceId: selectedAudienceId || existingDestination?.configuredAudienceId,
+      configuredAudienceName: selectedAudience?.name || existingDestination?.configuredAudienceName,
       fieldMappings,
       scheduleConfig: {
         frequency: syncFrequency,
@@ -387,7 +338,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
       setTimeout(() => {
         setIsSaving(false);
         onClose();
-      }, 1100);
+      }, 1000);
     } catch (err: any) {
       setIsSaving(false);
       setErrorMsg(err?.message || 'Unable to save destination account.');
@@ -399,6 +350,9 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
     setEgressResult(null);
     const sampleProfiles = profiles.slice(0, 3);
     const enabledMaps = fieldMappings.filter(m => m.enabled);
+    const baseSample = sampleProfiles.length > 0
+      ? sampleProfiles
+      : [{ id: 'prof_sample_01', primaryEmail: 'demo@customer.com', attributes: { totalSpend: 420, customerTier: 'VIP' } }];
 
     let samplePayload: any;
     if (payloadFormat === 'google_ads') {
@@ -413,43 +367,67 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
             ad_personalization: 'GRANTED',
           },
           mapped_fields: enabledMaps.map(m => `${m.sourceXdmField} -> ${m.targetField} (${m.transform})`),
-          operations: (sampleProfiles.length > 0 ? sampleProfiles : [{ id: 'prof_sample_01', primaryEmail: 'demo@customer.com' }]).map(
-            (p: any, idx: number) => ({
-              create: {
-                user_identifiers: [
-                  { hashed_email: `sha256_lc_${(p.id || `sample_${idx}`).slice(0, 14)}9f8e7d6c5b` },
-                  { hashed_phone_number: 'sha256_e164_e3b0c44298fc1c14' },
-                ],
-              },
-            })
-          ),
+          operations: baseSample.map((p: any, idx: number) => ({
+            create: {
+              user_identifiers: [
+                { hashed_email: `sha256_lc_${(p.id || `sample_${idx}`).slice(0, 14)}9f8e7d6c5b` },
+                { hashed_phone_number: 'sha256_e164_e3b0c44298fc1c14' },
+              ],
+            },
+          })),
         },
       };
     } else if (payloadFormat === 'meta_capi') {
       samplePayload = {
-        pixel_or_account_id: accountId || 'act_8841209341',
-        data: (sampleProfiles.length > 0 ? sampleProfiles : [{ id: 'prof_sample_01', attributes: { totalSpend: 420 } }]).map(
-          (p: any) => ({
-            event_name: 'AudienceSync',
-            event_time: Math.floor(Date.now() / 1000),
-            action_source: 'website',
-            user_data: {
-              em: ['4f794964177b94d93540bf59a1f9e... (SHA256)'],
-              ph: ['e3b0c44298fc1c149afbf4c8996fb... (SHA256)'],
-            },
-            custom_data: {
-              audience_list: externalListName,
-              value: p.attributes?.totalSpend || 120,
-            },
-          })
-        ),
+        ad_account_id: accountId || 'act_8841209341',
+        pixel_dataset_id: customFields.pixelDatasetId || accountId,
+        data: baseSample.map((p: any) => ({
+          event_name: 'AudienceSync',
+          event_time: Math.floor(Date.now() / 1000),
+          action_source: 'website',
+          user_data: {
+            em: ['4f794964177b94d93540bf59a1f9e... (SHA256)'],
+            ph: ['e3b0c44298fc1c149afbf4c8996fb... (SHA256)'],
+          },
+          custom_data: {
+            audience_list: externalListName,
+            value: p.attributes?.totalSpend || 120,
+          },
+        })),
       };
     } else if (payloadFormat === 's3_batch') {
       samplePayload = {
         destination_uri: accountId || 's3://xlr8-cdp-exports-prod/audiences/',
-        file_format: 'parquet.snappy',
+        region_or_warehouse: customFields.awsRegion || customFields.databaseSchema || 'us-east-1',
+        file_format: customFields.fileFormat || 'Parquet (Snappy)',
         mapped_columns: enabledMaps.map(m => m.targetField),
-        records_count: sampleProfiles.length,
+        records_count: baseSample.length,
+      };
+    } else if (payloadFormat === 'martech') {
+      samplePayload = {
+        destination: card.name,
+        account_or_list_id: accountId,
+        endpoint_cluster: customFields.brazeClusterUrl || customFields.marketoRestUrl || customFields.medalliaInstanceUrl || card.targetPlatform,
+        list_name: externalListName,
+        attributes: baseSample.map((p: any) => ({
+          external_id: p.id,
+          email_sha256: `sha256_${(p.id || '01').slice(0, 10)}`,
+          loyalty_tier: p.attributes?.customerTier || 'Gold',
+          audience_membership: externalListName,
+        })),
+      };
+    } else if (payloadFormat === 'analytics') {
+      samplePayload = {
+        measurement_or_project_id: accountId,
+        stream_or_token: customFields.streamId || customFields.projectToken || 'default',
+        events: baseSample.map((p: any) => ({
+          client_id: p.id,
+          name: 'cdp_audience_qualified',
+          params: {
+            audience_name: externalListName,
+            customer_tier: p.attributes?.customerTier || 'Gold',
+          },
+        })),
       };
     } else {
       samplePayload = {
@@ -457,8 +435,9 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
         destination: card.name,
         account_id: accountId,
         list_name: externalListName,
+        metadata: customFields,
         mapped_fields: enabledMaps.map(m => m.targetField),
-        profiles_count: sampleProfiles.length,
+        profiles_count: baseSample.length,
       };
     }
 
@@ -481,8 +460,12 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
   };
 
   const handleFinishActivate = () => {
+    if (!oauthAuthorized && !verifyResult?.verified) {
+      setErrorMsg('Please authenticate & verify your destination account in Step 1 first.');
+      return;
+    }
     if (!selectedAudienceId) {
-      setErrorMsg('Please select a target audience segment in Step 2 (or use "Save Connected Account" on Step 1).');
+      setErrorMsg('Please select a target audience segment in Step 2 (or use "Save Connected Account").');
       return;
     }
     if (enabledIdentityCount === 0) {
@@ -500,7 +483,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
       setTimeout(() => {
         setIsSaving(false);
         onClose();
-      }, 1300);
+      }, 1200);
     } catch (err: any) {
       setIsSaving(false);
       setErrorMsg(err?.message || 'Activation failed.');
@@ -520,7 +503,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
       ...prev,
       {
         sourceXdmField: 'homeAddress.city',
-        targetField: family === 'google_ads' ? 'address_info.city' : 'city',
+        targetField: card.id.includes('google') ? 'address_info.city' : 'city',
         transform: 'Direct Value',
         isIdentity: false,
         enabled: true,
@@ -551,7 +534,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="text-sm font-bold text-white">Configure Destination: {card.name}</h3>
-                <span className="px-2 py-0.5 rounded bg-white/15 border border-white/20 text-[10px] font-semibold text-white">
+                <span className="px-2 py-0.5 rounded bg-white/15 border border-white/20 text-[10px] font-semibold text-white whitespace-nowrap">
                   {card.type} · {card.category}
                 </span>
               </div>
@@ -567,7 +550,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
         </div>
 
         {/* 4-Step Wizard Bar */}
-        <div className="px-6 py-3 bg-[#F8F9FA] border-b border-[#E1E5EA] flex items-center justify-between gap-2 shrink-0">
+        <div className="px-6 py-3 bg-[#F8F9FA] border-b border-[#E1E5EA] flex items-center justify-between gap-2 overflow-x-auto shrink-0">
           {STEPS.map((s, idx) => {
             const Icon = s.icon;
             const isActive = step === s.num;
@@ -579,12 +562,19 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
               <React.Fragment key={s.num}>
                 <button
                   type="button"
-                  onClick={() => setStep(s.num)}
-                  className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                  onClick={() => {
+                    if (s.num > 1 && !oauthAuthorized && !verifyResult?.verified) {
+                      setErrorMsg('Complete Step 1 authentication & verification before proceeding.');
+                      return;
+                    }
+                    setErrorMsg(null);
+                    setStep(s.num);
+                  }}
+                  className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                     isActive
                       ? 'bg-[#EBF3FC] text-[#0D66D0] border border-[#1473E6]/30'
                       : isDone
-                      ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]'
+                      ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]'
                       : 'text-[#596780] hover:bg-white'
                   }`}
                 >
@@ -593,7 +583,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                       isActive
                         ? 'bg-[#1473E6] text-white'
                         : isDone
-                        ? 'bg-[#0E7A36] text-white'
+                        ? 'bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white'
                         : 'bg-[#E1E5EA] text-[#596780]'
                     }`}
                   >
@@ -615,17 +605,13 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
             <div className="space-y-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h4 className="text-sm font-bold text-[#1E2229]">Step 1: Authentication & Account Connection</h4>
-                  <p className="text-xs text-[#596780] mt-0.5">
-                    {family === 'google_ads'
-                      ? 'Connect your Google Ads account via OAuth 2.0 and bind your 10-digit Customer Account ID for Customer Match / Tagging.'
-                      : 'Enter your destination account identifiers and authorize server-to-server credentials.'}
-                  </p>
+                  <h4 className="text-sm font-bold text-[#1E2229]">Step 1: Authentication &amp; {card.name} Setup</h4>
+                  <p className="text-xs text-[#596780] mt-0.5">{adapter.authDescription}</p>
                 </div>
                 {verifyResult?.verified && (
-                  <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[#DEFBE6] border border-[#B4F0C3] text-[#0E7A36] font-bold text-[11px] shrink-0">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>OAuth 2.0 Authenticated</span>
+                  <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[#E0F2FE] border border-[#BAE6FD] text-[#0369A1] font-bold text-[11px] whitespace-nowrap shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7]" />
+                    <span>{adapter.authType} Verified</span>
                   </span>
                 )}
               </div>
@@ -642,73 +628,45 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-[#1E2229] block mb-1">Account Type</label>
+                  <label className="font-bold text-[#1E2229] block mb-1">Integration Mode / Account Type</label>
                   <select
                     value={accountType}
                     onChange={e => setAccountType(e.target.value)}
                     className="w-full px-3 py-2 bg-white border border-[#D0D7DE] rounded-lg text-xs text-[#1E2229] focus:border-[#1473E6] focus:outline-none"
                   >
-                    {family === 'google_ads' ? (
-                      <>
-                        <option value="AdWords">AdWords (Google Ads Customer Match)</option>
-                        <option value="Google Ads Tag">Google Ads Conversion & Remarketing Tag</option>
-                      </>
-                    ) : family === 'meta' ? (
-                      <>
-                        <option value="Meta Business Manager">Meta Business Manager (System User)</option>
-                        <option value="Meta Pixel Dataset">Meta Conversions API Dataset</option>
-                      </>
-                    ) : family === 'cloud_storage' ? (
-                      <>
-                        <option value="AWS S3 / IAM Role">AWS S3 Bucket (Cross-Account IAM Role)</option>
-                        <option value="Snowflake Secure Share">Snowflake Data Clean Room Share</option>
-                      </>
-                    ) : (
-                      <>
-                        <option value="Partner REST API">Partner OAuth 2.0 / REST API</option>
-                        <option value="Webhook Egress">Custom Webhook Egress</option>
-                      </>
-                    )}
+                    {adapter.accountTypes.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
 
-              {/* Google Ads Official Customer Match Setup Block */}
+              {/* Vendor-Specific Configuration Inputs */}
               <div className="p-4 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-bold text-[#1E2229] block mb-1">
-                      {family === 'google_ads'
-                        ? 'Google Ads Customer ID (XXX-XXX-XXXX) *'
-                        : family === 'meta'
-                        ? 'Meta Ad Account ID / Pixel ID *'
-                        : family === 'linkedin'
-                        ? 'LinkedIn Ad Account URN *'
-                        : family === 'cloud_storage'
-                        ? 'S3 Bucket URI / Warehouse Account *'
-                        : 'Workspace / Account Identifier *'}
-                    </label>
+                    <label className="font-bold text-[#1E2229] block mb-1">{adapter.accountIdLabel}</label>
                     <input
                       type="text"
                       value={accountId}
-                      onChange={e => setAccountId(e.target.value)}
-                      placeholder={
-                        family === 'google_ads'
-                          ? '123-456-7890'
-                          : family === 'meta'
-                          ? 'act_8841209341'
-                          : 'Enter Account ID'
-                      }
+                      onChange={e => {
+                        setAccountId(e.target.value);
+                        if (verifyResult?.verified) {
+                          setVerifyResult(null);
+                          setOauthAuthorized(false);
+                        }
+                      }}
+                      placeholder={adapter.accountIdPlaceholder}
                       className="w-full px-3 py-2 bg-white border border-[#D0D7DE] rounded-lg text-xs font-mono text-[#1E2229] focus:border-[#1473E6] focus:outline-none"
                     />
-                    {family === 'google_ads' && (
-                      <p className="text-[10px] text-[#596780] mt-1">
-                        Enter your child advertiser Customer ID (<span className="font-mono">123-456-7890</span>), not your Manager (MCC) ID.
-                      </p>
+                    {adapter.accountIdHelper && (
+                      <p className="text-[10px] text-[#596780] mt-1">{adapter.accountIdHelper}</p>
                     )}
                   </div>
 
-                  {family === 'google_ads' ? (
+                  {adapter.showManagerAccountId && (
                     <div>
                       <label className="font-bold text-[#1E2229] block mb-1">
                         Manager Account ID / MCC <span className="font-normal text-[#596780]">(Optional)</span>
@@ -724,33 +682,58 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                         Used as <span className="font-mono">login-customer-id</span> header when authenticating via MCC.
                       </p>
                     </div>
-                  ) : (
+                  )}
+
+                  {adapter.extraFields.map(field => (
+                    <div key={field.key}>
+                      <label className="font-bold text-[#1E2229] block mb-1">{field.label}</label>
+                      {field.type === 'select' ? (
+                        <select
+                          value={customFields[field.key] ?? field.defaultValue ?? ''}
+                          onChange={e => updateCustomField(field.key, e.target.value)}
+                          className="w-full px-3 py-2 bg-white border border-[#D0D7DE] rounded-lg text-xs text-[#1E2229] focus:border-[#1473E6] focus:outline-none"
+                        >
+                          {(field.options || []).map(opt => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type={field.type === 'password' ? 'password' : field.type === 'url' ? 'url' : 'text'}
+                          value={customFields[field.key] ?? ''}
+                          onChange={e => updateCustomField(field.key, e.target.value)}
+                          placeholder={field.placeholder}
+                          className="w-full px-3 py-2 bg-white border border-[#D0D7DE] rounded-lg text-xs font-mono text-[#1E2229] focus:border-[#1473E6] focus:outline-none"
+                        />
+                      )}
+                      {field.helperText && <p className="text-[10px] text-[#596780] mt-1">{field.helperText}</p>}
+                    </div>
+                  ))}
+
+                  {!adapter.showManagerAccountId && adapter.extraFields.length === 0 && (
                     <div>
-                      <label className="font-bold text-[#1E2229] block mb-1">Destination API / Webhook URL</label>
+                      <label className="font-bold text-[#1E2229] block mb-1">Destination API / Webhook URL *</label>
                       <input
-                        type="text"
+                        type="url"
                         value={apiEndpoint}
                         onChange={e => setApiEndpoint(e.target.value)}
+                        placeholder="https://api.partner.com/v1/audiences"
                         className="w-full px-3 py-2 bg-white border border-[#D0D7DE] rounded-lg text-xs font-mono text-[#1E2229] focus:border-[#1473E6] focus:outline-none"
                       />
                     </div>
                   )}
                 </div>
 
-                {/* OAuth 2.0 Authorization Card */}
+                {/* OAuth / API Credential Verification Card */}
                 <div className="p-3.5 bg-white border border-[#E1E5EA] rounded-lg space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-start space-x-2.5">
                       <Lock className="w-4 h-4 text-[#1473E6] mt-0.5 shrink-0" />
                       <div>
-                        <span className="font-bold text-[#1E2229] block">
-                          {family === 'google_ads' ? 'Google Ads OAuth 2.0 Account Grant' : `${card.name} API Authorization`}
-                        </span>
-                        <span className="text-[11px] text-[#596780]">
-                          {family === 'google_ads'
-                            ? 'Grants scoped AdWords Customer Match permissions (https://www.googleapis.com/auth/adwords).'
-                            : 'Validates account credentials and issues a scoped session token.'}
-                        </span>
+                        <span className="font-bold text-[#1E2229] block">{adapter.authTitle}</span>
+                        <span className="text-[11px] text-[#596780]">{adapter.authDescription}</span>
                       </div>
                     </div>
 
@@ -758,9 +741,9 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                       type="button"
                       onClick={handleAuthorizeAndVerify}
                       disabled={isVerifying}
-                      className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 shrink-0 transition-all cursor-pointer ${
+                      className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                         verifyResult?.verified
-                          ? 'bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] hover:bg-[#C6F6D5]'
+                          ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] hover:bg-[#BAE6FD]/60'
                           : 'bg-[#1473E6] hover:bg-[#0D66D0] text-white shadow-2xs'
                       }`}
                     >
@@ -770,7 +753,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                           ? 'Verifying Handshake...'
                           : verifyResult?.verified
                           ? 'Renew / Re-verify Auth'
-                          : `Connect & Verify ${family === 'google_ads' ? 'Google Ads' : 'Account'}`}
+                          : adapter.authButtonLabel}
                       </span>
                     </button>
                   </div>
@@ -793,7 +776,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                         onClick={() => setShowAdvancedAuth(v => !v)}
                         className="text-[11px] font-semibold text-[#1473E6] hover:underline cursor-pointer pb-1.5"
                       >
-                        {showAdvancedAuth ? 'Hide Advanced Token Fields' : '+ Optional: Bring Own Developer Token / Webhook'}
+                        {showAdvancedAuth ? 'Hide Advanced Endpoint & Token' : '+ Optional: Override Webhook URL / Developer Token'}
                       </button>
                     </div>
                   </div>
@@ -802,7 +785,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[#E1E5EA]">
                       <div>
                         <label className="text-[10px] font-bold uppercase text-[#596780] block mb-1">
-                          Developer Token / API Secret (Masked)
+                          Developer Token / Override Secret (Masked)
                         </label>
                         <input
                           type="password"
@@ -814,10 +797,10 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                       </div>
                       <div>
                         <label className="text-[10px] font-bold uppercase text-[#596780] block mb-1">
-                          Test Egress HTTP Endpoint
+                          Egress HTTP / Webhook Endpoint
                         </label>
                         <input
-                          type="text"
+                          type="url"
                           value={apiEndpoint}
                           onChange={e => setApiEndpoint(e.target.value)}
                           className="w-full px-2.5 py-1.5 bg-white border border-[#D0D7DE] rounded text-xs font-mono text-[#1E2229]"
@@ -830,15 +813,15 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                     <div
                       className={`p-3 rounded-lg border text-[11px] space-y-1 ${
                         verifyResult.verified
-                          ? 'bg-[#DEFBE6] border-[#B4F0C3] text-[#0E7A36]'
-                          : 'bg-[#FFEBEB] border-[#FFCCD0] text-[#D7373F]'
+                          ? 'bg-[#E0F2FE] border-[#BAE6FD] text-[#0369A1]'
+                          : 'bg-[#EFF6FF] border-[#93C5FD] text-[#0A3D82]'
                       }`}
                     >
                       {verifyResult.verified ? (
                         <>
                           <div className="flex items-center justify-between font-bold">
                             <span className="flex items-center space-x-1.5">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7]" />
                               <span>Connection Verified · {verifyResult.apiVersion}</span>
                             </span>
                             <span className="font-mono">{verifyResult.latencyMs}ms</span>
@@ -848,14 +831,14 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                             <span className="font-semibold">{verifyResult.accountLabel}</span>
                           </div>
                           {verifyResult.warnings && verifyResult.warnings.length > 0 && (
-                            <div className="text-[#8A5700] bg-[#FFF8E6] px-2 py-1 rounded border border-[#FEE2B3] mt-1">
+                            <div className="text-[#1D4ED8] bg-[#EFF6FF] px-2 py-1 rounded border border-[#BFDBFE] mt-1">
                               {verifyResult.warnings[0]}
                             </div>
                           )}
                         </>
                       ) : (
                         <div className="flex items-center space-x-2 font-semibold">
-                          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                          <AlertTriangle className="w-3.5 h-3.5 text-[#1D4ED8] shrink-0" />
                           <span>{verifyResult.error}</span>
                         </div>
                       )}
@@ -864,16 +847,13 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                 </div>
               </div>
 
-              {family === 'google_ads' && (
+              {adapter.prerequisiteTitle && (
                 <div className="p-3.5 bg-[#EBF3FC] border border-[#C5DCFA] rounded-xl text-[11px] text-[#0A3D82] space-y-1">
                   <div className="font-bold flex items-center space-x-1.5">
                     <Info className="w-3.5 h-3.5 text-[#1473E6]" />
-                    <span>Google Ads Customer Match Prerequisites (Adobe RT-CDP Standard)</span>
+                    <span>{adapter.prerequisiteTitle}</span>
                   </div>
-                  <p>
-                    1. Your Google Ads account must meet Google Customer Match eligibility policies. 2. Email &amp; phone identifiers are normalized and{' '}
-                    <span className="font-semibold">SHA-256 hashed</span> inside XLR8 before leaving the CDP. 3. Minimum 100–1,000 matched users are required to serve lists on Google Search &amp; YouTube.
-                  </p>
+                  <p>{adapter.prerequisiteText}</p>
                 </div>
               )}
             </div>
@@ -895,7 +875,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                     onClose();
                     onNavigateToAudiences();
                   }}
-                  className="text-xs font-semibold text-[#1473E6] hover:underline flex items-center space-x-1 cursor-pointer"
+                  className="text-xs font-semibold text-[#1473E6] hover:underline flex items-center space-x-1 cursor-pointer whitespace-nowrap"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>New Segment</span>
@@ -903,8 +883,8 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
               </div>
 
               {audiences.length === 0 ? (
-                <div className="p-6 bg-[#FFF8E6] border border-[#FEE2B3] rounded-xl space-y-3 text-center">
-                  <Info className="w-7 h-7 text-[#E68619] mx-auto" />
+                <div className="p-6 bg-[#EBF3FC] border border-[#BFDBFE] rounded-xl space-y-3 text-center">
+                  <Info className="w-7 h-7 text-[#1473E6] mx-auto" />
                   <h5 className="text-sm font-bold text-[#1E2229]">No Audience Segments Created Yet</h5>
                   <p className="text-xs text-[#596780] max-w-md mx-auto">
                     Your <span className="font-semibold text-[#1E2229]">{card.name}</span> account ({accountId}) can be saved right now using{' '}
@@ -943,38 +923,28 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                           <div className="min-w-0">
                             <div className="flex items-center space-x-2">
                               <span
-                                className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                                className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
                                   isSelected ? 'border-[#1473E6] bg-[#1473E6]' : 'border-[#CBD5E1] bg-white'
                                 }`}
                               >
                                 {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                               </span>
-                              <span className="font-bold text-[#1E2229] text-xs">{aud.name}</span>
-                              <span className="px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] text-[10px] font-semibold">
+                              <span className="font-bold text-[#1E2229] truncate">{aud.name}</span>
+                              <span className="px-2 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] text-[10px] font-semibold">
                                 {aud.status}
                               </span>
                             </div>
                             <p className="text-[11px] text-[#596780] mt-1 pl-6 truncate">{aud.description}</p>
                           </div>
 
-                          <div className="flex items-center space-x-4 shrink-0 text-right">
-                            <div>
-                              <span className="block font-mono font-bold text-[#1E2229]">
-                                {(aud.qualifyingProfileCount ?? 0).toLocaleString()}
-                              </span>
-                              <span className="text-[10px] text-[#596780]">Qualifying</span>
-                            </div>
-                            <div>
-                              <span className="block font-mono font-bold text-[#0E7A36]">
-                                {(aud.targetableProfileCount ?? 0).toLocaleString()}
-                              </span>
-                              <span className="text-[10px] text-[#596780]">DULE Cleared</span>
-                            </div>
+                          <div className="text-right shrink-0">
+                            <span className="font-mono font-bold text-[#1E2229] block">
+                              {(aud.targetableProfileCount ?? aud.qualifyingProfileCount ?? 0).toLocaleString()} targetable
+                            </span>
                             {suppressed > 0 && (
-                              <div>
-                                <span className="block font-mono font-bold text-[#D7373F]">{suppressed}</span>
-                                <span className="text-[10px] text-[#D7373F]">Blocked</span>
-                              </div>
+                              <span className="text-[10px] text-[#1D4ED8] font-semibold">
+                                {suppressed} DULE suppressed
+                              </span>
                             )}
                           </div>
                         </button>
@@ -982,7 +952,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                     })}
                   </div>
 
-                  <div className="p-4 bg-[#F8FAFC] border border-[#E1E5EA] rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-[#E1E5EA]">
                     <div>
                       <label className="font-bold text-[#1E2229] block mb-1">Destination List Action</label>
                       <select
@@ -995,9 +965,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                       </select>
                     </div>
                     <div>
-                      <label className="font-bold text-[#1E2229] block mb-1">
-                        {family === 'google_ads' ? 'Google Ads User List Name' : 'Target Audience / Segment Name'}
-                      </label>
+                      <label className="font-bold text-[#1E2229] block mb-1">Target Audience / List Name</label>
                       <input
                         type="text"
                         value={externalListName}
@@ -1096,7 +1064,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                           <button
                             type="button"
                             onClick={() => removeMappingRow(idx)}
-                            className="text-[#596780] hover:text-[#D7373F] cursor-pointer"
+                            className="text-[#0D66D0] hover:text-[#0A3D82] cursor-pointer"
                             title="Remove mapping"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1111,12 +1079,12 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
               <div
                 className={`p-3 rounded-lg border text-[11px] flex items-center justify-between ${
                   enabledIdentityCount > 0
-                    ? 'bg-[#DEFBE6] border-[#B4F0C3] text-[#0E7A36]'
-                    : 'bg-[#FFEBEB] border-[#FFCCD0] text-[#D7373F]'
+                    ? 'bg-[#E0F2FE] border-[#BAE6FD] text-[#0369A1]'
+                    : 'bg-[#EFF6FF] border-[#93C5FD] text-[#0A3D82]'
                 }`}
               >
                 <div className="flex items-center space-x-2 font-semibold">
-                  <ShieldCheck className="w-4 h-4 shrink-0" />
+                  <ShieldCheck className={`w-4 h-4 shrink-0 ${enabledIdentityCount > 0 ? 'text-[#0284C7]' : 'text-[#1D4ED8]'}`} />
                   <span>
                     {enabledIdentityCount > 0
                       ? `${enabledIdentityCount} Identity namespace(s) & ${enabledMappingCount} total field(s) mapped. Sensitive S1/S2 attributes (SSN, Health) auto-redacted by DULE.`
@@ -1146,7 +1114,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                         key={freq}
                         type="button"
                         onClick={() => setSyncFrequency(freq)}
-                        className={`py-1.5 px-2 rounded-lg border text-[11px] font-semibold cursor-pointer ${
+                        className={`py-1.5 px-2 rounded-lg border text-[11px] font-semibold cursor-pointer whitespace-nowrap ${
                           syncFrequency === freq
                             ? 'border-[#1473E6] bg-[#EBF3FC] text-[#0D66D0]'
                             : 'border-[#D0D7DE] bg-white text-[#1E2229]'
@@ -1183,7 +1151,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
               <div className="p-4 bg-[#F8FAFC] border border-[#E1E5EA] rounded-xl grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
                 <div>
                   <span className="text-[#596780] uppercase font-bold text-[10px] block">Account ID</span>
-                  <span className="font-mono font-bold text-[#1E2229]">{accountId || 'Not Set'}</span>
+                  <span className="font-mono font-bold text-[#1E2229] truncate block">{accountId || 'Not Set'}</span>
                 </div>
                 <div>
                   <span className="text-[#596780] uppercase font-bold text-[10px] block">Target Segment</span>
@@ -1197,7 +1165,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                 </div>
                 <div>
                   <span className="text-[#596780] uppercase font-bold text-[10px] block">DULE Governance</span>
-                  <span className="font-bold text-[#0E7A36]">Active &amp; Enforced</span>
+                  <span className="font-bold text-[#0D66D0]">Active &amp; Enforced</span>
                 </div>
               </div>
 
@@ -1208,7 +1176,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                     <Zap className="w-3.5 h-3.5 text-[#1473E6]" />
                     <span>Live Outbound Egress &amp; API Payload Tester</span>
                   </span>
-                  <span className="text-[10px] font-mono text-[#0E7A36] bg-[#DEFBE6] px-2 py-0.5 rounded font-bold border border-[#B4F0C3]">
+                  <span className="text-[10px] font-mono text-[#0369A1] bg-[#E0F2FE] px-2 py-0.5 rounded font-bold border border-[#BAE6FD]">
                     Live HTTP Dispatch
                   </span>
                 </div>
@@ -1218,19 +1186,21 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                     <label className="text-[10px] uppercase font-bold text-[#596780] block mb-1">Payload Format Adapter</label>
                     <select
                       value={payloadFormat}
-                      onChange={e => setPayloadFormat(e.target.value as any)}
+                      onChange={e => setPayloadFormat(e.target.value as PayloadFormatType)}
                       className="w-full bg-white border border-[#D0D7DE] rounded px-2.5 py-1.5 text-xs text-[#1E2229]"
                     >
                       <option value="google_ads">Google Customer Match (Google Ads v18)</option>
                       <option value="meta_capi">Meta Conversions API (CAPI SHA-256)</option>
-                      <option value="s3_batch">Amazon S3 Parquet Data Lake Batch</option>
+                      <option value="martech">MarTech / Email / VoC User Track JSON</option>
+                      <option value="analytics">Analytics Measurement Protocol Batch</option>
+                      <option value="s3_batch">Cloud Storage / Data Lake Parquet Batch</option>
                       <option value="standard">Standard XLR8 Webhook JSON</option>
                     </select>
                   </div>
                   <div>
                     <label className="text-[10px] uppercase font-bold text-[#596780] block mb-1">Egress HTTP Endpoint</label>
                     <input
-                      type="text"
+                      type="url"
                       value={apiEndpoint}
                       onChange={e => setApiEndpoint(e.target.value)}
                       className="w-full bg-white border border-[#D0D7DE] rounded px-2.5 py-1.5 text-xs font-mono text-[#1E2229]"
@@ -1252,19 +1222,19 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-[11px] bg-white p-2 rounded border border-[#E1E5EA]">
                       <div className="flex items-center space-x-2">
-                        <span className="font-mono font-bold text-[#0E7A36] bg-[#DEFBE6] px-1.5 py-0.5 rounded">
+                        <span className="font-mono font-bold text-[#0369A1] bg-[#E0F2FE] px-1.5 py-0.5 rounded">
                           HTTP {egressResult.status} OK
                         </span>
                         <span className="text-[#596780]">
                           Roundtrip: <strong>{egressResult.latencyMs}ms</strong>
                         </span>
                       </div>
-                      <span className="text-[#0E7A36] font-semibold flex items-center space-x-1">
-                        <ShieldCheck className="w-3.5 h-3.5" />
+                      <span className="text-[#0D66D0] font-semibold flex items-center space-x-1">
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#1473E6]" />
                         <span>DULE PII Masking Verified</span>
                       </span>
                     </div>
-                    <pre className="bg-[#1E1E1E] text-[#4ADE80] font-mono text-[10px] p-3 rounded-lg max-h-40 overflow-y-auto leading-relaxed select-text">
+                    <pre className="bg-[#0F172A] text-[#7DD3FC] font-mono text-[10px] p-3 rounded-lg max-h-40 overflow-y-auto leading-relaxed select-text">
                       {egressResult.payloadSnippet}
                     </pre>
                   </div>
@@ -1274,15 +1244,15 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
           )}
 
           {errorMsg && (
-            <div className="p-3 bg-[#FFEBEB] text-[#D7373F] border border-[#FFCCD0] rounded-lg text-xs flex items-center space-x-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
+            <div className="p-3 bg-[#EFF6FF] text-[#0A3D82] border border-[#93C5FD] rounded-lg text-xs flex items-center space-x-2">
+              <AlertTriangle className="w-4 h-4 text-[#1D4ED8] shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3 bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] rounded-lg text-xs flex items-center space-x-2">
-              <Check className="w-4 h-4 shrink-0" />
+            <div className="p-3 bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] rounded-lg text-xs flex items-center space-x-2">
+              <Check className="w-4 h-4 text-[#0284C7] shrink-0" />
               <span>{successMsg}</span>
             </div>
           )}
@@ -1295,7 +1265,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
               <button
                 type="button"
                 onClick={() => setStep((step - 1) as 1 | 2 | 3 | 4)}
-                className="px-3.5 py-1.5 rounded-lg border border-[#D0D7DE] bg-white hover:bg-[#F2F4F7] text-[#1E2229] text-xs font-semibold flex items-center space-x-1 cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg border border-[#D0D7DE] bg-white hover:bg-[#F2F4F7] text-[#1E2229] text-xs font-semibold flex items-center space-x-1 cursor-pointer whitespace-nowrap"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
                 <span>Back</span>
@@ -1306,7 +1276,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
               onClick={handleSaveAccount}
               disabled={isSaving || (!oauthAuthorized && !verifyResult?.verified)}
               title="Save connected account credentials to Destinations > Accounts even before activating a segment"
-              className={`px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-colors ${
+              className={`px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-colors whitespace-nowrap ${
                 oauthAuthorized || verifyResult?.verified
                   ? 'border-[#1473E6] text-[#0D66D0] bg-[#EBF3FC] hover:bg-[#D9EAFA] cursor-pointer'
                   : 'border-[#E1E5EA] text-[#8C95A6] bg-[#F2F4F7] cursor-not-allowed'
@@ -1330,13 +1300,13 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                 type="button"
                 onClick={() => {
                   if (step === 1 && !oauthAuthorized && !verifyResult?.verified) {
-                    setErrorMsg('Click "Connect & Verify" first to authenticate your destination account.');
+                    setErrorMsg(`Click "${adapter.authButtonLabel}" first to validate your destination credentials.`);
                     return;
                   }
                   setErrorMsg(null);
                   setStep((step + 1) as 2 | 3 | 4);
                 }}
-                className="px-4 py-1.5 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold flex items-center space-x-1.5 shadow-2xs cursor-pointer"
+                className="px-4 py-1.5 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold flex items-center space-x-1.5 shadow-2xs cursor-pointer whitespace-nowrap"
               >
                 <span>Next Step</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -1346,7 +1316,7 @@ export const DestinationConfigWizard: React.FC<DestinationConfigWizardProps> = (
                 type="button"
                 onClick={handleFinishActivate}
                 disabled={isSaving || audiences.length === 0 || !selectedAudienceId || enabledIdentityCount === 0}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 shadow-2xs ${
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 shadow-2xs whitespace-nowrap ${
                   audiences.length === 0 || !selectedAudienceId || enabledIdentityCount === 0
                     ? 'bg-[#E1E5EA] border border-[#D0D7DE] text-[#8C95A6] cursor-not-allowed'
                     : 'bg-[#1473E6] hover:bg-[#0D66D0] text-white cursor-pointer'

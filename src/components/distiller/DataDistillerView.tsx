@@ -138,16 +138,17 @@ export const DataDistillerView: React.FC = () => {
       {/* Main Workspace Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Query Templates Catalog */}
-        <div className="lg:col-span-4 bg-[#FFFFFF] rounded border border-[#E1E5EA] p-4 flex flex-col overflow-hidden shadow-2xs">
-          <div className="flex items-center justify-between pb-3 border-b border-[#E1E5EA]">
-            <h3 className="text-xs font-bold text-[#2C2C2C] uppercase tracking-wider flex items-center space-x-1.5">
-              <FileCode className="w-4 h-4 text-[#1473E6]" />
+        <div className="lg:col-span-4 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] flex flex-col overflow-hidden shadow-2xs">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-4 py-3 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-1.5">
+              <FileCode className="w-4 h-4 text-white shrink-0" />
               <span>Enterprise Query Templates</span>
             </h3>
-            <span className="text-[10px] text-[#1E2229] font-mono">XDM ANSI-SQL</span>
+            <span className="text-[10px] text-white bg-white/15 border border-white/25 px-2 py-0.5 rounded font-mono shrink-0">XDM ANSI-SQL</span>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-2 mt-3 pr-1">
+          <div className="p-4 flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-y-auto space-y-2 pr-1">
             {queryTemplates.map((tmpl) => {
               const isSelected = activeTemplate.id === tmpl.id;
               return (
@@ -184,6 +185,7 @@ export const DataDistillerView: React.FC = () => {
               <p>• xdm_b2b_accounts (4 accounts)</p>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Right Column: Code Editor & Result Table */}
@@ -202,7 +204,7 @@ export const DataDistillerView: React.FC = () => {
                 onClick={handleCopySql}
                 className="flex items-center space-x-1 text-[#B5B5B5] hover:text-white text-xs font-semibold"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-[#2D9D78]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[#38BDF8]" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
@@ -234,8 +236,8 @@ export const DataDistillerView: React.FC = () => {
                 </div>
               </div>
 
-              <span className="text-[10px] bg-[#DEFBE6] text-[#0E7A36] font-bold px-2 py-0.5 rounded border border-[#A1ECC4] flex items-center space-x-1">
-                <CheckCircle2 className="w-3 h-3" />
+              <span className="text-[10px] bg-[#E0F2FE] text-[#0369A1] font-bold px-2 py-0.5 rounded border border-[#BAE6FD] flex items-center space-x-1">
+                <CheckCircle2 className="w-3 h-3 text-[#0284C7]" />
                 <span>QUERY OK (ANSI-92)</span>
               </span>
             </div>

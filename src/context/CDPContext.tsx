@@ -152,6 +152,13 @@ interface CDPContextType {
   goForward: () => void;
   getPreviousTabTitle: () => string;
   getNextTabTitle: () => string;
+  guidedReturnStep: number | null;
+  guidedOpenMode: 'overview' | 'step';
+  setGuidedOpenMode: (mode: 'overview' | 'step') => void;
+  launchGuidedStepAction: (stepNumber: number, targetTab: string) => void;
+  returnToGuidedStep: () => void;
+  openGuidedOverview: () => void;
+  clearGuidedReturn: () => void;
   setSelectedProfileId: (id: string | null) => void;
   setSelectedB2BAccountId: (id: string | null) => void;
   setActiveSandboxId: (id: string) => void;
@@ -283,7 +290,18 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [profiles, setProfiles] = useState<CustomerProfile[]>(initialDemoEval.profiles);
   const [audiences, setAudiences] = useState<AudienceSegment[]>(initialDemoEval.audiences);
   const [journeys, setJourneys] = useState<JourneyDefinition[]>(initialDemoActive ? INITIAL_JOURNEYS : []);
-  const [destinations, setDestinations] = useState<DestinationConnector[]>(initialDemoActive ? INITIAL_DESTINATIONS : []);
+  const [destinations, setDestinations] = useState<DestinationConnector[]>(() => {
+    if (initialDemoActive) return INITIAL_DESTINATIONS;
+    try {
+      if (localStorage.getItem('xlr8_user_created') === 'true') {
+        const saved = localStorage.getItem('xlr8_cdp_destinations');
+        if (saved) return JSON.parse(saved);
+      }
+    } catch {
+      // ignore
+    }
+    return [];
+  });
   const [sources, setSources] = useState<IngestionSource[]>(() => {
     if (initialDemoActive) return INITIAL_INGESTION_SOURCES;
     try {
@@ -384,9 +402,18 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }, []);
 
-  const [activeTab, setActiveTabRaw] = useState<string>('home');
-  const [history, setHistory] = useState<string[]>(['home']);
-  const [historyIndex, setHistoryIndex] = useState<number>(0);
+  const [navState, setNavState] = useState<{
+    activeTab: string;
+    history: string[];
+    historyIndex: number;
+  }>({
+    activeTab: 'home',
+    history: ['home'],
+    historyIndex: 0
+  });
+  const { activeTab, history, historyIndex } = navState;
+  const [guidedReturnStep, setGuidedReturnStep] = useState<number | null>(null);
+  const [guidedOpenMode, setGuidedOpenMode] = useState<'overview' | 'step'>('overview');
 
   const addSource = useCallback((source: IngestionSource) => {
     setSources(prev => {
@@ -423,21 +450,20 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
   const setActiveTab = useCallback((tabOrFn: string | ((prev: string) => string)) => {
-    setActiveTabRaw(prevTab => {
-      const nextTab = typeof tabOrFn === 'function' ? tabOrFn(prevTab) : tabOrFn;
-      if (nextTab === prevTab) return prevTab;
+    setNavState(prev => {
+      const nextTab = typeof tabOrFn === 'function' ? tabOrFn(prev.activeTab) : tabOrFn;
+      if (nextTab === prev.activeTab) return prev;
 
-      setHistory(prevHist => {
-        const newHist = prevHist.slice(0, historyIndex + 1);
-        newHist.push(nextTab);
-        if (newHist.length > 50) newHist.shift();
-        return newHist;
-      });
-      setHistoryIndex(prevIdx => Math.min(prevIdx + 1, 49));
-
-      return nextTab;
+      const sliced = prev.history.slice(0, prev.historyIndex + 1);
+      sliced.push(nextTab);
+      if (sliced.length > 50) sliced.shift();
+      return {
+        activeTab: nextTab,
+        history: sliced,
+        historyIndex: sliced.length - 1
+      };
     });
-  }, [historyIndex]);
+  }, []);
 
   const getFallbackParentTab = useCallback((currentTab: string): string => {
     switch (currentTab) {
@@ -502,6 +528,8 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       case 'schema_editor': return 'XDM Schema Editor';
       case 'schemas': return 'Schemas (XDM)';
       case 'datasets': return 'Datasets & DULE Labeling';
+      case 'create_dataset':
+      case 'bring_in_dataset': return 'Bring In New Dataset';
       case 'ingestion': return 'Data Ingestion & Streams';
       case 'federated_composition': return 'Zero-Copy Data Mesh';
       case 'sources':
@@ -533,32 +561,73 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const goBack = useCallback(() => {
     if (historyIndex > 0) {
       const prevTab = history[historyIndex - 1];
-      setHistoryIndex(prev => prev - 1);
-      setActiveTabRaw(prevTab);
+      if (prevTab === 'get_started' && guidedReturnStep !== null) {
+        setGuidedOpenMode('step');
+      }
+      setNavState(prev => {
+        if (prev.historyIndex <= 0) return prev;
+        const nextIdx = prev.historyIndex - 1;
+        return {
+          ...prev,
+          activeTab: prev.history[nextIdx],
+          historyIndex: nextIdx
+        };
+      });
     } else {
       const fallback = getFallbackParentTab(activeTab);
       if (fallback !== activeTab) {
-        setHistory(['home', fallback]);
-        setHistoryIndex(fallback === 'home' ? 0 : 1);
-        setActiveTabRaw(fallback);
+        setNavState({
+          activeTab: fallback,
+          history: fallback === 'home' ? ['home'] : ['home', fallback],
+          historyIndex: fallback === 'home' ? 0 : 1
+        });
       }
     }
-  }, [historyIndex, history, activeTab, getFallbackParentTab]);
+  }, [historyIndex, history, activeTab, getFallbackParentTab, guidedReturnStep]);
 
   const goForward = useCallback(() => {
-    if (historyIndex < history.length - 1) {
-      const nextTab = history[historyIndex + 1];
-      setHistoryIndex(prev => prev + 1);
-      setActiveTabRaw(nextTab);
-    }
-  }, [historyIndex, history]);
+    setNavState(prev => {
+      if (prev.historyIndex >= prev.history.length - 1) return prev;
+      const nextIdx = prev.historyIndex + 1;
+      return {
+        ...prev,
+        activeTab: prev.history[nextIdx],
+        historyIndex: nextIdx
+      };
+    });
+  }, []);
+
+  const launchGuidedStepAction = useCallback((stepNumber: number, targetTab: string) => {
+    setGuidedReturnStep(stepNumber);
+    setGuidedOpenMode('step');
+    setActiveTab(targetTab);
+  }, [setActiveTab]);
+
+  const returnToGuidedStep = useCallback(() => {
+    setGuidedOpenMode('step');
+    setActiveTab('get_started');
+  }, [setActiveTab]);
+
+  const openGuidedOverview = useCallback(() => {
+    setGuidedReturnStep(null);
+    setGuidedOpenMode('overview');
+    setActiveTab('get_started');
+  }, [setActiveTab]);
+
+  const clearGuidedReturn = useCallback(() => {
+    setGuidedReturnStep(null);
+  }, []);
 
   const getPreviousTabTitle = useCallback((): string => {
     if (historyIndex > 0) {
-      return getTabLabel(history[historyIndex - 1]);
+      const prevTab = history[historyIndex - 1];
+      if (prevTab === 'get_started' && guidedReturnStep !== null) {
+        return `Get Started · Step ${guidedReturnStep}`;
+      }
+      return getTabLabel(prevTab);
     }
     return getTabLabel(getFallbackParentTab(activeTab));
-  }, [historyIndex, history, activeTab, getFallbackParentTab, getTabLabel]);
+  }, [historyIndex, history, activeTab, getFallbackParentTab, getTabLabel, guidedReturnStep]);
 
   const getNextTabTitle = useCallback((): string => {
     if (historyIndex < history.length - 1) {
@@ -1648,10 +1717,16 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const connectDestination = useCallback((destination: DestinationConnector): DestinationConnector => {
     setDestinations(prev => {
       const exists = prev.some(d => d.id === destination.id);
-      if (exists) {
-        return prev.map(d => d.id === destination.id ? { ...d, ...destination, status: 'Connected' } : d);
+      const next = exists
+        ? prev.map(d => (d.id === destination.id ? { ...d, ...destination, status: 'Connected' as const } : d))
+        : [destination, ...prev];
+      try {
+        localStorage.setItem('xlr8_user_created', 'true');
+        localStorage.setItem('xlr8_cdp_destinations', JSON.stringify(next));
+      } catch {
+        // ignore
       }
-      return [destination, ...prev];
+      return next;
     });
     addTerminalLog('success', 'DEST-CONNECT', `Connected destination "${destination.name}" (${destination.targetPlatform})`);
     return destination;
@@ -1725,19 +1800,29 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     setSyncLogs(prev => [newSyncLog, ...prev]);
 
-    // Update destination counters
+    // Update destination counters & bound audience
     setDestinations(prev => {
       const exists = prev.some(d => d.id === destinationId);
       const baseList = exists ? prev : [dest, ...prev];
-      return baseList.map(d => {
+      const next = baseList.map(d => {
         if (d.id !== destinationId) return d;
         return {
           ...d,
           totalSynced: d.totalSynced + synced,
           totalBlockedForPrivacy: d.totalBlockedForPrivacy + blocked,
           lastSyncTime: now,
+          configuredAudienceId: aud.id,
+          configuredAudienceName: aud.name,
+          activeAudienceCount: Math.max(d.activeAudienceCount || 0, 1),
         };
       });
+      try {
+        localStorage.setItem('xlr8_user_created', 'true');
+        localStorage.setItem('xlr8_cdp_destinations', JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
     });
 
     addTerminalLog(
@@ -2578,6 +2663,7 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
       localStorage.setItem('xlr8_demo_mode', 'false');
       localStorage.removeItem('xlr8_cdp_datasets');
       localStorage.removeItem('xlr8_cdp_schemas');
+      localStorage.removeItem('xlr8_cdp_destinations');
       localStorage.removeItem('nexus_cdp_sources');
       localStorage.removeItem('xlr8_user_created');
       localStorage.removeItem('xlr8_guided_completed_steps');
@@ -2724,6 +2810,13 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
         goForward,
         getPreviousTabTitle,
         getNextTabTitle,
+        guidedReturnStep,
+        guidedOpenMode,
+        setGuidedOpenMode,
+        launchGuidedStepAction,
+        returnToGuidedStep,
+        openGuidedOverview,
+        clearGuidedReturn,
         setSelectedProfileId,
         setSelectedB2BAccountId,
         setActiveSandboxId,

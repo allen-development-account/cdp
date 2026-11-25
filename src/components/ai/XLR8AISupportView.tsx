@@ -460,8 +460,8 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-sm font-bold text-white tracking-tight">XLR8 AI Support</h1>
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-white/15 text-[#8CE2A7] px-2 py-0.5 rounded-full border border-[#8CE2A7]/40 flex items-center space-x-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8CE2A7] animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-white/15 text-sky-200 px-2 py-0.5 rounded-full border border-sky-300/40 flex items-center space-x-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-pulse" />
                   <span>Multimodal Active</span>
                 </span>
               </div>
@@ -515,19 +515,19 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
               <div className="flex flex-wrap items-center gap-1.5">
                 <button
                   onClick={() => generateSampleScreenshot('schema_error')}
-                  className="px-2.5 py-1 rounded-lg bg-[#FEE2E2] hover:bg-[#FCA5A5] text-[#991B1B] text-[11px] font-semibold border border-[#F87171]/40 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#DBEAFE] hover:bg-[#BFDBFE] text-[#0A3D82] text-[11px] font-semibold border border-[#93C5FD] transition-colors cursor-pointer"
                 >
                   422 Schema Type Error
                 </button>
                 <button
                   onClick={() => generateSampleScreenshot('ingestion_dlq')}
-                  className="px-2.5 py-1 rounded-lg bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] text-[11px] font-semibold border border-[#FBBF24]/40 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0369A1] text-[11px] font-semibold border border-[#7DD3FC] transition-colors cursor-pointer"
                 >
                   Ingestion DLQ Overflow
                 </button>
                 <button
                   onClick={() => generateSampleScreenshot('identity_split')}
-                  className="px-2.5 py-1 rounded-lg bg-[#F3E8FF] hover:bg-[#E9D5FF] text-[#6B21A8] text-[11px] font-semibold border border-[#C084FC]/40 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#1D4ED8] text-[11px] font-semibold border border-[#93C5FD] transition-colors cursor-pointer"
                 >
                   Identity Graph Split
                 </button>
@@ -536,12 +536,12 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
 
             {/* Paste Notification Banner */}
             {pasteSuccessNotice && (
-              <div className="bg-[#DEFBE6] border border-[#B4F0C3] text-[#0E7A36] px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between shadow-xs animate-in fade-in slide-in-from-top-2">
+              <div className="bg-[#E0F2FE] border border-[#BAE6FD] text-[#0369A1] px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between shadow-xs animate-in fade-in slide-in-from-top-2">
                 <div className="flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#0E7A36]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
                   <span>Screenshot attached from clipboard! Type your question and hit Send.</span>
                 </div>
-                <button onClick={() => setPasteSuccessNotice(false)} className="text-[#0E7A36] hover:text-[#0A5826]">
+                <button onClick={() => setPasteSuccessNotice(false)} className="text-[#0369A1] hover:text-[#0A3D82]">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -686,7 +686,7 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
                       <span className="text-xs font-bold text-[#1E1E1E] truncate max-w-[240px]">
                         {attachedImageName || 'Screenshot attached'}
                       </span>
-                      <span className="text-[10px] font-semibold bg-[#DEFBE6] text-[#0E7A36] px-1.5 py-0.2 rounded border border-[#B4F0C3]">
+                      <span className="text-[10px] font-semibold bg-[#E0F2FE] text-[#0369A1] px-1.5 py-0.2 rounded border border-[#BAE6FD]">
                         Ready for Multimodal
                       </span>
                     </div>
@@ -776,13 +776,13 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
         </div>
 
         {/* Right Reference Knowledge Panel (Collapsible / Informational) */}
-        <div className="w-80 border-l border-[#E1E5EA] bg-white hidden xl:flex flex-col p-5 overflow-y-auto">
-          <div className="flex items-center space-x-2 mb-4 pb-3 border-b border-[#F2F4F7]">
-            <HelpCircle className="w-4 h-4 text-[#1473E6]" />
-            <h2 className="text-xs font-bold text-[#1E1E1E] uppercase tracking-wider">Troubleshooting Guide</h2>
+        <div className="w-80 border-l border-[#E1E5EA] bg-white hidden xl:flex flex-col overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center space-x-2 shrink-0">
+            <HelpCircle className="w-4 h-4 text-white shrink-0" />
+            <h2 className="text-xs font-bold text-white uppercase tracking-wider">Troubleshooting Guide</h2>
           </div>
 
-          <div className="space-y-4 text-xs text-[#2C2C2C]">
+          <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs text-[#2C2C2C]">
             <div className="p-3 rounded-xl bg-[#F8F9FA] border border-[#E1E5EA]">
               <span className="font-bold text-[#1E1E1E] block mb-1">📸 Instant Screenshot Pasting</span>
               <p className="text-[11px] text-[#1E2229] leading-relaxed">

@@ -67,7 +67,7 @@ export const NewUserWalkthroughGuide: React.FC = () => {
       stepNumber: 2,
       title: 'Establish Streaming Ingestion & Zero-Copy Mesh',
       category: 'Data Pipelines',
-      icon: <ArrowDownToLine className="w-5 h-5 text-[#059669]" />,
+      icon: <ArrowDownToLine className="w-5 h-5 text-[#0284C7]" />,
       duration: '4 mins',
       summary: 'Connect real-time HTTP streaming endpoints, Web/Mobile SDKs, or federate directly into Snowflake and BigQuery with Zero-Copy.',
       whyItMatters: 'Powers sub-second data availability so behavioral signals update profiles and trigger edge actions immediately.',
@@ -85,7 +85,7 @@ export const NewUserWalkthroughGuide: React.FC = () => {
       stepNumber: 3,
       title: 'Catalog Datasets & Apply DULE Governance Labels',
       category: 'Privacy & Governance',
-      icon: <ShieldCheck className="w-5 h-5 text-[#D97706]" />,
+      icon: <ShieldCheck className="w-5 h-5 text-[#0D66D0]" />,
       duration: '6 mins',
       summary: 'Register datasets and tag fields with Adobe Data Usage Labeling & Enforcement (DULE) to prevent privacy & contractual violations.',
       whyItMatters: 'Guarantees that sensitive health (S2), financial (S3), or third-party (C12) data is blocked before exporting to ad networks.',
@@ -104,7 +104,7 @@ export const NewUserWalkthroughGuide: React.FC = () => {
       stepNumber: 4,
       title: 'Stitch Real-Time Identity Graph & Customer 360',
       category: 'Identity Unification',
-      icon: <Users className="w-5 h-5 text-[#7C3AED]" />,
+      icon: <Users className="w-5 h-5 text-[#1D4ED8]" />,
       duration: '5 mins',
       summary: 'Deterministic and probabilistic identity stitching merges cross-device fragments (ECID, email, phone, CRM ID) into a single profile.',
       whyItMatters: 'Ensures marketers see a single, unified view of each customer rather than fractured, siloed identifiers.',
@@ -122,7 +122,7 @@ export const NewUserWalkthroughGuide: React.FC = () => {
       stepNumber: 5,
       title: 'Build Audiences & Activate to Multi-Destination Edge',
       category: 'Audience Activation',
-      icon: <Zap className="w-5 h-5 text-[#DC2626]" />,
+      icon: <Zap className="w-5 h-5 text-[#0A3D82]" />,
       duration: '4 mins',
       summary: 'Build rule-based streaming segments with Profile Query Language (PQL) and syndicate to ad networks, CRMs, and webhooks.',
       whyItMatters: 'Turns unified customer data into immediate business value: personalized ad campaigns, trigger emails, and real-time onsite offers.',
@@ -152,18 +152,18 @@ export const NewUserWalkthroughGuide: React.FC = () => {
     <div className="space-y-6" id="new-user-walkthrough-root">
       {/* Hero Welcome & Day-0 Callout Banner */}
       <div className="bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E2229] rounded-2xl border border-[#334155] p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-purple-600/10 pointer-events-none rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-sky-500/10 pointer-events-none rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-blue-600/10 pointer-events-none rounded-full blur-3xl" />
 
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="space-y-3 max-w-3xl">
             <div className="flex items-center space-x-2.5 flex-wrap gap-y-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30 flex items-center space-x-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-200 border border-sky-400/30 flex items-center space-x-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-300" />
                 <span>Day-0 Clean Slate</span>
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center space-x-1">
-                <Ghost className="w-3.5 h-3.5" />
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/20 text-blue-200 border border-blue-400/30 flex items-center space-x-1">
+                <Ghost className="w-3.5 h-3.5 text-sky-300" />
                 <span>Fresh Account Workspace</span>
               </span>
               <span className="text-xs text-[#94A3B8]">
@@ -179,14 +179,14 @@ export const NewUserWalkthroughGuide: React.FC = () => {
               Welcome! You are viewing a pristine, unpopulated sandbox. Follow the guided 5-step sequence below
               to construct your schemas, streaming pipelines, DULE privacy labels, and real-time customer profiles.
               Or, if you prefer to evaluate the platform with pre-populated sample data, click the{' '}
-              <strong className="text-emerald-300 font-semibold">Demo Icon on the top navbar</strong>.
+              <strong className="text-sky-300 font-semibold">Demo Icon on the top navbar</strong>.
             </p>
 
             <div className="flex items-center space-x-4 pt-1 text-xs text-[#94A3B8]">
               <span>Readiness Progress: <strong className="text-white font-bold">{completedCount} of 5</strong> milestones established</span>
               <div className="w-32 bg-[#334155] rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-blue-500 to-emerald-400 h-full rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-[#38BDF8] to-[#1473E6] h-full rounded-full transition-all duration-500"
                   style={{ width: `${(completedCount / 5) * 100}%` }}
                 />
               </div>
@@ -197,15 +197,15 @@ export const NewUserWalkthroughGuide: React.FC = () => {
           <div className="bg-[#1E293B]/80 backdrop-blur-md border border-[#475569] p-5 rounded-xl flex flex-col space-y-3 shrink-0 w-full sm:w-auto sm:min-w-[260px]">
             <div className="text-xs text-[#94A3B8] flex items-center justify-between">
               <span>Quick Evaluation</span>
-              <span className="text-[10px] bg-emerald-500/30 text-emerald-300 px-1.5 py-0.2 rounded font-mono">Optional Demo</span>
+              <span className="text-[10px] bg-sky-500/30 text-sky-200 px-1.5 py-0.2 rounded font-mono">Optional Demo</span>
             </div>
 
             <button
               id="walkthrough-btn-load-demo"
               onClick={loadDemoData}
-              className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md hover:shadow-emerald-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer group"
+              className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-[#0EA5E9] to-[#1473E6] hover:from-[#38BDF8] hover:to-[#0D66D0] text-white font-bold text-xs shadow-md hover:shadow-blue-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer group"
             >
-              <FlaskConical className="w-4 h-4 text-emerald-100 group-hover:rotate-12 transition-transform" />
+              <FlaskConical className="w-4 h-4 text-sky-100 group-hover:rotate-12 transition-transform" />
               <span>Enable Demo Data</span>
             </button>
 
@@ -214,7 +214,7 @@ export const NewUserWalkthroughGuide: React.FC = () => {
               onClick={() => setActiveWalkthroughStep(1)}
               className="w-full px-4 py-2 rounded-lg bg-[#334155] hover:bg-[#475569] text-white font-semibold text-xs border border-[#64748B] transition-colors flex items-center justify-center space-x-2"
             >
-              <BookOpen className="w-3.5 h-3.5 text-blue-400" />
+              <BookOpen className="w-3.5 h-3.5 text-sky-300" />
               <span>Step-by-Step Guided Tour</span>
             </button>
           </div>
@@ -222,30 +222,32 @@ export const NewUserWalkthroughGuide: React.FC = () => {
       </div>
 
       {/* Interactive Architectural Sequence Pipeline Diagram */}
-      <div className="bg-white rounded-xl border border-[#E1E5EA] p-5 sm:p-6 shadow-2xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+        <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 sm:px-6 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="font-bold text-sm text-[#1E2229] flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-[#1473E6]" />
+            <h3 className="font-bold text-sm text-white flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-white" />
               <span>Real-Time CDP Architectural Data Progression Sequence</span>
             </h3>
-            <p className="text-xs text-[#596780] mt-0.5">
+            <p className="text-xs text-blue-100 mt-0.5">
               Click any stage in the pipeline to examine the technical role, Adobe RT-CDP standards, and execution guide.
             </p>
           </div>
-          <span className="text-[11px] font-semibold text-[#1473E6] bg-[#EBF3FC] px-2.5 py-1 rounded-md self-start sm:self-auto">
+          <span className="text-[11px] font-semibold text-white bg-white/15 border border-white/25 px-2.5 py-1 rounded-md self-start sm:self-auto shrink-0">
             Sub-50ms Edge Target
           </span>
         </div>
 
+        <div className="p-5 sm:p-6 space-y-4">
+
         {/* Pipeline Nodes Flow */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 relative">
           {[
-            { step: 1, title: '1. Ingestion / Zero-Copy', subtitle: 'Kafka & Pushdown', icon: <ArrowDownToLine className="w-4 h-4 text-emerald-600" />, tab: 'ingestion' },
-            { step: 2, title: '2. XDM Schema Binding', subtitle: 'Profile & Event Classes', icon: <Layers className="w-4 h-4 text-blue-600" />, tab: 'schemas' },
-            { step: 3, title: '3. DULE Governance', subtitle: 'C / I / S / R Labels', icon: <ShieldCheck className="w-4 h-4 text-amber-600" />, tab: 'datasets' },
-            { step: 4, title: '4. Real-Time Profile', subtitle: 'Identity Graph Stitching', icon: <Users className="w-4 h-4 text-purple-600" />, tab: 'profiles' },
-            { step: 5, title: '5. Edge Activation', subtitle: 'PQL & Outbound Sync', icon: <Zap className="w-4 h-4 text-rose-600" />, tab: 'audiences' },
+            { step: 1, title: '1. Ingestion / Zero-Copy', subtitle: 'Kafka & Pushdown', icon: <ArrowDownToLine className="w-4 h-4 text-[#0284C7]" />, tab: 'ingestion' },
+            { step: 2, title: '2. XDM Schema Binding', subtitle: 'Profile & Event Classes', icon: <Layers className="w-4 h-4 text-[#1473E6]" />, tab: 'schemas' },
+            { step: 3, title: '3. DULE Governance', subtitle: 'C / I / S / R Labels', icon: <ShieldCheck className="w-4 h-4 text-[#0D66D0]" />, tab: 'datasets' },
+            { step: 4, title: '4. Real-Time Profile', subtitle: 'Identity Graph Stitching', icon: <Users className="w-4 h-4 text-[#1D4ED8]" />, tab: 'profiles' },
+            { step: 5, title: '5. Edge Activation', subtitle: 'PQL & Outbound Sync', icon: <Zap className="w-4 h-4 text-[#0A3D82]" />, tab: 'audiences' },
           ].map((item, idx) => (
             <div
               key={item.step}
@@ -298,21 +300,22 @@ export const NewUserWalkthroughGuide: React.FC = () => {
             </p>
           </div>
         )}
+        </div>
       </div>
 
       {/* The 5 Implementation Sequence Cards */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="font-bold text-base text-[#1E2229]">
+            <h3 className="font-bold text-base text-white">
               5-Step Implementation Sequence
             </h3>
-            <p className="text-xs text-[#596780]">
+            <p className="text-xs text-blue-100 mt-0.5">
               Complete these sequences in order to stand up your enterprise customer data platform.
             </p>
           </div>
-          <span className="text-xs text-[#596780]">
-            Estimated Setup: <strong className="text-[#1E2229]">24 mins</strong>
+          <span className="text-xs text-blue-100 bg-white/15 border border-white/25 px-2.5 py-1 rounded-md self-start sm:self-auto shrink-0">
+            Estimated Setup: <strong className="text-white">24 mins</strong>
           </span>
         </div>
 
@@ -335,8 +338,8 @@ export const NewUserWalkthroughGuide: React.FC = () => {
                   {/* Step Number Badge */}
                   <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${
                     isCompleted
-                      ? 'bg-emerald-50 border-emerald-200 text-emerald-600'
-                      : 'bg-[#F2F4F7] border-[#E1E5EA] text-[#596780]'
+                      ? 'bg-[#EBF3FC] border-[#BFDBFE] text-[#0D66D0]'
+                      : 'bg-[#F2F4F7] border-[#E1E5EA] text-[#1473E6]'
                   }`}>
                     {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : step.icon}
                   </div>
@@ -348,7 +351,7 @@ export const NewUserWalkthroughGuide: React.FC = () => {
                       </span>
                       <span className="text-[11px] text-[#8C9BAE]">• Est: {step.duration}</span>
                       {isCompleted && (
-                        <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                           Milestone Complete
                         </span>
                       )}

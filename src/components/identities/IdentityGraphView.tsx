@@ -133,11 +133,11 @@ export const IdentityGraphView: React.FC = () => {
   const getNodeIcon = (type: string) => {
     switch (type) {
       case 'email': return <Mail className="w-4 h-4 text-[#1473E6]" />;
-      case 'cookie': return <Globe className="w-4 h-4 text-[#0D66D0]" />;
-      case 'phone': return <Phone className="w-4 h-4 text-[#0E7A36]" />;
-      case 'crmId': return <Database className="w-4 h-4 text-[#E68619]" />;
-      case 'device': return <Smartphone className="w-4 h-4 text-[#7B2CBF]" />;
-      default: return <Key className="w-4 h-4 text-[#1E2229]" />;
+      case 'cookie': return <Globe className="w-4 h-4 text-[#0284C7]" />;
+      case 'phone': return <Phone className="w-4 h-4 text-[#0EA5E9]" />;
+      case 'crmId': return <Database className="w-4 h-4 text-[#1D4ED8]" />;
+      case 'device': return <Smartphone className="w-4 h-4 text-[#0A3D82]" />;
+      default: return <Key className="w-4 h-4 text-[#0F58B8]" />;
     }
   };
 
@@ -260,7 +260,7 @@ export const IdentityGraphView: React.FC = () => {
               onClick={() => setActiveTabMode('collision_simulator')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTabMode === 'collision_simulator'
-                  ? 'bg-white text-[#7B2CBF] shadow-2xs'
+                  ? 'bg-white text-[#1D4ED8] shadow-2xs'
                   : 'text-blue-100 hover:text-white hover:bg-white/10'
               }`}
             >
@@ -272,7 +272,7 @@ export const IdentityGraphView: React.FC = () => {
               onClick={() => setActiveTabMode('live_stitcher')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTabMode === 'live_stitcher'
-                  ? 'bg-white text-[#0E7A36] shadow-2xs'
+                  ? 'bg-white text-[#0284C7] shadow-2xs'
                   : 'text-blue-100 hover:text-white hover:bg-white/10'
               }`}
             >
@@ -299,15 +299,15 @@ export const IdentityGraphView: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left: Unified Profile Selector */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+            <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider">
                   Customer Profiles
                 </h3>
-                <span className="text-[10px] font-mono text-[#596780]">{profiles.length} Unified Records</span>
+                <span className="text-[10px] font-mono bg-white/15 border border-white/25 text-white px-2 py-0.5 rounded font-semibold tabular-nums">{profiles.length} Unified Records</span>
               </div>
 
-              <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+              <div className="p-5 space-y-2 max-h-[380px] overflow-y-auto">
                 {profiles.map(p => {
                   const isSelected = p.id === activeProfile?.id;
                   return (
@@ -358,15 +358,15 @@ export const IdentityGraphView: React.FC = () => {
 
             {/* Selected Node Inspector */}
             {activeNode && (
-              <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-3">
-                <div className="flex items-center space-x-2 border-b border-[#E1E5EA] pb-2">
-                  <Key className="w-4 h-4 text-[#1473E6]" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
+              <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3 border-b border-[#0E4DA4] flex items-center space-x-2">
+                  <Key className="w-4 h-4 text-white shrink-0" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-white">
                     Node Inspector: {activeNode.type.toUpperCase()}
                   </h3>
                 </div>
 
-                <div className="space-y-2 text-xs">
+                <div className="p-5 space-y-2 text-xs">
                   <div>
                     <label className="text-[10px] text-[#596780] uppercase font-bold">Identifier Value</label>
                     <p className="font-mono text-xs font-bold text-[#1E2229] break-all bg-[#F8FAFC] p-2 rounded border border-[#E1E5EA]">
@@ -400,52 +400,54 @@ export const IdentityGraphView: React.FC = () => {
           </div>
 
           {/* Right: Visual Node-Link Canvas */}
-          <div className="lg:col-span-8 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-6 flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E1E5EA] pb-4 mb-4">
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <h3 className="text-base font-bold text-[#1E2229]">{activeProfile?.unifiedName}</h3>
-                    <span className="text-[10px] bg-[#F2F4F7] text-[#1E2229] border border-[#D0D7DE] font-mono px-2 py-0.5 rounded font-bold">
-                      {activeProfile?.id}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#596780] mt-0.5">
-                    Unified identity cluster linking {activeProfile?.identities.length} devices, cookies, and authenticated accounts.
-                  </p>
+          <div className="lg:col-span-8 bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden flex flex-col justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h3 className="text-base font-bold text-white">{activeProfile?.unifiedName}</h3>
+                  <span className="text-[10px] bg-white/15 text-white border border-white/25 font-mono px-2 py-0.5 rounded font-bold">
+                    {activeProfile?.id}
+                  </span>
                 </div>
-
-                {/* Edge Filter Toggle */}
-                <div className="flex items-center space-x-1 bg-[#F2F4F7] p-1 rounded border border-[#D0D7DE] shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setEdgeFilter('all')}
-                    className={`px-2.5 py-1 text-[11px] font-semibold rounded whitespace-nowrap cursor-pointer ${
-                      edgeFilter === 'all' ? 'bg-white text-[#1E2229] shadow-2xs' : 'text-[#596780]'
-                    }`}
-                  >
-                    All Edges
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEdgeFilter('deterministic')}
-                    className={`px-2.5 py-1 text-[11px] font-semibold rounded whitespace-nowrap cursor-pointer ${
-                      edgeFilter === 'deterministic' ? 'bg-white text-[#0E7A36] shadow-2xs' : 'text-[#596780]'
-                    }`}
-                  >
-                    Deterministic (1.0)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEdgeFilter('probabilistic')}
-                    className={`px-2.5 py-1 text-[11px] font-semibold rounded whitespace-nowrap cursor-pointer ${
-                      edgeFilter === 'probabilistic' ? 'bg-white text-[#E68619] shadow-2xs' : 'text-[#596780]'
-                    }`}
-                  >
-                    Probabilistic (&lt;1.0)
-                  </button>
-                </div>
+                <p className="text-xs text-blue-100 mt-0.5">
+                  Unified identity cluster linking {activeProfile?.identities.length} devices, cookies, and authenticated accounts.
+                </p>
               </div>
+
+              {/* Edge Filter Toggle */}
+              <div className="flex items-center space-x-1 bg-white/15 p-1 rounded border border-white/25 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setEdgeFilter('all')}
+                  className={`px-2.5 py-1 text-[11px] font-semibold rounded whitespace-nowrap cursor-pointer ${
+                    edgeFilter === 'all' ? 'bg-white text-[#0D66D0] shadow-2xs' : 'text-blue-100 hover:text-white'
+                  }`}
+                >
+                  All Edges
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEdgeFilter('deterministic')}
+                  className={`px-2.5 py-1 text-[11px] font-semibold rounded whitespace-nowrap cursor-pointer ${
+                    edgeFilter === 'deterministic' ? 'bg-white text-[#0E7A36] shadow-2xs' : 'text-blue-100 hover:text-white'
+                  }`}
+                >
+                  Deterministic (1.0)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEdgeFilter('probabilistic')}
+                  className={`px-2.5 py-1 text-[11px] font-semibold rounded whitespace-nowrap cursor-pointer ${
+                    edgeFilter === 'probabilistic' ? 'bg-white text-[#B25900] shadow-2xs' : 'text-blue-100 hover:text-white'
+                  }`}
+                >
+                  Probabilistic (&lt;1.0)
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
 
               {/* Node-Link Canvas Visualizer */}
               <div className="bg-[#FAFBFD] rounded-xl p-6 border border-[#E1E5EA] relative overflow-hidden min-h-[360px] flex flex-col items-center justify-center select-none">
@@ -513,7 +515,7 @@ export const IdentityGraphView: React.FC = () => {
             {/* Audit & Compliance Footer */}
             <div className="pt-3 border-t border-[#E1E5EA] flex flex-wrap items-center justify-between text-xs text-[#596780] gap-2">
               <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4 text-[#0E7A36]" />
+                <Shield className="w-4 h-4 text-[#0D66D0]" />
                 <span>Deterministic identity cluster complies with SOC 2 & GDPR Art. 15 right to access.</span>
               </div>
 
@@ -529,6 +531,7 @@ export const IdentityGraphView: React.FC = () => {
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
+            </div>
           </div>
         </div>
       )}
@@ -537,18 +540,19 @@ export const IdentityGraphView: React.FC = () => {
       {activeTabMode === 'collision_simulator' && (
         <div className="space-y-6">
           {/* Scenario Selection Deck */}
-          <div className="bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between">
               <div>
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider">
                   Select Real-World Identity Collision Scenario
                 </h3>
-                <p className="text-[11px] text-[#596780] mt-0.5">
+                <p className="text-[11px] text-blue-100 mt-0.5">
                   Simulate ambiguity when distinct authenticated customers interact with the same device or cookie.
                 </p>
               </div>
             </div>
 
+            <div className="p-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {COLLISION_SCENARIOS.map(scenario => {
                 const isSelected = scenario.id === selectedScenarioId;
@@ -562,35 +566,39 @@ export const IdentityGraphView: React.FC = () => {
                     }}
                     className={`p-4 rounded-lg border text-left transition-all ${
                       isSelected
-                        ? 'bg-[#F2EBF9] border-[#7B2CBF] ring-1 ring-[#7B2CBF] shadow-2xs'
+                        ? 'bg-[#EBF3FC] border-[#1473E6] ring-1 ring-[#1473E6] shadow-2xs'
                         : 'bg-white border-[#E1E5EA] hover:bg-[#F8FAFC]'
                     }`}
                   >
-                    <span className="text-[10px] font-bold uppercase text-[#7B2CBF] block">{scenario.subtitle}</span>
+                    <span className="text-[10px] font-bold uppercase text-[#1D4ED8] block">{scenario.subtitle}</span>
                     <p className="text-xs font-bold text-[#1E2229] mt-0.5">{scenario.title}</p>
                     <p className="text-[11px] text-[#596780] mt-1 leading-snug">{scenario.description}</p>
                     <div className="mt-3 pt-2 border-t border-[#E1E5EA] flex items-center space-x-1.5 text-[10px] font-mono text-[#1E2229]">
                       <span className="text-[#596780]">Contested:</span>
-                      <strong className="text-[#7B2CBF] truncate">{scenario.sharedIdentifier.value}</strong>
+                      <strong className="text-[#0D66D0] truncate">{scenario.sharedIdentifier.value}</strong>
                     </div>
                   </button>
                 );
               })}
+            </div>
             </div>
           </div>
 
           {/* Strategy Selection & Run Console */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left Strategy Selector */}
-            <div className="lg:col-span-5 bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4">
-              <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider flex items-center space-x-2">
-                <Sliders className="w-4 h-4 text-[#7B2CBF]" />
-                <span>Collision Resolution Policy Engine</span>
-              </h3>
-              <p className="text-[11px] text-[#596780]">
-                Choose the automated governance strategy applied when this identity conflict is detected in real time:
-              </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden flex flex-col">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4]">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2">
+                  <Sliders className="w-4 h-4 text-white shrink-0" />
+                  <span>Collision Resolution Policy Engine</span>
+                </h3>
+                <p className="text-[11px] text-blue-100 mt-0.5">
+                  Choose the automated governance strategy applied when this identity conflict is detected in real time:
+                </p>
+              </div>
 
+              <div className="p-5 space-y-4 flex-1">
               <div className="space-y-2.5">
                 {[
                   {
@@ -618,7 +626,7 @@ export const IdentityGraphView: React.FC = () => {
                     key={opt.id}
                     className={`p-3 rounded border block cursor-pointer transition-all ${
                       selectedStrategy === opt.id
-                        ? 'bg-[#F2EBF9] border-[#7B2CBF] ring-1 ring-[#7B2CBF]'
+                        ? 'bg-[#EBF3FC] border-[#1473E6] ring-1 ring-[#1473E6]'
                         : 'bg-[#F8FAFC] border-[#E1E5EA] hover:bg-white'
                     }`}
                   >
@@ -629,7 +637,7 @@ export const IdentityGraphView: React.FC = () => {
                         value={opt.id}
                         checked={selectedStrategy === opt.id}
                         onChange={() => setSelectedStrategy(opt.id as ResolutionStrategy)}
-                        className="mt-0.5 text-[#7B2CBF] focus:ring-[#7B2CBF]"
+                        className="mt-0.5 text-[#1473E6] focus:ring-[#1473E6]"
                       />
                       <div>
                         <p className="text-xs font-bold text-[#1E2229]">{opt.title}</p>
@@ -647,7 +655,7 @@ export const IdentityGraphView: React.FC = () => {
                 className={`w-full py-2.5 rounded text-xs font-bold transition-all flex items-center justify-center space-x-2 shadow-2xs ${
                   isSimulatingCollision
                     ? 'bg-[#CBD5E1] text-[#64748B] cursor-wait'
-                    : 'bg-[#7B2CBF] hover:bg-[#6A1EB0] text-white cursor-pointer'
+                    : 'bg-gradient-to-r from-[#1473E6] to-[#0A3D82] hover:from-[#0D66D0] hover:to-[#082E63] text-white cursor-pointer'
                 }`}
               >
                 {isSimulatingCollision ? (
@@ -662,28 +670,36 @@ export const IdentityGraphView: React.FC = () => {
                   </>
                 )}
               </button>
+              </div>
             </div>
 
             {/* Right: Interactive Split / Merge Visualizer */}
-            <div className="lg:col-span-7 bg-white rounded border border-[#E1E5EA] shadow-2xs p-5 space-y-4">
-              <div className="flex items-center justify-between border-b border-[#E1E5EA] pb-3">
-                <div className="flex items-center space-x-2">
-                  <Activity className="w-4 h-4 text-[#7B2CBF]" />
-                  <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
-                    Graph Resolution Visualizer
-                  </h3>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden flex flex-col">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <Activity className="w-4 h-4 text-white shrink-0" />
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                      Graph Resolution Visualizer
+                    </h3>
+                  </div>
+                  <p className="text-[11px] text-blue-100 mt-0.5">
+                    Inspect partitioned sub-graphs and deterministic trace logs after conflict execution.
+                  </p>
                 </div>
 
                 {collisionResult && (
-                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] rounded">
+                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] rounded shrink-0">
                     POLICY RESOLVED (3.2ms)
                   </span>
                 )}
               </div>
 
+              <div className="p-5 space-y-4 flex-1">
+
               {!collisionResult ? (
                 <div className="p-8 text-center border border-dashed border-[#CBD5E1] rounded-lg bg-[#FAFBFD] space-y-2">
-                  <AlertTriangle className="w-6 h-6 text-[#E68619] mx-auto" />
+                  <AlertTriangle className="w-6 h-6 text-[#0284C7] mx-auto" />
                   <p className="text-xs font-bold text-[#1E2229]">
                     Collision Condition Pending Resolution
                   </p>
@@ -694,8 +710,8 @@ export const IdentityGraphView: React.FC = () => {
               ) : (
                 <div className="space-y-4 animate-in fade-in duration-300">
                   {/* Summary Callout */}
-                  <div className="p-3 bg-[#DEFBE6] border border-[#B4F0C3] rounded text-xs text-[#0E7A36] flex items-start space-x-2">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                  <div className="p-3 bg-[#EBF3FC] border border-[#BFDBFE] rounded text-xs text-[#0A3D82] flex items-start space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#0D66D0] shrink-0 mt-0.5" />
                     <div>
                       <p className="font-bold">Collision Resolved Cleanly</p>
                       <p className="text-[11px] mt-0.5 leading-relaxed">{collisionResult.summary}</p>
@@ -712,11 +728,11 @@ export const IdentityGraphView: React.FC = () => {
                         <div key={idx} className="p-3 bg-[#F8FAFC] rounded-lg border border-[#E1E5EA] space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-bold text-[#1E2229]">{g.profileName}</span>
-                            <span className="text-[9px] font-mono bg-white px-1.5 py-0.5 rounded border border-[#CBD5E1] text-[#7B2CBF] font-semibold">
+                            <span className="text-[9px] font-mono bg-white px-1.5 py-0.5 rounded border border-[#BFDBFE] text-[#1D4ED8] font-semibold">
                               {g.crmId}
                             </span>
                           </div>
-                          <span className="text-[10px] text-[#0E7A36] font-semibold block">{g.role}</span>
+                          <span className="text-[10px] text-[#0D66D0] font-semibold block">{g.role}</span>
                           <div className="space-y-1 pt-1 border-t border-[#E1E5EA]">
                             {g.nodes.map((n, nIdx) => (
                               <div key={nIdx} className="text-[10px] font-mono text-[#596780] truncate flex items-center space-x-1">
@@ -749,6 +765,7 @@ export const IdentityGraphView: React.FC = () => {
                   </div>
                 </div>
               )}
+              </div>
             </div>
           </div>
         </div>
@@ -757,18 +774,20 @@ export const IdentityGraphView: React.FC = () => {
       {/* Mode 3: Real-Time Live Stitching Playground */}
       {activeTabMode === 'live_stitcher' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-5 bg-white rounded border border-[#E1E5EA] p-5 shadow-2xs space-y-4">
-            <div className="flex items-center space-x-2 border-b border-[#E1E5EA] pb-2">
-              <Sparkles className="w-4 h-4 text-[#1473E6]" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
-                Interactive Live Stitching Form
-              </h3>
+          <div className="lg:col-span-5 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4]">
+              <div className="flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-white shrink-0" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                  Interactive Live Stitching Form
+                </h3>
+              </div>
+              <p className="text-[11px] text-blue-100 mt-0.5">
+                Trigger an authentication event that dynamically merges an anonymous cookie with an authenticated email address in real time.
+              </p>
             </div>
-            <p className="text-xs text-[#596780]">
-              Trigger an authentication event that dynamically merges an anonymous cookie with an authenticated email address in real time.
-            </p>
 
-            <div className="space-y-3 text-xs">
+            <div className="p-5 space-y-3 text-xs">
               <div>
                 <label className="text-[10px] text-[#596780] uppercase font-bold">Anonymous Cookie ID (ECID)</label>
                 <input
@@ -799,18 +818,24 @@ export const IdentityGraphView: React.FC = () => {
               </button>
 
               {mergeMessage && (
-                <div className="p-3 bg-[#DEFBE6] border border-[#B4F0C3] text-[#0E7A36] rounded text-xs">
-                  <CheckCircle2 className="w-4 h-4 inline mr-1 text-[#0E7A36]" />
+                <div className="p-3 bg-[#EBF3FC] border border-[#BFDBFE] text-[#0A3D82] rounded text-xs">
+                  <CheckCircle2 className="w-4 h-4 inline mr-1 text-[#0D66D0]" />
                   {mergeMessage}
                 </div>
               )}
             </div>
           </div>
 
-          <div className="lg:col-span-7 bg-white rounded border border-[#E1E5EA] p-5 shadow-2xs space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
-              Deterministic Stitching Architecture
-            </h3>
+          <div className="lg:col-span-7 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4]">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                Deterministic Stitching Architecture
+              </h3>
+              <p className="text-[11px] text-blue-100 mt-0.5">
+                How authenticated identity hashes trigger real-time cluster graph traversal and edge propagation.
+              </p>
+            </div>
+            <div className="p-5 space-y-3">
             <p className="text-xs text-[#596780] leading-relaxed">
               When a visitor signs in, the XLR8 Identity Service receives both the client-side ECID and the authenticated hash. It immediately executes a graph traversal across the cluster database, merging previous unauthenticated event histories into the unified customer profile timeline.
             </p>
@@ -822,6 +847,7 @@ export const IdentityGraphView: React.FC = () => {
                 <li>DULE privacy policies automatically propagate across all stitched nodes.</li>
               </ul>
             </div>
+            </div>
           </div>
         </div>
       )}
@@ -830,35 +856,36 @@ export const IdentityGraphView: React.FC = () => {
       {activeTabMode === 'probabilistic_studio' && (
         <div className="space-y-6">
           {/* Rules & Weights Configuration Panel */}
-          <div className="bg-white rounded border border-[#E1E5EA] p-5 shadow-2xs">
-            <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-[#E1E5EA] gap-3">
+          <div className="bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-bold text-[#1E2229] flex items-center space-x-2">
-                  <Sliders className="w-4 h-4 text-[#1473E6]" />
+                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                  <Sliders className="w-4 h-4 text-white shrink-0" />
                   <span>Probabilistic Matching Engine Parameters</span>
                 </h3>
-                <p className="text-xs text-[#596780] mt-0.5">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Configure statistical distance metrics, confidence gates, and dimension weighting for cross-device identity linkage.
                 </p>
               </div>
 
-              <div className="flex items-center space-x-3">
-                <span className="text-xs font-semibold text-[#1E2229]">Threshold:</span>
-                <div className="flex items-center space-x-2 bg-[#F2F4F7] px-3 py-1 rounded border border-[#D0D7DE]">
+              <div className="flex items-center space-x-3 shrink-0">
+                <span className="text-xs font-semibold text-blue-100">Threshold:</span>
+                <div className="flex items-center space-x-2 bg-white/15 px-3 py-1 rounded border border-white/25">
                   <input
                     type="range"
                     min="60"
                     max="95"
                     value={confidenceThreshold}
                     onChange={e => setConfidenceThreshold(Number(e.target.value))}
-                    className="w-24 accent-[#1473E6] cursor-pointer"
+                    className="w-24 accent-white cursor-pointer"
                   />
-                  <span className="text-xs font-mono font-bold text-[#1473E6]">{confidenceThreshold}% Match</span>
+                  <span className="text-xs font-mono font-bold text-white tabular-nums">{confidenceThreshold}% Match</span>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 text-xs">
+            <div className="p-5">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
               <div className="p-3 bg-[#F8FAFC] rounded border border-[#E1E5EA]">
                 <label className="text-[10px] uppercase font-bold text-[#596780] block mb-1">Similarity Metric</label>
                 <select
@@ -920,18 +947,19 @@ export const IdentityGraphView: React.FC = () => {
                 <span className="text-[10px] text-[#596780] block mt-1">Corporate or ISP email domain similarity</span>
               </div>
             </div>
+            </div>
           </div>
 
           {/* Feedback message if merge occurred */}
           {probabilisticMergeSuccess && (
-            <div className="p-3.5 bg-[#DEFBE6] border border-[#B4F0C3] rounded text-xs text-[#0E7A36] flex items-center justify-between">
+            <div className="p-3.5 bg-[#EBF3FC] border border-[#BFDBFE] rounded text-xs text-[#0A3D82] flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-[#0E7A36] shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#0D66D0] shrink-0" />
                 <span>{probabilisticMergeSuccess}</span>
               </div>
               <button
                 onClick={() => setProbabilisticMergeSuccess(null)}
-                className="text-[#0E7A36] font-bold hover:underline ml-4"
+                className="text-[#0D66D0] font-bold hover:underline ml-4"
               >
                 Dismiss
               </button>
@@ -941,16 +969,18 @@ export const IdentityGraphView: React.FC = () => {
           {/* Two-Column Grid: Candidate Matches & Graph Split Utility */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left: Probabilistic Candidate Matches */}
-            <div className="lg:col-span-8 bg-white rounded border border-[#E1E5EA] p-5 shadow-2xs space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider flex items-center space-x-1.5">
-                  <Sparkles className="w-4 h-4 text-[#1473E6]" />
+            <div className="lg:col-span-8 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center justify-between gap-2">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-1.5">
+                  <Sparkles className="w-4 h-4 text-white shrink-0" />
                   <span>Discovered Candidate Matches (≥ {confidenceThreshold}% Threshold)</span>
                 </h3>
-                <span className="text-[10px] bg-[#EBF3FC] text-[#1473E6] font-mono px-2 py-0.5 rounded font-bold">
+                <span className="text-[10px] bg-white/15 border border-white/25 text-white font-mono px-2 py-0.5 rounded font-bold shrink-0">
                   Live Identity Scanner
                 </span>
               </div>
+
+              <div className="p-5 space-y-4">
 
               {/* Dynamic candidates generated from profiles */}
               <div className="space-y-3">
@@ -1023,21 +1053,24 @@ export const IdentityGraphView: React.FC = () => {
                   <p className="text-xs text-[#596780]">Minimum 2 profiles required to evaluate candidate matches.</p>
                 )}
               </div>
+              </div>
             </div>
 
             {/* Right: Graph Partition & Split Console */}
-            <div className="lg:col-span-4 bg-white rounded border border-[#E1E5EA] p-5 shadow-2xs space-y-4">
-              <div className="flex items-center space-x-2 border-b border-[#E1E5EA] pb-2">
-                <Split className="w-4 h-4 text-[#7B2CBF]" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#1E2229]">
-                  Graph Split & Unmerge Studio
-                </h3>
+            <div className="lg:col-span-4 bg-white rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4]">
+                <div className="flex items-center space-x-2">
+                  <Split className="w-4 h-4 text-white shrink-0" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Graph Split & Unmerge Studio
+                  </h3>
+                </div>
+                <p className="text-[11px] text-blue-100 mt-1 leading-relaxed">
+                  If an identity node was improperly linked (e.g., shared household kiosk or recycled phone number), select the node below to detach it into an isolated profile partition.
+                </p>
               </div>
-              <p className="text-xs text-[#596780] leading-relaxed">
-                If an identity node was improperly linked (e.g., shared household kiosk or recycled phone number), select the node below to detach it into an isolated profile partition.
-              </p>
 
-              <div className="space-y-3 text-xs">
+              <div className="p-5 space-y-3 text-xs">
                 <div>
                   <label className="text-[10px] uppercase font-bold text-[#596780] block mb-1">Select Profile</label>
                   <select
@@ -1086,15 +1119,15 @@ export const IdentityGraphView: React.FC = () => {
                       setTimeout(() => setSplitSuccessMsg(null), 5000);
                     }
                   }}
-                  className="w-full py-2 bg-[#7B2CBF] hover:bg-[#6A24A6] text-white font-bold text-xs rounded transition-colors flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer mt-2"
+                  className="w-full py-2 bg-gradient-to-r from-[#1473E6] to-[#0A3D82] hover:from-[#0D66D0] hover:to-[#082E63] text-white font-bold text-xs rounded transition-colors flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer mt-2"
                 >
                   <Split className="w-3.5 h-3.5" />
                   <span>Sever Node & Partition Graph</span>
                 </button>
 
                 {splitSuccessMsg && (
-                  <div className="p-3 bg-[#DEFBE6] border border-[#B4F0C3] text-[#0E7A36] rounded text-[11px] flex items-center space-x-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <div className="p-3 bg-[#EBF3FC] border border-[#BFDBFE] text-[#0A3D82] rounded text-[11px] flex items-center space-x-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#0D66D0] shrink-0" />
                     <span>{splitSuccessMsg}</span>
                   </div>
                 )}

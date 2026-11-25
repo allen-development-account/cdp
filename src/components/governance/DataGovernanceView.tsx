@@ -101,7 +101,7 @@ export const DataGovernanceView: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-bold text-white">Data Governance & Privacy Label Categories (DULE)</h2>
-              <span className="text-[10px] bg-white/15 text-[#8CE2A7] border border-[#8CE2A7]/40 font-bold px-2 py-0.5 rounded uppercase">
+              <span className="text-[10px] bg-white/15 text-sky-200 border border-sky-200/40 font-bold px-2 py-0.5 rounded uppercase">
                 XLR8 DULE & ISO 27701
               </span>
             </div>
@@ -112,8 +112,8 @@ export const DataGovernanceView: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
-          <span className="px-3 py-1.5 bg-white/15 border border-[#8CE2A7]/40 text-[#8CE2A7] rounded text-xs font-bold flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" />
+          <span className="px-3 py-1.5 bg-white/15 border border-sky-200/40 text-sky-200 rounded text-xs font-bold flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-sky-200" />
             SOC 2 / GDPR DULE Active
           </span>
           <button
@@ -205,7 +205,7 @@ export const DataGovernanceView: React.FC = () => {
               : 'text-[#1A1D23] hover:text-[#2C2C2C]'
           }`}
         >
-          <Zap className="w-3.5 h-3.5 text-[#C76A00]" />
+          <Zap className="w-3.5 h-3.5 text-[#0284C7]" />
           <span>Live DULE Policy Simulator</span>
         </button>
 
@@ -217,7 +217,7 @@ export const DataGovernanceView: React.FC = () => {
               : 'text-[#1A1D23] hover:text-[#2C2C2C]'
           }`}
         >
-          <Lock className="w-3.5 h-3.5 text-[#D7373F]" />
+          <Lock className="w-3.5 h-3.5 text-[#1E40AF]" />
           <span>Enforced DULE Policies</span>
         </button>
 
@@ -316,25 +316,27 @@ export const DataGovernanceView: React.FC = () => {
 
             {/* Right: Selected Label Deep Dive Inspector */}
             <div className="lg:col-span-7">
-              <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-6 space-y-5">
-                <div className="flex items-start justify-between border-b border-[#E1E5EA] pb-4">
+              <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+                <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4] flex items-start justify-between">
                   <div className="flex items-start space-x-3">
-                    <span className="w-10 h-10 rounded bg-[#EBF3FC] text-[#1473E6] font-mono font-bold text-base flex items-center justify-center border border-[#C5DCFA] shrink-0">
+                    <span className="w-10 h-10 rounded-lg bg-white/15 text-white font-mono font-bold text-base flex items-center justify-center border border-white/25 shrink-0">
                       {currentLabelDetail.code}
                     </span>
                     <div>
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-bold text-[#2C2C2C] text-sm">{currentLabelDetail.name}</h3>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#F2F4F7] text-[#1A1D23] border border-[#E1E5EA]">
+                      <div className="flex items-center flex-wrap gap-2">
+                        <h3 className="font-bold text-white text-sm">{currentLabelDetail.name}</h3>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/15 text-white border border-white/25">
                           {currentLabelDetail.category} Series
                         </span>
                       </div>
-                      <p className="text-xs text-[#1E2229] mt-1 leading-relaxed">
+                      <p className="text-xs text-blue-100 mt-1 leading-relaxed">
                         {currentLabelDetail.description}
                       </p>
                     </div>
                   </div>
                 </div>
+
+                <div className="p-6 space-y-5">
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div className="p-3.5 bg-[#F2F4F7] rounded border border-[#E1E5EA] space-y-1">
@@ -351,8 +353,8 @@ export const DataGovernanceView: React.FC = () => {
                     <span className="text-[10px] font-bold text-[#1E2229] uppercase tracking-wider block">
                       Severity Classification
                     </span>
-                    <span className="font-bold text-[#D7373F] text-xs flex items-center space-x-1.5">
-                      <ShieldAlert className="w-3.5 h-3.5" />
+                    <span className="font-bold text-[#0D66D0] text-xs flex items-center space-x-1.5">
+                      <ShieldAlert className="w-3.5 h-3.5 text-[#0D66D0]" />
                       <span>{currentLabelDetail.severity} Severity</span>
                     </span>
                   </div>
@@ -386,6 +388,7 @@ export const DataGovernanceView: React.FC = () => {
                     ))}
                   </div>
                 </div>
+                </div>
               </div>
             </div>
           </div>
@@ -394,18 +397,19 @@ export const DataGovernanceView: React.FC = () => {
 
       {/* TAB 2: LIVE DULE POLICY SIMULATOR */}
       {activeGovernanceTab === 'policy_simulator' && (
-        <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-6 space-y-5">
-          <div>
-            <h3 className="font-bold text-sm text-[#2C2C2C] flex items-center space-x-2">
-              <Zap className="w-4 h-4 text-[#C76A00]" />
+        <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4]">
+            <h3 className="font-bold text-sm text-white flex items-center space-x-2">
+              <Zap className="w-4 h-4 text-white shrink-0" />
               <span>Real-Time DULE Policy & Privacy Gate Simulator</span>
             </h3>
-            <p className="text-xs text-[#1E2229] mt-0.5">
+            <p className="text-xs text-blue-100 mt-0.5">
               Simulate edge policy evaluation before executing downstream destination syndications. Verifies if attributes are permitted, masked with SHA-256, or suppressed.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Input Controls */}
             <div className="space-y-4 p-5 bg-[#F2F4F7] rounded border border-[#E1E5EA]">
               <h4 className="font-bold text-xs text-[#2C2C2C]">Simulation Parameters</h4>
@@ -516,14 +520,21 @@ export const DataGovernanceView: React.FC = () => {
               </div>
             </div>
           </div>
+          </div>
         </div>
       )}
 
       {/* TAB 3: ENFORCED DULE POLICIES */}
       {activeGovernanceTab === 'enforced_policies' && (
-        <div className="bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs p-6 space-y-4">
-          <h3 className="font-bold text-sm text-[#2C2C2C]">Enforced Enterprise Privacy Policies</h3>
+        <div className="bg-[#FFFFFF] rounded-xl border border-[#E1E5EA] shadow-2xs overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-6 py-4 border-b border-[#0E4DA4]">
+            <h3 className="font-bold text-sm text-white">Enforced Enterprise Privacy Policies</h3>
+            <p className="text-xs text-blue-100 mt-0.5">
+              Active automated compliance guardrails protecting identity, health, financial, and opt-out attributes across outbound destinations.
+            </p>
+          </div>
 
+          <div className="p-6">
           <div className="space-y-3">
             <div className="p-4 bg-[#F2F4F7] rounded border border-[#E1E5EA] flex items-start justify-between">
               <div className="flex items-start space-x-3">
@@ -544,7 +555,7 @@ export const DataGovernanceView: React.FC = () => {
 
             <div className="p-4 bg-[#F2F4F7] rounded border border-[#E1E5EA] flex items-start justify-between">
               <div className="flex items-start space-x-3">
-                <div className="p-2 bg-[#FDE6E8] rounded text-[#D7373F] border border-[#F88B8B]">
+                <div className="p-2 bg-[#E0F2FE] rounded text-[#0284C7] border border-[#BAE6FD]">
                   <EyeOff className="w-4 h-4" />
                 </div>
                 <div>
@@ -561,7 +572,7 @@ export const DataGovernanceView: React.FC = () => {
 
             <div className="p-4 bg-[#F2F4F7] rounded border border-[#E1E5EA] flex items-start justify-between">
               <div className="flex items-start space-x-3">
-                <div className="p-2 bg-[#FFF0D4] rounded text-[#C76A00] border border-[#FFD085]">
+                <div className="p-2 bg-[#EFF6FF] rounded text-[#1E3A8A] border border-[#BFDBFE]">
                   <ShieldAlert className="w-4 h-4" />
                 </div>
                 <div>
@@ -575,6 +586,7 @@ export const DataGovernanceView: React.FC = () => {
                 ACTIVE & ENFORCED
               </span>
             </div>
+          </div>
           </div>
         </div>
       )}

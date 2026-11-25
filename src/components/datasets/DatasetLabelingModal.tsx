@@ -151,9 +151,9 @@ export const DatasetLabelingModal: React.FC<DatasetLabelingModalProps> = ({
     switch (cat) {
       case 'Contract':
         return {
-          pill: 'bg-[#EEF2FF] text-[#4F46E5] border-[#C7D2FE]',
-          accent: '#4F46E5',
-          bgLight: 'bg-indigo-50/40'
+          pill: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]',
+          accent: '#1D4ED8',
+          bgLight: 'bg-blue-50/40'
         };
       case 'Identity':
         return {
@@ -163,15 +163,15 @@ export const DatasetLabelingModal: React.FC<DatasetLabelingModalProps> = ({
         };
       case 'Sensitive':
         return {
-          pill: 'bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]',
-          accent: '#E11D48',
-          bgLight: 'bg-rose-50/40'
+          pill: 'bg-[#EBF3FC] text-[#0A3D82] border-[#93C5FD]',
+          accent: '#0A3D82',
+          bgLight: 'bg-sky-50/40'
         };
       case 'Regulatory':
         return {
-          pill: 'bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]',
-          accent: '#059669',
-          bgLight: 'bg-emerald-50/40'
+          pill: 'bg-[#E0F2FE] text-[#0284C7] border-[#BAE6FD]',
+          accent: '#0284C7',
+          bgLight: 'bg-sky-50/40'
         };
     }
   };
@@ -250,7 +250,7 @@ export const DatasetLabelingModal: React.FC<DatasetLabelingModalProps> = ({
             </span>
             <button
               onClick={() => applyPreset(['C1', 'C4', 'I2'])}
-              className="px-2.5 py-1 bg-[#F8FAFC] hover:bg-[#EEF2FF] hover:border-[#C7D2FE] border border-[#E1E5EA] rounded text-[11px] font-medium text-[#4F46E5] transition-all"
+              className="px-2.5 py-1 bg-[#F8FAFC] hover:bg-[#EFF6FF] hover:border-[#BFDBFE] border border-[#E1E5EA] rounded text-[11px] font-medium text-[#1D4ED8] transition-all"
               title="C1 (No Syndication), C4 (No Retargeting), I2 (Indirect Identifiers)"
             >
               Web SDK Clickstream (C1, C4, I2)
@@ -264,21 +264,21 @@ export const DatasetLabelingModal: React.FC<DatasetLabelingModalProps> = ({
             </button>
             <button
               onClick={() => applyPreset(['C4', 'C5', 'I2', 'S1'])}
-              className="px-2.5 py-1 bg-[#F8FAFC] hover:bg-[#FFF1F2] hover:border-[#FECDD3] border border-[#E1E5EA] rounded text-[11px] font-medium text-[#E11D48] transition-all"
+              className="px-2.5 py-1 bg-[#F8FAFC] hover:bg-[#E0F2FE] hover:border-[#BAE6FD] border border-[#E1E5EA] rounded text-[11px] font-medium text-[#0284C7] transition-all"
               title="C4, C5, I2, S1 (Precise Geolocation)"
             >
               Mobile App Telemetry (C4, C5, I2, S1)
             </button>
             <button
               onClick={() => applyPreset(['I1', 'C9', 'C11'])}
-              className="px-2.5 py-1 bg-[#F8FAFC] hover:bg-[#ECFDF5] hover:border-[#A7F3D0] border border-[#E1E5EA] rounded text-[11px] font-medium text-[#059669] transition-all"
+              className="px-2.5 py-1 bg-[#F8FAFC] hover:bg-[#EBF3FC] hover:border-[#93C5FD] border border-[#E1E5EA] rounded text-[11px] font-medium text-[#0A3D82] transition-all"
               title="I1, C9 (No AI Training), C11 (Confidential NDA)"
             >
               Support & Verbatims (I1, C9, C11)
             </button>
             <button
               onClick={() => applyPreset([])}
-              className="px-2 py-1 text-[#8C9BAE] hover:text-[#D7373F] text-[11px] font-medium transition-all"
+              className="px-2 py-1 text-[#8C9BAE] hover:text-[#0A3D82] text-[11px] font-medium transition-all"
             >
               Clear All
             </button>
@@ -731,7 +731,7 @@ export const DatasetLabelingModal: React.FC<DatasetLabelingModalProps> = ({
 
           <div className="flex items-center space-x-3 w-full sm:w-auto justify-end">
             {saveSuccess && (
-              <span className="text-xs font-bold text-[#0E7A36] flex items-center gap-1 animate-in fade-in">
+              <span className="text-xs font-bold text-[#0284C7] flex items-center gap-1 animate-in fade-in">
                 <CheckCircle2 className="w-4 h-4" />
                 Labels Saved & DULE Policies Active!
               </span>

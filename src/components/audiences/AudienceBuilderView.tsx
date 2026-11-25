@@ -601,14 +601,14 @@ export const AudienceBuilderView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTabMode('templates')}
-                  className="p-6 rounded-xl bg-[#FAFBFD] hover:bg-[#FFF9EB] border border-[#E1E5EA] hover:border-[#E68619] text-left transition-all flex flex-col justify-between space-y-5 group cursor-pointer shadow-2xs"
+                  className="p-6 rounded-xl bg-[#FAFBFD] hover:bg-[#F0F9FF] border border-[#E1E5EA] hover:border-[#0284C7] text-left transition-all flex flex-col justify-between space-y-5 group cursor-pointer shadow-2xs"
                 >
                   <div className="space-y-3">
-                    <div className="w-11 h-11 rounded-xl bg-[#FFF4E5] border border-[#FFD8A8] text-[#E68619] flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="text-base font-bold text-[#1E2229] group-hover:text-[#B25E02] transition-colors">
+                      <h4 className="text-base font-bold text-[#1E2229] group-hover:text-[#0284C7] transition-colors">
                         Use a readymade segment blueprint and save time
                       </h4>
                       <p className="text-xs text-[#596780] mt-1.5 leading-relaxed">
@@ -617,7 +617,7 @@ export const AudienceBuilderView: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-between text-xs font-bold text-[#B25E02]">
+                  <div className="pt-2 flex items-center justify-between text-xs font-bold text-[#0284C7]">
                     <span>Start from Segment Blueprint</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -813,7 +813,7 @@ export const AudienceBuilderView: React.FC = () => {
                         }}
                         title={`Delete "${aud.name}"`}
                         aria-label={`Delete segment ${aud.name}`}
-                        className="p-2 rounded-lg border border-[#FECDD3] bg-white hover:bg-[#FFF1F2] text-[#D7373F] hover:text-[#B3242B] transition-colors cursor-pointer shadow-2xs"
+                        className="p-2 rounded-lg border border-[#BFDBFE] bg-white hover:bg-[#EFF6FF] text-[#0A3D82] hover:text-[#072B5C] transition-colors cursor-pointer shadow-2xs"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -888,17 +888,17 @@ export const AudienceBuilderView: React.FC = () => {
                 </div>
                 <div className="h-7 w-px bg-white/25" />
                 <div className="text-right">
-                  <span className="text-xl font-bold text-[#8CE2A7] font-mono">
+                  <span className="text-xl font-bold text-sky-200 font-mono">
                     {activeSegmentForSizing ? targetableProfiles.length : 0}
                   </span>
-                  <span className="text-[10px] text-[#8CE2A7] block font-medium">DULE Targetable</span>
+                  <span className="text-[10px] text-sky-200 block font-medium">DULE Targetable</span>
                 </div>
                 <div className="h-7 w-px bg-white/25" />
                 <div className="text-right">
-                  <span className="text-lg font-bold text-[#FFD1D1] font-mono">
+                  <span className="text-lg font-bold text-blue-200 font-mono">
                     {activeSegmentForSizing ? privacyBlockedCount : 0}
                   </span>
-                  <span className="text-[10px] text-[#FFD1D1] block font-medium">Suppressed</span>
+                  <span className="text-[10px] text-blue-200 block font-medium">Suppressed</span>
                 </div>
               </div>
             </div>
@@ -942,7 +942,7 @@ export const AudienceBuilderView: React.FC = () => {
                             : 'text-[#1E2229] hover:text-[#2C2C2C]'
                         }`}
                       >
-                        <Database className="w-3.5 h-3.5 text-[#0E7A36]" />
+                        <Database className="w-3.5 h-3.5 text-[#0284C7]" />
                         <span>SQL Query</span>
                       </button>
                     </>
@@ -956,7 +956,7 @@ export const AudienceBuilderView: React.FC = () => {
                         : 'text-[#1E2229] hover:text-[#2C2C2C]'
                     }`}
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-[#E68619]" />
+                    <Sparkles className="w-3.5 h-3.5 text-[#1D4ED8]" />
                     <span>Blueprints</span>
                   </button>
                 </div>
@@ -969,17 +969,17 @@ export const AudienceBuilderView: React.FC = () => {
                         className="px-2.5 py-1 border rounded text-xs font-medium flex items-center space-x-1 bg-[#FFFFFF] hover:bg-[#F2F4F7] border-[#D5D5D5] text-[#1A1D23] transition-colors cursor-pointer"
                         title="Export Segment"
                       >
-                        <FileDown className="w-3.5 h-3.5" />
+                        <FileDown className="w-3.5 h-3.5 text-[#0D66D0]" />
                         <span>Export</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => currentAudience && setAudienceToDelete(currentAudience)}
-                        className="px-2.5 py-1 border border-[#FECDD3] bg-white hover:bg-[#FFF1F2] text-[#D7373F] hover:text-[#B3242B] rounded text-xs font-medium flex items-center space-x-1 transition-colors cursor-pointer"
+                        className="px-2.5 py-1 border border-[#BFDBFE] bg-white hover:bg-[#EFF6FF] text-[#0A3D82] hover:text-[#072B5C] rounded text-xs font-medium flex items-center space-x-1 transition-colors cursor-pointer"
                         title={`Delete segment "${currentAudience?.name}"`}
                       >
-                        <Trash2 className="w-3.5 h-3.5 text-[#D7373F]" />
+                        <Trash2 className="w-3.5 h-3.5 text-[#0A3D82]" />
                         <span>Delete</span>
                       </button>
 
@@ -1054,15 +1054,17 @@ export const AudienceBuilderView: React.FC = () => {
 
                       {/* STEP 1: Segment Identity & Match Logic */}
                       {creationStep === 1 && (
-                        <div className="space-y-4 p-4 rounded-lg bg-[#FAFBFD] border border-[#E1E5EA]">
-                          <div>
-                            <h4 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+                        <div className="rounded-xl bg-[#FAFBFD] border border-[#E1E5EA] overflow-hidden">
+                          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-4 py-3 border-b border-[#0E4DA4]">
+                            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
                               Step 1: Define Segment Identity & Match Logic
                             </h4>
-                            <p className="text-[11px] text-[#596780] mt-0.5">
+                            <p className="text-[11px] text-blue-100 mt-0.5">
                               Give your segment a clear business name and choose how multiple segmentation rules should be combined.
                             </p>
                           </div>
+
+                          <div className="p-4 space-y-4">
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -1170,23 +1172,24 @@ export const AudienceBuilderView: React.FC = () => {
                               <ArrowRight className="w-3.5 h-3.5" />
                             </button>
                           </div>
+                          </div>
                         </div>
                       )}
 
                       {/* STEP 2: Rule Nodes Canvas */}
                       {creationStep === 2 && (
                         <div className="space-y-4">
-                          <div className="flex items-center justify-between">
+                          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-4 py-3 flex items-center justify-between gap-2">
                             <div>
-                              <h4 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider flex items-center space-x-1.5">
-                                <GitBranch className="w-3.5 h-3.5 text-[#1473E6]" />
+                              <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-1.5">
+                                <GitBranch className="w-3.5 h-3.5 text-white shrink-0" />
                                 <span>Step 2: Configure Qualification Rules ({rules.length})</span>
                               </h4>
-                              <p className="text-[11px] text-[#596780] mt-0.5">
+                              <p className="text-[11px] text-blue-100 mt-0.5">
                                 Pick a rule category, field, operator, and value. Live audience size above updates automatically.
                               </p>
                             </div>
-                            <span className="text-[10px] bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA] px-2 py-0.5 rounded font-mono font-semibold">
+                            <span className="text-[10px] bg-white/15 text-white border border-white/25 px-2 py-0.5 rounded font-mono font-semibold shrink-0">
                               Combine via {rulesMatch}
                             </span>
                           </div>
@@ -1228,7 +1231,7 @@ export const AudienceBuilderView: React.FC = () => {
                                   <button
                                     type="button"
                                     onClick={() => handleRemoveRule(rule.id)}
-                                    className="p-1 text-[#596780] hover:text-[#D7373F] rounded hover:bg-[#FFF1F0] transition-colors cursor-pointer"
+                                    className="p-1 text-[#0D66D0] hover:text-[#0A3D82] rounded hover:bg-[#EBF3FC] transition-colors cursor-pointer"
                                     title="Remove rule node"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
@@ -1532,9 +1535,9 @@ export const AudienceBuilderView: React.FC = () => {
                                       handleAddRule('event');
                                       setShowAddRuleMenu(false);
                                     }}
-                                    className="p-3 bg-white hover:bg-[#F2F7FE] border border-[#E1E5EA] hover:border-[#1473E6] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
+                                    className="p-3 bg-white hover:bg-[#F0F9FF] border border-[#E1E5EA] hover:border-[#0EA5E9] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-[#EBF3FC] text-[#0D66D0] flex items-center justify-center shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center shrink-0">
                                       <Activity className="w-4 h-4" />
                                     </div>
                                     <div>
@@ -1551,9 +1554,9 @@ export const AudienceBuilderView: React.FC = () => {
                                       handleAddRule('ai_predictive');
                                       setShowAddRuleMenu(false);
                                     }}
-                                    className="p-3 bg-white hover:bg-[#F2F7FE] border border-[#E1E5EA] hover:border-[#1473E6] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
+                                    className="p-3 bg-white hover:bg-[#EFF6FF] border border-[#E1E5EA] hover:border-[#1D4ED8] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-[#EBF3FC] text-[#1473E6] flex items-center justify-center shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-[#EFF6FF] text-[#1D4ED8] flex items-center justify-center shrink-0">
                                       <Sparkles className="w-4 h-4" />
                                     </div>
                                     <div>
@@ -1570,9 +1573,9 @@ export const AudienceBuilderView: React.FC = () => {
                                       handleAddRule('calculated_attribute');
                                       setShowAddRuleMenu(false);
                                     }}
-                                    className="p-3 bg-white hover:bg-[#FFF8EB] border border-[#E1E5EA] hover:border-[#E68619] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
+                                    className="p-3 bg-white hover:bg-[#F0F9FF] border border-[#E1E5EA] hover:border-[#0284C7] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-[#FFF4E5] text-[#E68619] flex items-center justify-center shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white flex items-center justify-center shrink-0">
                                       <Database className="w-4 h-4" />
                                     </div>
                                     <div>
@@ -1589,9 +1592,9 @@ export const AudienceBuilderView: React.FC = () => {
                                       handleAddRule('consent');
                                       setShowAddRuleMenu(false);
                                     }}
-                                    className="p-3 bg-white hover:bg-[#F0FDF4] border border-[#E1E5EA] hover:border-[#0E7A36] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
+                                    className="p-3 bg-white hover:bg-[#EFF6FF] border border-[#E1E5EA] hover:border-[#0A3D82] rounded-lg text-left transition-all flex items-start space-x-2.5 cursor-pointer group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-[#DEFBE6] text-[#0E7A36] flex items-center justify-center shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1D4ED8] to-[#0A3D82] text-white flex items-center justify-center shrink-0">
                                       <ShieldCheck className="w-4 h-4" />
                                     </div>
                                     <div>
@@ -1632,20 +1635,22 @@ export const AudienceBuilderView: React.FC = () => {
 
                       {/* STEP 3: Review & Activate */}
                       {creationStep === 3 && (
-                        <div className="space-y-4 p-4 rounded-lg bg-[#FAFBFD] border border-[#E1E5EA]">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E1E5EA] pb-3">
+                        <div className="rounded-xl bg-[#FAFBFD] border border-[#E1E5EA] overflow-hidden">
+                          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-4 py-3 border-b border-[#0E4DA4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <div>
-                              <h4 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">
+                              <h4 className="text-xs font-bold text-white uppercase tracking-wider">
                                 Step 3: Review Segment Specification & Activate
                               </h4>
-                              <p className="text-[11px] text-[#596780] mt-0.5">
+                              <p className="text-[11px] text-blue-100 mt-0.5">
                                 Verify your criteria and compiled PQL/SQL before activating real-time qualification.
                               </p>
                             </div>
-                            <span className="text-xs font-mono font-bold text-[#0E7A36] bg-[#DEFBE6] border border-[#B4F0C3] px-2.5 py-1 rounded">
+                            <span className="text-xs font-mono font-bold text-[#0E7A36] bg-[#DEFBE6] border border-[#B4F0C3] px-2.5 py-1 rounded shrink-0 self-start sm:self-center">
                               {qualifyingProfiles.length} Qualifying • {targetableProfiles.length} Targetable
                             </span>
                           </div>
+
+                          <div className="p-4 space-y-4">
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                             <div className="p-3 bg-white rounded border border-[#E1E5EA]">
@@ -1683,11 +1688,12 @@ export const AudienceBuilderView: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleSaveAudience()}
-                              className="px-5 py-2 bg-[#0E7A36] hover:bg-[#0A5E29] text-white font-semibold rounded text-xs shadow-2xs transition-colors flex items-center space-x-1.5 cursor-pointer"
+                              className="px-5 py-2 bg-gradient-to-r from-[#1473E6] to-[#0A3D82] hover:from-[#0D66D0] hover:to-[#072B5C] text-white font-semibold rounded text-xs shadow-2xs transition-colors flex items-center space-x-1.5 cursor-pointer"
                             >
                               <CheckCircle2 className="w-4 h-4" />
                               <span>Save & Activate Segment</span>
                             </button>
+                          </div>
                           </div>
                         </div>
                       )}
@@ -1702,8 +1708,8 @@ export const AudienceBuilderView: React.FC = () => {
                               {currentAudience?.rulesMatch} Criteria
                             </span>
                             {currentAudience?.excludedAudienceIds && currentAudience.excludedAudienceIds.length > 0 && (
-                              <span className="text-[10px] font-semibold px-2 py-0.2 bg-[#FFF4E5] text-[#B76E00] rounded border border-[#FFE2B3] inline-flex items-center space-x-1">
-                                <Ban className="w-3 h-3" />
+                              <span className="text-[10px] font-semibold px-2 py-0.2 bg-[#EBF3FC] text-[#0A3D82] rounded border border-[#BFDBFE] inline-flex items-center space-x-1">
+                                <Ban className="w-3 h-3 text-[#0A3D82]" />
                                 <span>Excludes {currentAudience.excludedAudienceIds.length} Segment</span>
                               </span>
                             )}
@@ -1749,7 +1755,7 @@ export const AudienceBuilderView: React.FC = () => {
                                 </span>
                               )}
                             </div>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#0E7A36] shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
                           </div>
                         ))}
                       </div>
@@ -1767,7 +1773,7 @@ export const AudienceBuilderView: React.FC = () => {
                       onClick={() => copyToClipboard(generatedPql)}
                       className="px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F2F4F7] border border-[#D5D5D5] rounded text-xs font-medium text-[#1A1D23] flex items-center space-x-1 cursor-pointer"
                     >
-                      {copiedCode ? <Check className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedCode ? <Check className="w-3.5 h-3.5 text-[#0284C7]" /> : <Copy className="w-3.5 h-3.5 text-[#0D66D0]" />}
                       <span>{copiedCode ? 'Copied' : 'Copy PQL'}</span>
                     </button>
                   </div>
@@ -1786,7 +1792,7 @@ export const AudienceBuilderView: React.FC = () => {
                       onClick={() => copyToClipboard(generatedSql)}
                       className="px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F2F4F7] border border-[#D5D5D5] rounded text-xs font-medium text-[#1A1D23] flex items-center space-x-1 cursor-pointer"
                     >
-                      {copiedCode ? <Check className="w-3.5 h-3.5 text-[#0E7A36]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedCode ? <Check className="w-3.5 h-3.5 text-[#0284C7]" /> : <Copy className="w-3.5 h-3.5 text-[#0D66D0]" />}
                       <span>{copiedCode ? 'Copied' : 'Copy SQL'}</span>
                     </button>
                   </div>
@@ -1888,9 +1894,9 @@ export const AudienceBuilderView: React.FC = () => {
                             <div className="flex items-center justify-between">
                               <p className="font-semibold text-[#2C2C2C] truncate">{p.unifiedName}</p>
                               {isDuleTargetable ? (
-                                <ShieldCheck className="w-3 h-3 text-[#0E7A36] shrink-0" />
+                                <ShieldCheck className="w-3 h-3 text-[#0284C7] shrink-0" />
                               ) : (
-                                <ShieldAlert className="w-3 h-3 text-[#D7373F] shrink-0" title="CCPA/GDPR Suppressed" />
+                                <ShieldAlert className="w-3 h-3 text-[#0A3D82] shrink-0" title="CCPA/GDPR Suppressed" />
                               )}
                             </div>
                             <div className="flex items-center space-x-1.5 text-[10px] text-[#1E2229] font-mono">
@@ -1974,8 +1980,8 @@ export const AudienceBuilderView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
           <div className="bg-white rounded-xl shadow-2xl border border-[#D0D7DE] max-w-md w-full p-5 space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 rounded-full bg-[#FFF1F2] border border-[#FECDD3] flex items-center justify-center shrink-0">
-                <Trash2 className="w-5 h-5 text-[#D7373F]" />
+              <div className="w-10 h-10 rounded-full bg-[#EBF3FC] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+                <Trash2 className="w-5 h-5 text-[#0A3D82]" />
               </div>
               <div className="flex-1">
                 <h3 className="text-sm font-bold text-[#1E2229]">Delete Audience Segment?</h3>

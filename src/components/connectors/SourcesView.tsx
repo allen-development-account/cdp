@@ -992,7 +992,7 @@ export const SourcesView: React.FC = () => {
                             <div
                               key={card.id}
                               className={`bg-[#FFFFFF] border rounded-xl p-4 flex flex-col justify-between h-[155px] shadow-2xs transition-all relative group ${
-                                isConnected ? 'border-[#B4F0C3] hover:border-[#0E7A36]' : 'border-[#E5E7EB] hover:border-[#B5B5B5]'
+                                isConnected ? 'border-[#93C5FD] hover:border-[#1473E6]' : 'border-[#E5E7EB] hover:border-[#93C5FD]'
                               }`}
                             >
                               {/* Top row: Brand Icon + Title */}
@@ -1004,7 +1004,7 @@ export const SourcesView: React.FC = () => {
                                       {card.name}
                                     </span>
                                     {isConnected && (
-                                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#DEFBE6] text-[#0E7A36] shrink-0">
+                                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E0F2FE] text-[#0369A1] shrink-0">
                                         Connected
                                       </span>
                                     )}
@@ -1076,7 +1076,7 @@ export const SourcesView: React.FC = () => {
 
                 {filteredCatalog.length === 0 && (
                   <div className="text-center py-16 bg-[#F9FAFB] rounded-xl border border-dashed border-[#E1E5EA] space-y-3">
-                    <Search className="w-8 h-8 text-[#262A33] mx-auto" />
+                    <Search className="w-8 h-8 text-[#1473E6] mx-auto" />
                     <h3 className="text-sm font-bold text-[#2C2C2C]">
                       {sourceFilter === 'my' ? 'No connected sources yet' : 'No sources found'}
                     </h3>
@@ -1103,15 +1103,15 @@ export const SourcesView: React.FC = () => {
         {/* ================= DATAFLOWS TAB ================= */}
         {activeTab === 'Dataflows' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h2 className="text-base font-bold text-[#2C2C2C]">Active Ingestion Dataflows</h2>
-                <p className="text-xs text-[#1E2229]">
+                <h2 className="text-base font-bold text-white">Active Ingestion Dataflows</h2>
+                <p className="text-xs text-blue-100 mt-0.5">
                   Real-time streaming and batch pipelines feeding XDM schemas with validation status.
                 </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-mono font-bold bg-[#EBF3FC] text-[#1473E6] px-2.5 py-1 rounded border border-[#D0E2F9]">
+              <div className="flex items-center space-x-2 shrink-0">
+                <span className="text-xs font-mono font-bold bg-white/15 text-white px-2.5 py-1 rounded border border-white/25 tabular-nums">
                   {systemMetrics.ratePerSec.toLocaleString()} events/sec
                 </span>
               </div>
@@ -1171,8 +1171,8 @@ export const SourcesView: React.FC = () => {
                           </span>
                         </td>
                         <td className="px-5 py-3.5">
-                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#DEFBE6] text-[#0E7A36]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36] animate-pulse" />
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#E0F2FE] text-[#0369A1]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
                             <span>{src.status}</span>
                           </span>
                         </td>
@@ -1205,10 +1205,10 @@ export const SourcesView: React.FC = () => {
         {/* ================= ACCOUNTS TAB ================= */}
         {activeTab === 'Accounts' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs flex items-center justify-between">
               <div>
-                <h2 className="text-base font-bold text-[#2C2C2C]">Connected Source Accounts</h2>
-                <p className="text-xs text-[#1E2229]">
+                <h2 className="text-base font-bold text-white">Connected Source Accounts</h2>
+                <p className="text-xs text-blue-100 mt-0.5">
                   Authorized provider credentials, OAuth 2.0 refresh tokens, and service principal connections.
                 </p>
               </div>
@@ -1216,7 +1216,7 @@ export const SourcesView: React.FC = () => {
 
             {safeSources.length === 0 ? (
               <div className="bg-[#F9FAFB] rounded-xl border border-dashed border-[#D0D7DE] p-12 text-center space-y-3">
-                <ShieldCheck className="w-8 h-8 text-[#596780] mx-auto" />
+                <ShieldCheck className="w-8 h-8 text-[#1473E6] mx-auto" />
                 <h3 className="text-sm font-bold text-[#2C2C2C]">No Source Accounts Authorized Yet</h3>
                 <p className="text-xs text-[#596780] max-w-md mx-auto">
                   Configure a connector in the Source Catalog to register OAuth 2.0 tokens or service accounts here.
@@ -1236,7 +1236,7 @@ export const SourcesView: React.FC = () => {
                       <BrandIcon name={src.icon || 'xpr'} className="w-8 h-8" />
                       <div className="min-w-0">
                         <span className="text-xs font-bold text-[#2C2C2C] block truncate">{src.name}</span>
-                        <span className="text-[10px] text-[#0E7A36] font-semibold">{src.authMethod || 'OAuth 2.0 Active'}</span>
+                        <span className="text-[10px] text-[#0369A1] font-semibold">{src.authMethod || 'OAuth 2.0 Active'}</span>
                       </div>
                     </div>
                     <p className="text-[11px] text-[#1E2229] font-mono truncate">{src.dataFlowUrl || src.id}</p>
@@ -1254,16 +1254,16 @@ export const SourcesView: React.FC = () => {
         {/* ================= KEY PAIRS TAB ================= */}
         {activeTab === 'Key pairs' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div>
-              <h2 className="text-base font-bold text-[#2C2C2C]">Cryptographic Key Pairs & mTLS</h2>
-              <p className="text-xs text-[#1E2229]">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs">
+              <h2 className="text-base font-bold text-white">Cryptographic Key Pairs & mTLS</h2>
+              <p className="text-xs text-blue-100 mt-0.5">
                 Public and private key certificates utilized for SFTP batch ingestion and Kafka mTLS handshakes.
               </p>
             </div>
 
             {safeSources.length === 0 && !isDemoMode ? (
               <div className="bg-[#F9FAFB] rounded-xl border border-dashed border-[#D0D7DE] p-12 text-center space-y-2">
-                <Key className="w-8 h-8 text-[#596780] mx-auto" />
+                <Key className="w-8 h-8 text-[#0284C7] mx-auto" />
                 <h3 className="text-sm font-bold text-[#2C2C2C]">No Active Key Pairs Provisioned</h3>
                 <p className="text-xs text-[#596780] max-w-md mx-auto">
                   Provision SFTP or Kafka mTLS sources from the Catalog to generate client key pairs.
@@ -1279,18 +1279,18 @@ export const SourcesView: React.FC = () => {
                       <span className="text-[10px] text-[#1E2229] font-mono">Fingerprint: SHA256:d8a9f24...b83a</span>
                     </div>
                   </div>
-                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-[#DEFBE6] text-[#0E7A36] rounded">Valid (Expires 2027)</span>
+                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-[#E0F2FE] text-[#0369A1] rounded">Valid (Expires 2027)</span>
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center space-x-3">
-                    <Lock className="w-5 h-5 text-[#0E7A36]" />
+                    <Lock className="w-5 h-5 text-[#0284C7]" />
                     <div>
                       <span className="text-xs font-bold text-[#2C2C2C] block">kafka-mtls-client-cert</span>
                       <span className="text-[10px] text-[#1E2229] font-mono">Issuer: DigiCert Global Root G2</span>
                     </div>
                   </div>
-                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-[#DEFBE6] text-[#0E7A36] rounded">Active</span>
+                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-[#E0F2FE] text-[#0369A1] rounded">Active</span>
                 </div>
               </div>
             )}
@@ -1300,16 +1300,16 @@ export const SourcesView: React.FC = () => {
         {/* ================= PRIVATE ENDPOINTS TAB ================= */}
         {activeTab === 'Private endpoints' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div>
-              <h2 className="text-base font-bold text-[#2C2C2C]">Private Endpoints & VPC Peering</h2>
-              <p className="text-xs text-[#1E2229]">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs">
+              <h2 className="text-base font-bold text-white">Private Endpoints & VPC Peering</h2>
+              <p className="text-xs text-blue-100 mt-0.5">
                 Direct private network paths bypassing the public internet via AWS PrivateLink and Azure Private Link.
               </p>
             </div>
 
             {safeSources.length === 0 && !isDemoMode ? (
               <div className="bg-[#F9FAFB] rounded-xl border border-dashed border-[#D0D7DE] p-12 text-center space-y-2">
-                <Network className="w-8 h-8 text-[#596780] mx-auto" />
+                <Network className="w-8 h-8 text-[#1D4ED8] mx-auto" />
                 <h3 className="text-sm font-bold text-[#2C2C2C]">No VPC Peering Endpoints Configured</h3>
                 <p className="text-xs text-[#596780] max-w-md mx-auto">
                   Connect an AWS S3, Snowflake, or Kafka source to establish private VPC ingress routes.
@@ -1325,7 +1325,7 @@ export const SourcesView: React.FC = () => {
                       <span className="text-[10px] text-[#1E2229]">Connected to VPC vpc-08a8e1 (us-east-1)</span>
                     </div>
                   </div>
-                  <span className="px-2.5 py-0.5 text-[10px] font-bold bg-[#DEFBE6] text-[#0E7A36] rounded">
+                  <span className="px-2.5 py-0.5 text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1] rounded">
                     Connected (0.8ms Latency)
                   </span>
                 </div>
@@ -1337,9 +1337,9 @@ export const SourcesView: React.FC = () => {
         {/* ================= SYSTEM VIEW TAB ================= */}
         {activeTab === 'System view' && (
           <div className="p-8 space-y-6 overflow-y-auto h-full max-w-7xl mx-auto">
-            <div>
-              <h2 className="text-base font-bold text-[#2C2C2C]">Inbound Ingestion Topology</h2>
-              <p className="text-xs text-[#1E2229]">
+            <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white rounded-xl border border-[#0E4DA4] px-5 py-3.5 shadow-2xs">
+              <h2 className="text-base font-bold text-white">Inbound Ingestion Topology</h2>
+              <p className="text-xs text-blue-100 mt-0.5">
                 Architectural data flow from upstream partner sources to the XLR8 Edge network and XDM schema validation.
               </p>
             </div>
@@ -1357,9 +1357,9 @@ export const SourcesView: React.FC = () => {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#0D66D0] block mb-1">Edge Validation & Ingest</span>
                   <span className="text-xs font-bold text-[#0D66D0]">Flink Stream Parser + DULE</span>
                 </div>
-                <div className="p-4 bg-[#DEFBE6] rounded-lg border border-[#B4F0C3] text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0E7A36] block mb-1">Canonical Storage</span>
-                  <span className="text-xs font-bold text-[#0E7A36]">XDM Experience Event Lake</span>
+                <div className="p-4 bg-[#E0F2FE] rounded-lg border border-[#BAE6FD] text-center">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0369A1] block mb-1">Canonical Storage</span>
+                  <span className="text-xs font-bold text-[#0369A1]">XDM Experience Event Lake</span>
                 </div>
               </div>
             </div>
@@ -1423,7 +1423,7 @@ export const SourcesView: React.FC = () => {
               </div>
 
               {streamTestResult && (
-                <div className="p-3 bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] rounded-lg text-xs">
+                <div className="p-3 bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] rounded-lg text-xs">
                   {streamTestResult}
                 </div>
               )}
@@ -1503,20 +1503,20 @@ export const SourcesView: React.FC = () => {
                   rows={10}
                   value={customJsonPayload}
                   onChange={e => setCustomJsonPayload(e.target.value)}
-                  className="w-full p-3 font-mono text-[11px] bg-[#1E1E1E] text-[#A6E22E] rounded-lg border border-[#333333] focus:outline-none"
+                  className="w-full p-3 font-mono text-[11px] bg-[#0F172A] text-[#7DD3FC] rounded-lg border border-[#1E293B] focus:outline-none"
                 />
               </div>
 
               {simulationErrorMsg && (
-                <div className="p-3 bg-[#FFEBEB] text-[#D7373F] border border-[#FFCCD0] rounded-lg text-xs flex items-center space-x-2">
-                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                <div className="p-3 bg-[#EFF6FF] text-[#0A3D82] border border-[#93C5FD] rounded-lg text-xs flex items-center space-x-2">
+                  <AlertTriangle className="w-4 h-4 text-[#1D4ED8] shrink-0" />
                   <span>{simulationErrorMsg}</span>
                 </div>
               )}
 
               {simulationSuccessMsg && (
-                <div className="p-3 bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] rounded-lg text-xs flex items-center space-x-2">
-                  <Check className="w-4 h-4 shrink-0" />
+                <div className="p-3 bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] rounded-lg text-xs flex items-center space-x-2">
+                  <Check className="w-4 h-4 text-[#0284C7] shrink-0" />
                   <span>{simulationSuccessMsg}</span>
                 </div>
               )}

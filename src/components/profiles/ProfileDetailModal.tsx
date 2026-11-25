@@ -35,11 +35,11 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({ profile,
   const getNodeIcon = (type: string) => {
     switch (type) {
       case 'email': return <Mail className="w-3.5 h-3.5 text-[#1473E6]" />;
-      case 'cookie': return <Globe className="w-3.5 h-3.5 text-[#2680EB]" />;
-      case 'phone': return <Phone className="w-3.5 h-3.5 text-[#0E7A36]" />;
-      case 'crmId': return <Database className="w-3.5 h-3.5 text-[#B25900]" />;
-      case 'device': return <Smartphone className="w-3.5 h-3.5 text-[#7024C4]" />;
-      default: return <GitMerge className="w-3.5 h-3.5 text-[#1A1D23]" />;
+      case 'cookie': return <Globe className="w-3.5 h-3.5 text-[#0EA5E9]" />;
+      case 'phone': return <Phone className="w-3.5 h-3.5 text-[#0284C7]" />;
+      case 'crmId': return <Database className="w-3.5 h-3.5 text-[#1D4ED8]" />;
+      case 'device': return <Smartphone className="w-3.5 h-3.5 text-[#0A3D82]" />;
+      default: return <GitMerge className="w-3.5 h-3.5 text-[#0F58B8]" />;
     }
   };
 
@@ -179,7 +179,7 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({ profile,
                 <div className="p-3.5 bg-[#FFFFFF] rounded border border-[#E1E5EA]">
                   <div className="flex items-center justify-between text-[#1E2229] font-semibold mb-1.5">
                     <span className="uppercase text-[10px]">Predicted LTV</span>
-                    <DollarSign className="w-3.5 h-3.5 text-[#0E7A36]" />
+                    <DollarSign className="w-3.5 h-3.5 text-[#0284C7]" />
                   </div>
                   <div className="flex items-baseline space-x-1">
                     <span className="text-2xl font-bold text-[#2C2C2C] font-mono">
@@ -415,7 +415,7 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({ profile,
         {/* Modal Bottom Footer */}
         <div className="p-3.5 bg-[#F8F9FA] border-t border-[#E1E5EA] flex items-center justify-between">
           <div className="flex items-center space-x-1.5 text-[11px] text-[#1E2229]">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#0E7A36]" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#0D66D0]" />
             <span>Profile synchronized with real-time streaming state store</span>
           </div>
           <button

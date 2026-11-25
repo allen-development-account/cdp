@@ -59,6 +59,8 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
     setIsSidebarCollapsed,
     addTerminalLog,
     ingestEvent,
+    guidedReturnStep,
+    returnToGuidedStep,
   } = useCDP();
 
   // Auto-minimize the left-side menu panel when arriving on this dedicated schema builder page
@@ -447,16 +449,16 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
       case 'string':
         return <Type className="w-3.5 h-3.5 text-[#1473E6]" />;
       case 'number':
-        return <Hash className="w-3.5 h-3.5 text-[#0E7A36]" />;
+        return <Hash className="w-3.5 h-3.5 text-[#0EA5E9]" />;
       case 'boolean':
-        return <ToggleLeft className="w-3.5 h-3.5 text-[#7024C4]" />;
+        return <ToggleLeft className="w-3.5 h-3.5 text-[#1D4ED8]" />;
       case 'timestamp':
-        return <Clock className="w-3.5 h-3.5 text-[#D97706]" />;
+        return <Clock className="w-3.5 h-3.5 text-[#0284C7]" />;
       case 'array':
-        return <Brackets className="w-3.5 h-3.5 text-[#0284C7]" />;
+        return <Brackets className="w-3.5 h-3.5 text-[#3B82F6]" />;
       case 'object':
       default:
-        return <FolderTree className="w-3.5 h-3.5 text-[#4B4B4B]" />;
+        return <FolderTree className="w-3.5 h-3.5 text-[#0A3D82]" />;
     }
   };
 
@@ -468,18 +470,33 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
       <header className="h-[56px] bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white border-b border-[#0E4DA4] px-4 flex items-center justify-between shrink-0 z-20">
         {/* Left Section: Back, Title & Class */}
         <div className="flex items-center space-x-3 min-w-0">
-          <button
-            onClick={() => {
-              setEditingSchemaId(null);
-              if (onBack) onBack();
-              else setActiveTab('schemas');
-            }}
-            className="flex items-center space-x-1.5 text-xs font-medium text-white bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1.5 rounded transition-colors cursor-pointer"
-            title="Return to Schemas Registry"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Schemas</span>
-          </button>
+          {!onBack && guidedReturnStep !== null ? (
+            <button
+              type="button"
+              onClick={() => {
+                setEditingSchemaId(null);
+                returnToGuidedStep();
+              }}
+              className="flex items-center space-x-1.5 text-xs font-semibold text-[#0D66D0] bg-white hover:bg-[#F2F4F7] border border-white px-2.5 py-1.5 rounded transition-colors cursor-pointer whitespace-nowrap shrink-0"
+              title={`Back to Get Started (Step ${guidedReturnStep})`}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Get Started (Step {guidedReturnStep})</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setEditingSchemaId(null);
+                if (onBack) onBack();
+                else setActiveTab('schemas');
+              }}
+              className="flex items-center space-x-1.5 text-xs font-medium text-white bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1.5 rounded transition-colors cursor-pointer"
+              title="Return to Schemas Registry"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Schemas</span>
+            </button>
+          )}
 
           <div className="h-4 w-px bg-white/25" />
 
@@ -504,8 +521,8 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
 
             {/* Profile Status Indicator */}
             {isProfileEnabled ? (
-              <span className="text-[10px] font-medium text-[#8CE2A7] bg-white/15 border border-[#8CE2A7]/40 px-2 py-0.5 rounded flex items-center space-x-1 hidden lg:inline-flex">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8CE2A7] animate-pulse" />
+              <span className="text-[10px] font-medium text-sky-200 bg-white/15 border border-sky-200/40 px-2 py-0.5 rounded flex items-center space-x-1 hidden lg:inline-flex">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-pulse" />
                 <span>Profile Enabled</span>
               </span>
             ) : (
@@ -539,6 +556,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             onClick={() => {
               setEditingSchemaId(null);
               if (onBack) onBack();
+              else if (guidedReturnStep !== null) returnToGuidedStep();
               else setActiveTab('schemas');
             }}
             className="px-3 py-1.5 text-xs font-medium text-blue-100 hover:text-white hover:bg-white/15 rounded transition-colors cursor-pointer"
@@ -570,16 +588,16 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
         {/* ======================================================================= */}
         {/* PANEL 1: COMPOSITION (Left Rail, 280px)                                 */}
         {/* ======================================================================= */}
-        <div className="w-72 bg-[#FAFAFA] border-r border-[#E1E5EA] flex flex-col shrink-0 overflow-y-auto">
+        <div className="w-72 bg-[#1B2432] border-r border-[#0F172A] flex flex-col shrink-0 overflow-y-auto text-slate-100">
           {/* Rail Header */}
-          <div className="p-3.5 border-b border-[#E1E5EA] bg-[#FFFFFF] flex items-center justify-between">
+          <div className="p-3.5 border-b border-slate-700/80 bg-[#141C27] flex items-center justify-between">
             <div>
-              <h2 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">Composition</h2>
-              <p className="text-[11px] text-[#6E6E6E]">Building blocks of your schema</p>
+              <h2 className="text-xs font-bold text-white uppercase tracking-wider">Composition</h2>
+              <p className="text-[11px] text-slate-300">Building blocks of your schema</p>
             </div>
             <button
               onClick={() => setSelectedFieldId(null)}
-              className="text-[11px] text-[#1473E6] hover:underline font-medium"
+              className="text-[11px] text-[#60A5FA] hover:text-blue-300 hover:underline font-medium cursor-pointer"
             >
               Schema info
             </button>
@@ -589,23 +607,23 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             {/* Section 1: Class */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-[#4B4B4B] uppercase tracking-wide">Class</span>
+                <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Class</span>
                 <button
                   onClick={() => setIsClassSelectorModalOpen(true)}
-                  className="text-[11px] font-medium text-[#1473E6] hover:text-[#0D66D0]"
+                  className="text-[11px] font-medium text-[#60A5FA] hover:text-blue-300 cursor-pointer"
                 >
                   Change
                 </button>
               </div>
 
-              <div className="p-3 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-xs text-[#1E2229]">{currentClass.name}</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#F2F4F7] text-[#6E6E6E] border border-[#E1E5EA]">
+              <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-xs text-white">{currentClass.name}</span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-200 border border-slate-600 shrink-0">
                     {currentClass.category}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#6E6E6E] leading-relaxed">
+                <p className="text-[11px] text-slate-300 leading-relaxed">
                   {currentClass.description}
                 </p>
               </div>
@@ -615,15 +633,15 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1.5">
-                  <span className="text-[11px] font-semibold text-[#4B4B4B] uppercase tracking-wide">Field groups</span>
-                  <span className="text-[10px] font-mono text-[#6E6E6E] bg-[#E1E5EA] px-1.5 py-0.2 rounded font-bold">
+                  <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Field groups</span>
+                  <span className="text-[10px] font-mono text-slate-100 bg-slate-700/80 border border-slate-600/70 px-1.5 py-0.2 rounded font-bold tabular-nums">
                     {attachedGroupIds.length}
                   </span>
                 </div>
 
                 <button
                   onClick={() => setIsAddFieldGroupsModalOpen(true)}
-                  className="text-xs font-semibold text-[#1473E6] hover:text-[#0D66D0] flex items-center space-x-1"
+                  className="text-xs font-semibold text-[#60A5FA] hover:text-blue-300 flex items-center space-x-1 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add</span>
@@ -639,20 +657,20 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                   return (
                     <div
                       key={group.id}
-                      className="p-2.5 bg-[#FFFFFF] rounded border border-[#E1E5EA] hover:border-[#C5DCFA] shadow-2xs group flex items-start justify-between gap-2 transition-colors"
+                      className="p-2.5 bg-[#243042] rounded-lg border border-slate-600/60 hover:border-[#60A5FA]/70 shadow-2xs group flex items-start justify-between gap-2 transition-colors"
                     >
                       <div className="min-w-0">
                         <div className="flex items-center space-x-1.5">
-                          <Layers className="w-3 h-3 text-[#1473E6] shrink-0" />
-                          <h4 className="text-xs font-semibold text-[#1E2229] truncate">{group.name}</h4>
+                          <Layers className="w-3 h-3 text-[#60A5FA] shrink-0" />
+                          <h4 className="text-xs font-semibold text-white truncate">{group.name}</h4>
                         </div>
-                        <p className="text-[10px] text-[#6E6E6E] line-clamp-1 mt-0.5">{group.category} · {group.fields.length} attributes</p>
+                        <p className="text-[10px] text-slate-300 line-clamp-1 mt-0.5">{group.category} · {group.fields.length} attributes</p>
                       </div>
 
                       <button
                         onClick={() => handleToggleFieldGroup(group)}
                         title="Remove field group from schema"
-                        className="text-[#888888] hover:text-[#DC2626] p-1 rounded hover:bg-[#FFEBEB] transition-colors shrink-0"
+                        className="text-slate-400 hover:text-red-300 p-1 rounded hover:bg-red-500/20 transition-colors shrink-0 cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -662,7 +680,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
 
                 <button
                   onClick={() => setIsAddFieldGroupsModalOpen(true)}
-                  className="w-full py-2 border border-dashed border-[#C5DCFA] hover:border-[#1473E6] bg-[#FFFFFF] hover:bg-[#EBF3FC] text-[#1473E6] rounded text-xs font-medium transition-colors flex items-center justify-center space-x-1.5"
+                  className="w-full py-2 border border-dashed border-[#60A5FA]/60 hover:border-[#60A5FA] bg-[#243042]/60 hover:bg-[#2B3A50] text-[#93C5FD] rounded-lg text-xs font-medium transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Field Groups</span>
@@ -673,27 +691,27 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             {/* Section 3: Identities Summary */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-[#4B4B4B] uppercase tracking-wide">Identities</span>
-                <span className="text-[10px] font-mono text-[#6E6E6E] bg-[#E1E5EA] px-1.5 py-0.2 rounded font-bold">
+                <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Identities</span>
+                <span className="text-[10px] font-mono text-slate-100 bg-slate-700/80 border border-slate-600/70 px-1.5 py-0.2 rounded font-bold tabular-nums">
                   {identityFields.length}
                 </span>
               </div>
 
-              <div className="p-2.5 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs space-y-1.5">
+              <div className="p-2.5 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-1.5">
                 {identityFields.length === 0 ? (
-                  <p className="text-[11px] text-[#888888] italic">No identity keys defined in this schema.</p>
+                  <p className="text-[11px] text-slate-300 italic">No identity keys defined in this schema.</p>
                 ) : (
                   identityFields.map(idField => (
                     <div
                       key={idField.id}
                       onClick={() => handleSelectField(idField)}
-                      className="flex items-center justify-between text-xs py-1 px-1.5 rounded hover:bg-[#F2F4F7] cursor-pointer"
+                      className="flex items-center justify-between text-xs py-1 px-1.5 rounded hover:bg-slate-700/60 cursor-pointer transition-colors"
                     >
                       <div className="flex items-center space-x-1.5 truncate">
-                        <Key className="w-3 h-3 text-[#1473E6] shrink-0" />
-                        <span className="font-mono text-[11px] text-[#1E2229] truncate">{idField.name}</span>
+                        <Key className="w-3 h-3 text-[#60A5FA] shrink-0" />
+                        <span className="font-mono text-[11px] text-slate-100 truncate">{idField.name}</span>
                       </div>
-                      <span className="text-[10px] uppercase font-semibold text-[#0D66D0] bg-[#EBF3FC] px-1.5 py-0.2 rounded border border-[#C5DCFA] shrink-0">
+                      <span className="text-[10px] uppercase font-semibold text-[#93C5FD] bg-[#1D4ED8]/30 px-1.5 py-0.2 rounded border border-[#60A5FA]/40 shrink-0">
                         {idField.identifierType || 'CRM'}
                       </span>
                     </div>
@@ -703,14 +721,14 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             </div>
 
             {/* Section 4: Real-Time Customer Profile Toggle */}
-            <div className="p-3 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs space-y-2">
+            <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#1E2229]">Real-Time Profile</span>
+                <span className="text-xs font-bold text-white">Real-Time Profile</span>
                 <button
                   type="button"
                   onClick={() => setIsProfileEnabled(!isProfileEnabled)}
                   className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    isProfileEnabled ? 'bg-[#1473E6]' : 'bg-[#D5D5D5]'
+                    isProfileEnabled ? 'bg-[#1473E6]' : 'bg-slate-600'
                   }`}
                 >
                   <span
@@ -721,7 +739,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                 </button>
               </div>
 
-              <p className="text-[11px] text-[#6E6E6E] leading-relaxed">
+              <p className="text-[11px] text-slate-300 leading-relaxed">
                 When enabled, streaming datasets mapped to this schema will stitch into the real-time unified customer graph.
               </p>
             </div>
@@ -853,244 +871,248 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
         {/* ======================================================================= */}
         {/* PANEL 3: FIELD / SCHEMA PROPERTIES (Right Rail, 340px)                  */}
         {/* ======================================================================= */}
-        <div className="w-80 bg-[#FAFAFA] flex flex-col shrink-0 overflow-y-auto">
+        <div className="w-80 bg-[#1B2432] border-l border-[#0F172A] flex flex-col shrink-0 overflow-y-auto text-slate-100">
           {selectedField ? (
             /* Selected Field Properties Panel */
-            <div className="p-4 space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[#E1E5EA]">
+            <div className="flex flex-col">
+              <div className="px-4 py-3.5 bg-[#141C27] border-b border-slate-700/80 flex items-center justify-between gap-2">
                 <div>
-                  <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">Field Properties</h3>
-                  <p className="text-[11px] text-[#6E6E6E]">Configure attribute behavior & privacy</p>
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">Field Properties</h3>
+                  <p className="text-[11px] text-slate-300">Configure attribute behavior &amp; privacy</p>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA]">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1D4ED8]/30 text-[#93C5FD] border border-[#60A5FA]/40 shrink-0">
                   {selectedField.dataType}
                 </span>
               </div>
 
-              {/* Field Name & Display Title */}
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Field Name (XDM Path)</label>
-                  <input
-                    type="text"
-                    value={selectedField.name}
-                    onChange={e => handleUpdateSelectedField({ name: e.target.value })}
-                    className="w-full text-xs font-mono text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Data Type</label>
-                  <select
-                    value={selectedField.dataType}
-                    onChange={e => handleUpdateSelectedField({ dataType: e.target.value as any })}
-                    className="w-full text-xs text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none"
-                  >
-                    <option value="string">string (Text)</option>
-                    <option value="number">number (Integer / Double)</option>
-                    <option value="boolean">boolean (True / False)</option>
-                    <option value="timestamp">timestamp (ISO 8601 Date & Time)</option>
-                    <option value="object">object (Nested Container)</option>
-                    <option value="array">array (Repeated Elements)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Description</label>
-                  <textarea
-                    rows={2}
-                    value={selectedField.description}
-                    onChange={e => handleUpdateSelectedField({ description: e.target.value })}
-                    className="w-full text-xs text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none"
-                  />
-                </div>
-
-                {/* Required Checkbox */}
-                <label className="flex items-center space-x-2 cursor-pointer pt-1">
-                  <input
-                    type="checkbox"
-                    checked={selectedField.isRequired}
-                    onChange={e => handleUpdateSelectedField({ isRequired: e.target.checked })}
-                    className="w-4 h-4 text-[#1473E6] rounded border-[#D5D5D5] focus:ring-0"
-                  />
-                  <span className="text-xs font-medium text-[#2C2C2C]">Required Field</span>
-                </label>
-              </div>
-
-              {/* Identity Configuration Box */}
-              <div className="p-3 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-1.5">
-                    <Key className="w-3.5 h-3.5 text-[#1473E6]" />
-                    <span className="text-xs font-bold text-[#1E2229]">Identity Stitching</span>
+              <div className="p-4 space-y-5">
+                {/* Field Name & Display Title */}
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Field Name (XDM Path)</label>
+                    <input
+                      type="text"
+                      value={selectedField.name}
+                      onChange={e => handleUpdateSelectedField({ name: e.target.value })}
+                      className="w-full text-xs font-mono text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none"
+                    />
                   </div>
-                  <input
-                    type="checkbox"
-                    checked={selectedField.isIdentifier}
-                    onChange={e => handleUpdateSelectedField({
-                      isIdentifier: e.target.checked,
-                      identifierType: e.target.checked ? (selectedField.identifierType || 'crmId') : undefined
-                    })}
-                    className="w-4 h-4 text-[#1473E6] rounded border-[#D5D5D5] focus:ring-0"
-                  />
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Data Type</label>
+                    <select
+                      value={selectedField.dataType}
+                      onChange={e => handleUpdateSelectedField({ dataType: e.target.value as any })}
+                      className="w-full text-xs text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none"
+                    >
+                      <option value="string">string (Text)</option>
+                      <option value="number">number (Integer / Double)</option>
+                      <option value="boolean">boolean (True / False)</option>
+                      <option value="timestamp">timestamp (ISO 8601 Date &amp; Time)</option>
+                      <option value="object">object (Nested Container)</option>
+                      <option value="array">array (Repeated Elements)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Description</label>
+                    <textarea
+                      rows={2}
+                      value={selectedField.description}
+                      onChange={e => handleUpdateSelectedField({ description: e.target.value })}
+                      className="w-full text-xs text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none"
+                    />
+                  </div>
+
+                  {/* Required Checkbox */}
+                  <label className="flex items-center space-x-2 cursor-pointer pt-1">
+                    <input
+                      type="checkbox"
+                      checked={selectedField.isRequired}
+                      onChange={e => handleUpdateSelectedField({ isRequired: e.target.checked })}
+                      className="w-4 h-4 accent-[#1473E6] rounded border-slate-500 focus:ring-0"
+                    />
+                    <span className="text-xs font-medium text-slate-100">Required Field</span>
+                  </label>
                 </div>
 
-                {selectedField.isIdentifier && (
-                  <div className="space-y-2 pt-2 border-t border-[#F2F4F7]">
-                    <div>
-                      <label className="block text-[10px] font-semibold text-[#6E6E6E] uppercase mb-1">Identity Namespace</label>
-                      <select
-                        value={selectedField.identifierType || 'crmId'}
-                        onChange={e => handleUpdateSelectedField({ identifierType: e.target.value as any })}
-                        className="w-full text-xs text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] rounded p-1.5 outline-none"
-                      >
-                        <option value="email">Email (Primary Deterministic)</option>
-                        <option value="phone">Phone (E.164)</option>
-                        <option value="cookie">ECID (Experience Cloud ID)</option>
-                        <option value="crmId">CRM ID (Customer Primary Key)</option>
-                        <option value="device">Device ID / IDFA / GAID</option>
-                      </select>
+                {/* Identity Configuration Box */}
+                <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-1.5">
+                      <Key className="w-3.5 h-3.5 text-[#60A5FA]" />
+                      <span className="text-xs font-bold text-white">Identity Stitching</span>
                     </div>
-                    <p className="text-[10px] text-[#6E6E6E]">
-                      Enables real-time graph links between pseudonymous cookies and authenticated profiles.
-                    </p>
+                    <input
+                      type="checkbox"
+                      checked={selectedField.isIdentifier}
+                      onChange={e => handleUpdateSelectedField({
+                        isIdentifier: e.target.checked,
+                        identifierType: e.target.checked ? (selectedField.identifierType || 'crmId') : undefined
+                      })}
+                      className="w-4 h-4 accent-[#1473E6] rounded border-slate-500 focus:ring-0"
+                    />
                   </div>
-                )}
-              </div>
 
-              {/* Data Governance & DULE Privacy Labels */}
-              <div className="p-3 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs space-y-3">
-                <div className="flex items-center space-x-1.5">
-                  <Shield className="w-3.5 h-3.5 text-[#0E7A36]" />
-                  <span className="text-xs font-bold text-[#1E2229]">Data Usage Labels (DULE)</span>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-semibold text-[#6E6E6E] uppercase mb-1">Privacy Classification</label>
-                  <select
-                    value={selectedField.classification}
-                    onChange={e => handleUpdateSelectedField({ classification: e.target.value as PrivacyClassification })}
-                    className="w-full text-xs text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] rounded p-1.5 outline-none"
-                  >
-                    <option value="Standard">Standard (General Public)</option>
-                    <option value="Sensitive">Sensitive (Masking Required)</option>
-                    <option value="Financial">Financial (PCI DSS / Monetary)</option>
-                    <option value="Health">Health (HIPAA Directive)</option>
-                    <option value="Behavioral">Behavioral (Digital Tracking)</option>
-                  </select>
-                </div>
-
-                {/* Quick DULE Label Toggles */}
-                <div>
-                  <span className="block text-[10px] font-semibold text-[#6E6E6E] uppercase mb-1.5">Applied DULE Labels</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['C1', 'C2', 'I1', 'I2', 'S1', 'S2', 'S3', 'R1', 'R2'].map(code => {
-                      const isApplied = (selectedField.privacyLabels || []).includes(code);
-                      return (
-                        <button
-                          key={code}
-                          type="button"
-                          onClick={() => {
-                            const current = selectedField.privacyLabels || [];
-                            const next = isApplied
-                              ? current.filter(c => c !== code)
-                              : [...current, code];
-                            handleUpdateSelectedField({ privacyLabels: next });
-                          }}
-                          className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border transition-colors ${
-                            isApplied
-                              ? 'bg-[#1473E6] text-white border-[#1473E6]'
-                              : 'bg-[#FFFFFF] text-[#6E6E6E] border-[#E1E5EA] hover:border-[#1473E6]'
-                          }`}
+                  {selectedField.isIdentifier && (
+                    <div className="space-y-2 pt-2 border-t border-slate-600/60">
+                      <div>
+                        <label className="block text-[10px] font-semibold text-slate-300 uppercase mb-1">Identity Namespace</label>
+                        <select
+                          value={selectedField.identifierType || 'crmId'}
+                          onChange={e => handleUpdateSelectedField({ identifierType: e.target.value as any })}
+                          className="w-full text-xs text-white bg-[#141C27] border border-slate-600/80 rounded-lg p-1.5 outline-none"
                         >
-                          {code}
-                        </button>
-                      );
-                    })}
+                          <option value="email">Email (Primary Deterministic)</option>
+                          <option value="phone">Phone (E.164)</option>
+                          <option value="cookie">ECID (Experience Cloud ID)</option>
+                          <option value="crmId">CRM ID (Customer Primary Key)</option>
+                          <option value="device">Device ID / IDFA / GAID</option>
+                        </select>
+                      </div>
+                      <p className="text-[10px] text-slate-300 leading-relaxed">
+                        Enables real-time graph links between pseudonymous cookies and authenticated profiles.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Data Governance & DULE Privacy Labels */}
+                <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-3">
+                  <div className="flex items-center space-x-1.5">
+                    <Shield className="w-3.5 h-3.5 text-[#38BDF8]" />
+                    <span className="text-xs font-bold text-white">Data Usage Labels (DULE)</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-semibold text-slate-300 uppercase mb-1">Privacy Classification</label>
+                    <select
+                      value={selectedField.classification}
+                      onChange={e => handleUpdateSelectedField({ classification: e.target.value as PrivacyClassification })}
+                      className="w-full text-xs text-white bg-[#141C27] border border-slate-600/80 rounded-lg p-1.5 outline-none"
+                    >
+                      <option value="Standard">Standard (General Public)</option>
+                      <option value="Sensitive">Sensitive (Masking Required)</option>
+                      <option value="Financial">Financial (PCI DSS / Monetary)</option>
+                      <option value="Health">Health (HIPAA Directive)</option>
+                      <option value="Behavioral">Behavioral (Digital Tracking)</option>
+                    </select>
+                  </div>
+
+                  {/* Quick DULE Label Toggles */}
+                  <div>
+                    <span className="block text-[10px] font-semibold text-slate-300 uppercase mb-1.5">Applied DULE Labels</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['C1', 'C2', 'I1', 'I2', 'S1', 'S2', 'S3', 'R1', 'R2'].map(code => {
+                        const isApplied = (selectedField.privacyLabels || []).includes(code);
+                        return (
+                          <button
+                            key={code}
+                            type="button"
+                            onClick={() => {
+                              const current = selectedField.privacyLabels || [];
+                              const next = isApplied
+                                ? current.filter(c => c !== code)
+                                : [...current, code];
+                              handleUpdateSelectedField({ privacyLabels: next });
+                            }}
+                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border transition-colors cursor-pointer ${
+                              isApplied
+                                ? 'bg-[#1473E6] text-white border-[#1473E6]'
+                                : 'bg-[#141C27] text-slate-300 border-slate-600 hover:border-[#60A5FA]'
+                            }`}
+                          >
+                            {code}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="pt-2">
-                <button
-                  onClick={() => handleDeleteField(selectedField.id)}
-                  className="w-full py-2 bg-[#FFFFFF] hover:bg-[#FFEBEB] text-[#DC2626] border border-[#FFCCD0] rounded text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Delete Attribute</span>
-                </button>
+                {/* Action Buttons */}
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleDeleteField(selectedField.id)}
+                    className="w-full py-2 bg-[#243042] hover:bg-red-500/20 text-red-300 border border-red-500/40 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete Attribute</span>
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
             /* Root Schema Properties Panel */
-            <div className="p-4 space-y-5">
-              <div className="pb-3 border-b border-[#E1E5EA]">
-                <h3 className="text-xs font-bold text-[#1E2229] uppercase tracking-wider">Schema Properties</h3>
-                <p className="text-[11px] text-[#6E6E6E]">Global settings for this Experience Data Model</p>
+            <div className="flex flex-col">
+              <div className="px-4 py-3.5 bg-[#141C27] border-b border-slate-700/80">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider">Schema Properties</h3>
+                <p className="text-[11px] text-slate-300">Global settings for this Experience Data Model</p>
               </div>
 
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Display Name</label>
-                  <input
-                    type="text"
-                    value={schemaName}
-                    onChange={e => setSchemaName(e.target.value)}
-                    className="w-full text-xs text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none font-medium"
-                  />
+              <div className="p-4 space-y-5">
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Display Name</label>
+                    <input
+                      type="text"
+                      value={schemaName}
+                      onChange={e => setSchemaName(e.target.value)}
+                      className="w-full text-xs text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Description</label>
+                    <textarea
+                      rows={3}
+                      value={schemaDescription}
+                      onChange={e => setSchemaDescription(e.target.value)}
+                      className="w-full text-xs text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Tenant Namespace</label>
+                    <input
+                      type="text"
+                      value={tenantNamespace}
+                      onChange={e => setTenantNamespace(e.target.value)}
+                      className="w-full text-xs font-mono text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Version</label>
+                    <input
+                      type="text"
+                      value={version}
+                      onChange={e => setVersion(e.target.value)}
+                      className="w-full text-xs font-mono text-white bg-[#243042] border border-slate-600/80 focus:border-[#60A5FA] rounded-lg p-2 outline-none"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Description</label>
-                  <textarea
-                    rows={3}
-                    value={schemaDescription}
-                    onChange={e => setSchemaDescription(e.target.value)}
-                    className="w-full text-xs text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none"
-                  />
+                <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-2">
+                  <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Base Class Contract</span>
+                  <div className="text-xs font-mono text-[#93C5FD] bg-[#141C27] p-2 rounded border border-slate-700/80 break-all">
+                    {currentClass.baseUri}
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-slate-300 pt-1">
+                    <span>Class Category:</span>
+                    <span className="font-semibold text-white">{currentClass.category}</span>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Tenant Namespace</label>
-                  <input
-                    type="text"
-                    value={tenantNamespace}
-                    onChange={e => setTenantNamespace(e.target.value)}
-                    className="w-full text-xs font-mono text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none"
-                  />
+                <div className="p-3 bg-[#1E3A5F]/60 rounded-lg border border-[#60A5FA]/40 text-xs text-white space-y-1">
+                  <div className="flex items-center space-x-1.5 font-bold text-[#93C5FD]">
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>Real-Time Ingestion Ready</span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-slate-200">
+                    When saved, an authorized dataset will automatically bind to this schema and start ingesting edge events in sub-millisecond intervals.
+                  </p>
                 </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#4B4B4B] mb-1">Version</label>
-                  <input
-                    type="text"
-                    value={version}
-                    onChange={e => setVersion(e.target.value)}
-                    className="w-full text-xs font-mono text-[#1E2229] bg-[#FFFFFF] border border-[#E1E5EA] focus:border-[#1473E6] rounded p-2 outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="p-3 bg-[#FFFFFF] rounded border border-[#E1E5EA] shadow-2xs space-y-2">
-                <span className="text-[11px] font-semibold text-[#4B4B4B] uppercase tracking-wide">Base Class Contract</span>
-                <div className="text-xs font-mono text-[#1473E6] bg-[#F8F9FA] p-2 rounded border border-[#E1E5EA] break-all">
-                  {currentClass.baseUri}
-                </div>
-                <div className="flex items-center justify-between text-xs text-[#6E6E6E] pt-1">
-                  <span>Class Category:</span>
-                  <span className="font-semibold text-[#1E2229]">{currentClass.category}</span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-[#EBF3FC] rounded border border-[#C5DCFA] text-xs text-[#0D66D0] space-y-1">
-                <div className="flex items-center space-x-1.5 font-bold">
-                  <Zap className="w-3.5 h-3.5" />
-                  <span>Real-Time Ingestion Ready</span>
-                </div>
-                <p className="text-[11px] leading-relaxed text-[#0D66D0]/90">
-                  When saved, an authorized dataset will automatically bind to this schema and start ingesting edge events in sub-millisecond intervals.
-                </p>
               </div>
             </div>
           )}
@@ -1370,7 +1392,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-2xs animate-in zoom-in-95 duration-150">
           <div className="bg-[#FFFFFF] rounded-lg shadow-2xl border border-[#E1E5EA] w-full max-w-lg overflow-hidden">
             <div className="p-6 text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3] flex items-center justify-center mx-auto shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#38BDF8] to-[#0284C7] text-white border border-[#7DD3FC] flex items-center justify-center mx-auto shadow-sm">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
@@ -1389,8 +1411,8 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[#6E6E6E]">Real-Time Profile Status:</span>
-                  <span className="text-[#0E7A36] font-semibold flex items-center space-x-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A36] inline-block" />
+                  <span className="text-[#0284C7] font-semibold flex items-center space-x-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] inline-block" />
                     <span>Enabled for Stitching</span>
                   </span>
                 </div>
@@ -1414,8 +1436,8 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                 </p>
 
                 {testEventStatus === 'success' && testEventResult && (
-                  <div className="p-2 bg-[#FFFFFF] rounded border border-[#B4F0C3] text-[11px] font-mono text-[#0E7A36] flex items-center space-x-1.5">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#0E7A36]" />
+                  <div className="p-2 bg-[#FFFFFF] rounded border border-[#BAE6FD] text-[11px] font-mono text-[#0369A1] flex items-center space-x-1.5">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#0284C7]" />
                     <span className="truncate">Ingested in 0.9ms! Profile ID: {testEventResult.profileId}</span>
                   </div>
                 )}
@@ -1509,7 +1531,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             {node.field ? (
               getDataTypeIcon(node.field.dataType)
             ) : (
-              <FolderTree className="w-3.5 h-3.5 text-[#6E6E6E]" />
+              <FolderTree className="w-3.5 h-3.5 text-[#0F58B8]" />
             )}
 
             {/* Label */}
@@ -1524,11 +1546,11 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             )}
 
             {node.field?.isRequired && (
-              <span className="text-[#DC2626] font-bold text-xs" title="Required Field">*</span>
+              <span className="text-[#1D4ED8] font-bold text-xs" title="Required Field">*</span>
             )}
 
             {node.field?.privacyLabels && node.field.privacyLabels.length > 0 && (
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-[#DEFBE6] text-[#0E7A36] border border-[#B4F0C3]">
+              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
                 {node.field.privacyLabels.join(', ')}
               </span>
             )}
@@ -1547,7 +1569,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                   e.stopPropagation();
                   handleDeleteField(node.field!.id);
                 }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-[#888888] hover:text-[#DC2626] transition-opacity"
+                className="opacity-0 group-hover:opacity-100 p-1 text-[#888888] hover:text-[#0A3D82] transition-opacity"
                 title="Remove attribute"
               >
                 <Trash2 className="w-3 h-3" />
