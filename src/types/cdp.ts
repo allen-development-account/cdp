@@ -121,7 +121,20 @@ export interface AIPredictions {
 export interface CDPEvent {
   id: string;
   timestamp: string;
-  eventType: 'PageView' | 'AddToCart' | 'Purchase' | 'AppOpen' | 'FormSubmit' | 'ConsentUpdate' | 'SupportTicket' | 'Search' | 'ProductView';
+  eventType:
+    | 'PageView'
+    | 'AddToCart'
+    | 'RemoveFromCart'
+    | 'CartAbandoned'
+    | 'CheckoutStarted'
+    | 'WishlistAdd'
+    | 'Purchase'
+    | 'AppOpen'
+    | 'FormSubmit'
+    | 'ConsentUpdate'
+    | 'SupportTicket'
+    | 'Search'
+    | 'ProductView';
   channel: 'Web SDK' | 'Mobile SDK' | 'Snowflake Batch' | 'Salesforce CRM' | 'POS Terminal' | 'Kafka Ingestion';
   schemaId: string;
   identifiers: {
@@ -168,6 +181,11 @@ export interface CustomerProfile {
     deviceType?: string;
     ssnLast4?: string; // sensitive
     healthCategory?: string; // sensitive
+    activeCartValue?: number;
+    cartItemsCount?: number;
+    abandonedCartCount?: number;
+    lastAbandonedCartTotal?: number;
+    lastAbandonedItems?: string[];
   };
   consent: PrivacyConsent;
   predictions: AIPredictions;
@@ -713,4 +731,61 @@ export interface AuditLogEntry {
   };
   complianceFlags: string[];
 }
+
+// ==========================================
+// Databricks Unity Catalog & Delta Lakehouse
+// ==========================================
+export interface DatabricksDeltaTableSummary {
+  tableName: string;
+  layer: 'Bronze' | 'Silver' | 'Gold';
+  fullPath: string;
+  description: string;
+  rowCount: number;
+  lastUpdatedAt: string;
+  columns: { name: string; type: string; nullable: boolean }[];
+}
+
+export interface DatabricksSyncLogEntry {
+  id: string;
+  timestamp: string;
+  operation: 'STREAM_APPEND' | 'DELTA_MERGE' | 'GOLD_AGGREGATE' | 'SQL_QUERY' | 'DDL_BOOTSTRAP';
+  targetTable: string;
+  rowsAffected: number;
+  mode: 'live_cloud' | 'local_lakehouse';
+  latencyMs: number;
+  status: 'SUCCESS' | 'WARNING' | 'ERROR';
+  message: string;
+}
+
+export interface DatabricksConnectionStatus {
+  mode: 'live_cloud' | 'local_lakehouse';
+  connected: boolean;
+  host: string;
+  httpPath: string;
+  catalog: string;
+  schema: string;
+  hasToken: boolean;
+  envConfigured: boolean;
+  lastSyncAt: string | null;
+  totalEventsStreamed: number;
+  totalProfilesMerged: number;
+  totalCartAbandonments: number;
+  totalRevenueCaptured: number;
+  tables: DatabricksDeltaTableSummary[];
+  recentSyncLogs: DatabricksSyncLogEntry[];
+}
+
+export interface DatabricksQueryResult {
+  success: boolean;
+  mode: 'live_cloud' | 'local_lakehouse';
+  statementId: string;
+  sql: string;
+  columns: string[];
+  rows: Record<string, any>[];
+  rowCount: number;
+  executionTimeMs: number;
+  bytesScanned: string;
+  message?: string;
+}
+
 

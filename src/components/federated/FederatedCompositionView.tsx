@@ -41,7 +41,9 @@ export const FederatedCompositionView: React.FC = () => {
     deleteFederatedComposition,
     executeZeroCopyPushdown,
     destinations,
-    audiences
+    audiences,
+    runDatabricksSql,
+    setActiveTab
   } = useCDP();
 
   const [activeSubTab, setActiveSubTab] = useState<'compositions' | 'warehouses' | 'sql_console' | 'reverse_etl'>('compositions');
@@ -216,8 +218,24 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
     setNewCompDesc('');
   };
 
-  const handleRunConsoleSql = () => {
+  const handleRunConsoleSql = async () => {
     setIsConsoleRunning(true);
+    const selectedWh = warehouses.find((w) => w.id === consoleWarehouseId);
+    const isDatabricksTarget =
+      consoleWarehouseId === 'databricks_live' ||
+      selectedWh?.type === 'Databricks' ||
+      /bronze_ecommerce_events|silver_unified_profiles|gold_cart_abandonment_marts|show tables/i.test(consoleSql);
+
+    if (isDatabricksTarget) {
+      try {
+        const res = await runDatabricksSql(consoleSql);
+        setConsoleResult(res.rows || []);
+      } finally {
+        setIsConsoleRunning(false);
+      }
+      return;
+    }
+
     setTimeout(() => {
       setIsConsoleRunning(false);
       setConsoleResult([
@@ -227,7 +245,7 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
         { CUSTOMER_CRM_ID: 'CRM_902814', NET_REVENUE: 19800.75, PRODUCT_CATEGORY: 'Security Fabric Pro', HISTORICAL_LIFETIME_VALUE: 53100, MARGIN_TIER: 'Tier A' },
         { CUSTOMER_CRM_ID: 'CRM_339102', NET_REVENUE: 16500.00, PRODUCT_CATEGORY: 'Enterprise Suite', HISTORICAL_LIFETIME_VALUE: 41200, MARGIN_TIER: 'Tier B' }
       ]);
-    }, 400);
+    }, 350);
   };
 
   const handleExportPushdownCsv = () => {
@@ -680,10 +698,18 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                 onChange={(e) => setConsoleWarehouseId(e.target.value)}
                 className="bg-white/15 border border-white/25 text-xs font-semibold px-3 py-1.5 rounded-lg text-white focus:outline-none [&>option]:text-[#1E2229]"
               >
+                <option value="databricks_live">Databricks Unity Catalog (Live Delta)</option>
                 {warehouses.map(w => (
                   <option key={w.id} value={w.id}>{w.name} ({w.type})</option>
                 ))}
               </select>
+
+              <button
+                onClick={() => setActiveTab('databricks_warehouse')}
+                className="bg-white/15 hover:bg-white/25 text-white border border-white/25 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all cursor-pointer"
+              >
+                Open Databricks Lakehouse
+              </button>
 
               <button
                 onClick={handleRunConsoleSql}
@@ -731,32 +757,34 @@ WHERE wh.TOTAL_REVENUE >= 5000;`,
                 </span>
               </div>
               <div className="overflow-x-auto border border-[#E1E5EA] rounded">
-                <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#F2F4F7] text-[#1E2229] font-semibold border-b border-[#E1E5EA]">
-                    <tr>
-                      <th className="p-2">CUSTOMER_CRM_ID</th>
-                      <th className="p-2">NET_REVENUE</th>
-                      <th className="p-2">PRODUCT_CATEGORY</th>
-                      <th className="p-2">HISTORICAL_LTV</th>
-                      <th className="p-2">MARGIN_TIER</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#E1E5EA]">
-                    {consoleResult.map((row, i) => (
-                      <tr key={i} className="hover:bg-[#F2F4F7]">
-                        <td className="p-2 font-bold text-[#1473E6]">{row.CUSTOMER_CRM_ID}</td>
-                        <td className="p-2 text-[#2C2C2C]">${row.NET_REVENUE.toLocaleString()}</td>
-                        <td className="p-2 text-[#1E2229]">{row.PRODUCT_CATEGORY}</td>
-                        <td className="p-2 font-bold text-[#0369A1]">${row.HISTORICAL_LIFETIME_VALUE.toLocaleString()}</td>
-                        <td className="p-2">
-                          <span className="bg-[#E0F2FE] text-[#0369A1] px-1.5 py-0.5 rounded text-[10px] font-bold border border-[#BAE6FD]">
-                            {row.MARGIN_TIER}
-                          </span>
-                        </td>
+                {consoleResult.length === 0 ? (
+                  <div className="p-6 text-center text-xs text-[#64748B]">
+                    No rows returned for this query. Stream e-commerce events in the Live Storefront or verify your table name.
+                  </div>
+                ) : (
+                  <table className="w-full text-left text-xs font-mono">
+                    <thead className="bg-[#F2F4F7] text-[#1E2229] font-semibold border-b border-[#E1E5EA]">
+                      <tr>
+                        {Object.keys(consoleResult[0]).map((col) => (
+                          <th key={col} className="p-2 whitespace-nowrap">{col}</th>
+                        ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-[#E1E5EA]">
+                      {consoleResult.map((row, i) => (
+                        <tr key={i} className="hover:bg-[#F2F4F7]">
+                          {Object.keys(consoleResult[0]).map((col) => (
+                            <td key={col} className="p-2 whitespace-nowrap text-[#1E2229]">
+                              {typeof row[col] === 'number'
+                                ? row[col].toLocaleString()
+                                : String(row[col] ?? '')}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           )}

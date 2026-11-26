@@ -3,7 +3,6 @@ import { useCDP } from '../../context/CDPContext';
 import { PageBackButton } from '../common/PageBackButton';
 import {
   Bot,
-  Sparkles,
   Send,
   Image as ImageIcon,
   X,
@@ -13,7 +12,6 @@ import {
   ArrowRight,
   AlertTriangle,
   CheckCircle2,
-  HelpCircle,
   Maximize2,
   ExternalLink,
   Layers,
@@ -59,19 +57,9 @@ export const XLR8AISupportView: React.FC = () => {
 
 I am your dedicated enterprise troubleshooting and guidance agent for **XLR8 Realtime CDP**.
 
-Whenever you encounter an issue or have questions:
-1. **Take a screenshot** of any error, schema, or configuration in your browser.
-2. **Press Ctrl+V (or ⌘+V)** to paste the screenshot directly here.
-3. **Ask your question**, just like asking ChatGPT!
-
-I will inspect the screenshot, diagnose the root cause, and provide step-by-step resolution instructions.`,
+Whenever you encounter an issue or have questions, ask your question below — I will diagnose the root cause and provide step-by-step resolution instructions.`,
         timestamp: 'Just now',
-        model: 'xlr8-copilot',
-        actionTabs: [
-          { label: 'Schemas (XDM)', tab: 'schemas' },
-          { label: 'Data Ingestion', tab: 'ingestion' },
-          { label: 'Identity Graph', tab: 'identities' }
-        ]
+        model: 'xlr8-copilot'
       }
     ];
   });
@@ -138,94 +126,6 @@ I will inspect the screenshot, diagnose the root cause, and provide step-by-step
         }
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  // Pre-generate sample screenshots for instant 1-click testing
-  const generateSampleScreenshot = (type: 'schema_error' | 'ingestion_dlq' | 'identity_split') => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 720;
-    canvas.height = 360;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Dark terminal/UI window background
-    ctx.fillStyle = '#1A1D23';
-    ctx.fillRect(0, 0, 720, 360);
-
-    // Title bar
-    ctx.fillStyle = '#262A33';
-    ctx.fillRect(0, 0, 720, 36);
-    ctx.fillStyle = '#FF5F56';
-    ctx.beginPath(); ctx.arc(18, 18, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#FFBD2E';
-    ctx.beginPath(); ctx.arc(36, 18, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#27C93F';
-    ctx.beginPath(); ctx.arc(54, 18, 5, 0, Math.PI * 2); ctx.fill();
-
-    ctx.fillStyle = '#A0AEC0';
-    ctx.font = 'bold 12px monospace';
-    ctx.fillText(`XLR8 Realtime CDP [${activeSandboxId.toUpperCase()}] - Diagnostic Capture`, 80, 22);
-
-    if (type === 'schema_error') {
-      ctx.fillStyle = '#E53E3E';
-      ctx.fillRect(20, 56, 680, 48);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 14px monospace';
-      ctx.fillText('CRITICAL: HTTP 422 Unprocessable Entity - XDM Schema Validation Failed', 36, 84);
-
-      ctx.fillStyle = '#CBD5E0';
-      ctx.font = '13px monospace';
-      ctx.fillText('Target Schema: "Loyalty Commerce Experience Event" (v2.1)', 30, 135);
-      ctx.fillStyle = '#FC8181';
-      ctx.fillText('Error: Field "/commerce/order/orderTotal" expected type "double", received "string"', 30, 165);
-      ctx.fillText('Missing Mandatory Mixin: "_id" Primary Identity missing in namespace "ECID"', 30, 195);
-      ctx.fillStyle = '#718096';
-      ctx.fillText('Trace ID: xlr8-stream-val-0928394-node-04', 30, 240);
-      ctx.fillText('Payload Sample: {"orderId": "ORD-9921", "orderTotal": "149.99"}', 30, 270);
-    } else if (type === 'ingestion_dlq') {
-      ctx.fillStyle = '#DD6B20';
-      ctx.fillRect(20, 56, 680, 48);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 14px monospace';
-      ctx.fillText('INGESTION ALERT: Dead Letter Queue (DLQ) Overflow Detected', 36, 84);
-
-      ctx.fillStyle = '#CBD5E0';
-      ctx.font = '13px monospace';
-      ctx.fillText('Endpoint: https://dcs.xlr8.io/ee/v1/interact?dataStreamId=ds_prod_01', 30, 135);
-      ctx.fillStyle = '#FBD38D';
-      ctx.fillText('Dropped Events (Last 10m): 1,420 events rejected', 30, 165);
-      ctx.fillText('Reason: Ingestion buffer reached maximum queue threshold (p99 latency: 1,850ms)', 30, 195);
-      ctx.fillStyle = '#718096';
-      ctx.fillText('Action Required: Throttle client SDK retry interval or scale ingestion workers', 30, 245);
-    } else {
-      ctx.fillStyle = '#805AD5';
-      ctx.fillRect(20, 56, 680, 48);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 14px monospace';
-      ctx.fillText('IDENTITY DISPUTE: Graph Disconnect / Stitching Conflict', 36, 84);
-
-      ctx.fillStyle = '#CBD5E0';
-      ctx.font = '13px monospace';
-      ctx.fillText('ECID: "8492048102948201" linked across 2 conflicting CRM_IDs:', 30, 135);
-      ctx.fillStyle = '#D6BCFA';
-      ctx.fillText('1. Profile A: CRM_ID "USER-1029" (Email: sarah.c@example.com)', 30, 165);
-      ctx.fillText('2. Profile B: CRM_ID "USER-5582" (Email: alex.m@example.com)', 30, 195);
-      ctx.fillStyle = '#FC8181';
-      ctx.fillText('Merge Policy Violation: Shared device cookie exceeds link threshold limit (10)', 30, 240);
-    }
-
-    const dataUrl = canvas.toDataURL('image/png');
-    setAttachedImage(dataUrl);
-    setAttachedImageName(`Sample_${type}.png`);
-    textareaRef.current?.focus();
-
-    if (type === 'schema_error') {
-      setInputText('My streaming payload is failing with this 422 schema error. How do I fix the field type and missing primary identity?');
-    } else if (type === 'ingestion_dlq') {
-      setInputText('Our Dead Letter Queue is showing overflow and high latency. What steps should we take to resolve this?');
-    } else {
-      setInputText('Why did this ECID link to two different CRM IDs, and how should I configure the merge policy to resolve the graph dispute?');
     }
   };
 
@@ -494,49 +394,13 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
 
       {/* Main Chat Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left/Center Chat Thread */}
+        {/* Centered Chat Thread */}
         <div className="flex-1 flex flex-col h-full bg-[#F8F9FA] overflow-hidden">
           {/* Messages Scrollable Container */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
-            {/* Instant Sample Scenario Selector Bar (Helpful for instant testing) */}
-            <div className="bg-white rounded-xl border border-[#E1E5EA] p-3.5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[#EBF3FC] text-[#1473E6] flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-bold text-[#1E1E1E] block">Try Sample Screenshot Issues</span>
-                  <span className="text-[11px] text-[#262A33]">
-                    Click any test scenario to populate a realistic error screenshot and diagnosis query instantly:
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-1.5">
-                <button
-                  onClick={() => generateSampleScreenshot('schema_error')}
-                  className="px-2.5 py-1 rounded-lg bg-[#DBEAFE] hover:bg-[#BFDBFE] text-[#0A3D82] text-[11px] font-semibold border border-[#93C5FD] transition-colors cursor-pointer"
-                >
-                  422 Schema Type Error
-                </button>
-                <button
-                  onClick={() => generateSampleScreenshot('ingestion_dlq')}
-                  className="px-2.5 py-1 rounded-lg bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0369A1] text-[11px] font-semibold border border-[#7DD3FC] transition-colors cursor-pointer"
-                >
-                  Ingestion DLQ Overflow
-                </button>
-                <button
-                  onClick={() => generateSampleScreenshot('identity_split')}
-                  className="px-2.5 py-1 rounded-lg bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#1D4ED8] text-[11px] font-semibold border border-[#93C5FD] transition-colors cursor-pointer"
-                >
-                  Identity Graph Split
-                </button>
-              </div>
-            </div>
-
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col">
             {/* Paste Notification Banner */}
             {pasteSuccessNotice && (
-              <div className="bg-[#E0F2FE] border border-[#BAE6FD] text-[#0369A1] px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between shadow-xs animate-in fade-in slide-in-from-top-2">
+              <div className="w-full max-w-3xl mx-auto mb-4 bg-[#E0F2FE] border border-[#BAE6FD] text-[#0369A1] px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between shadow-xs animate-in fade-in slide-in-from-top-2">
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
                   <span>Screenshot attached from clipboard! Type your question and hit Send.</span>
@@ -547,124 +411,176 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
               </div>
             )}
 
-            {/* Conversation Messages */}
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
-              >
-                {/* Author Label */}
-                <div className="flex items-center space-x-1.5 px-1 text-[11px] text-[#262A33]">
-                  {msg.role === 'user' ? (
-                    <>
-                      <span className="font-semibold text-[#1E1E1E]">You</span>
-                      <span>•</span>
-                      <span>{msg.timestamp}</span>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-4 h-4 rounded-full bg-[#1473E6] text-white flex items-center justify-center">
-                        <Bot className="w-2.5 h-2.5" />
+            {/* Centered Welcome Hero when no conversation messages exist yet */}
+            {messages.length === 1 && (messages[0].id === 'msg-welcome' || messages[0].id === 'msg-reset') && !isLoading ? (
+              <div className="flex-1 flex flex-col items-center justify-center w-full max-w-2xl mx-auto text-center py-6">
+                <div className="w-full bg-white rounded-2xl border border-[#E1E5EA] shadow-sm p-8 sm:p-10 flex flex-col items-center text-center space-y-5">
+                  {/* Robot Mascot Medallion */}
+                  <div className="relative">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#38BDF8] via-[#1473E6] to-[#0A3D82] text-white flex items-center justify-center shadow-lg shadow-blue-500/20 ring-4 ring-[#EBF3FC]">
+                      <Bot className="w-11 h-11 text-white" />
+                    </div>
+                    <span
+                      className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#0EA5E9] border-2 border-white flex items-center justify-center shadow-xs"
+                      title="XLR8 AI Mascot Active"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                    </span>
+                  </div>
+
+                  {/* Brand & Copilot Tag */}
+                  <div className="flex items-center justify-center space-x-2">
+                    <span className="text-xs font-bold text-[#1473E6]">XLR8 AI Support</span>
+                    <span className="text-[10px] bg-[#EBF3FC] text-[#0D66D0] px-2 py-0.5 rounded-md font-mono border border-[#BFDBFE]">
+                      {messages[0].model || 'xlr8-copilot'}
+                    </span>
+                  </div>
+
+                  {/* Centered Welcome Copy */}
+                  <div className="space-y-2.5 max-w-lg">
+                    <h2 className="text-xl font-bold text-[#1E2229] tracking-tight">
+                      {messages[0].id === 'msg-reset' ? 'Session Reset' : 'Welcome to XLR8 AI Support'}
+                    </h2>
+                    {messages[0].id === 'msg-reset' ? (
+                      <p className="text-sm text-[#4B5563] leading-relaxed">
+                        Chat session cleared. Paste a new screenshot with <kbd className="px-1.5 py-0.5 font-mono text-xs bg-[#F2F4F7] rounded border border-[#E1E5EA] text-[#0D66D0]">Ctrl+V</kbd> (or <kbd className="px-1.5 py-0.5 font-mono text-xs bg-[#F2F4F7] rounded border border-[#E1E5EA] text-[#0D66D0]">⌘+V</kbd>) or type your query below to troubleshoot any part of the <strong className="text-[#1E2229]">XLR8 Realtime CDP</strong> platform.
+                      </p>
+                    ) : (
+                      <>
+                        <p className="text-sm text-[#4B5563] leading-relaxed">
+                          I am your dedicated enterprise troubleshooting and guidance agent for{' '}
+                          <strong className="text-[#1E2229]">XLR8 Realtime CDP</strong>.
+                        </p>
+                        <p className="text-sm text-[#4B5563] leading-relaxed">
+                          Whenever you encounter an issue or have questions, ask your question below — I will diagnose the root cause and provide step-by-step resolution instructions.
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="w-full max-w-4xl mx-auto space-y-5">
+                {/* Conversation Messages */}
+                {messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
+                  >
+                    {/* Author Label */}
+                    <div className="flex items-center space-x-1.5 px-1 text-[11px] text-[#262A33]">
+                      {msg.role === 'user' ? (
+                        <>
+                          <span className="font-semibold text-[#1E1E1E]">You</span>
+                          <span>•</span>
+                          <span>{msg.timestamp}</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-[#38BDF8] to-[#1473E6] text-white flex items-center justify-center shadow-2xs">
+                            <Bot className="w-3 h-3" />
+                          </div>
+                          <span className="font-semibold text-[#1473E6]">XLR8 AI Support</span>
+                          <span>•</span>
+                          <span>{msg.timestamp}</span>
+                          {msg.model && (
+                            <span className="text-[9px] bg-[#EBF3FC] text-[#0D66D0] px-1.5 py-0.2 rounded font-mono">
+                              {msg.model}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {/* Message Bubble */}
+                    <div
+                      className={`max-w-3xl rounded-2xl p-4 shadow-2xs ${
+                        msg.role === 'user'
+                          ? 'bg-[#1473E6] text-white rounded-tr-xs'
+                          : 'bg-white text-[#2C2C2C] border border-[#E1E5EA] rounded-tl-xs'
+                      }`}
+                    >
+                      {/* Attached Screenshot in message */}
+                      {msg.image && (
+                        <div className="mb-3">
+                          <div className="relative group inline-block rounded-xl overflow-hidden border border-white/20 shadow-xs">
+                            <img
+                              src={msg.image}
+                              alt="Uploaded Screenshot"
+                              className="max-h-64 max-w-full rounded-lg object-contain bg-black/10 cursor-pointer transition-transform group-hover:scale-[1.01]"
+                              onClick={() => setLightboxImage(msg.image!)}
+                            />
+                            <div
+                              onClick={() => setLightboxImage(msg.image!)}
+                              className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer text-white text-xs font-semibold space-x-1.5"
+                            >
+                              <Maximize2 className="w-4 h-4" />
+                              <span>Click to Enlarge</span>
+                            </div>
+                          </div>
+                          {msg.imageName && (
+                            <span
+                              className={`text-[10px] block mt-1 ${
+                                msg.role === 'user' ? 'text-white/80' : 'text-[#262A33]'
+                              } font-mono`}
+                            >
+                              📎 {msg.imageName}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Message Content */}
+                      <div className={msg.role === 'user' ? 'text-sm text-white' : 'space-y-1'}>
+                        {msg.role === 'user' ? (
+                          <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+                        ) : (
+                          renderMarkdown(msg.text)
+                        )}
+                      </div>
+
+                      {/* Remediation Action Buttons */}
+                      {msg.actionTabs && msg.actionTabs.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-[#F2F4F7] flex flex-wrap items-center gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#262A33] block w-full">
+                            Remediation Shortcuts:
+                          </span>
+                          {msg.actionTabs.map((action) => (
+                            <button
+                              key={action.tab}
+                              onClick={() => setActiveTab(action.tab)}
+                              className="px-3 py-1.5 rounded-lg bg-[#F2F4F7] hover:bg-[#EBF3FC] text-[#0D66D0] hover:text-[#1473E6] border border-[#D5D5D5] hover:border-[#C5DCFA] text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+                            >
+                              <span>{action.label}</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Loading / Thinking State */}
+                {isLoading && (
+                  <div className="flex flex-col items-start space-y-1.5">
+                    <div className="flex items-center space-x-1.5 px-1 text-[11px] text-[#262A33]">
+                      <div className="w-5 h-5 rounded-md bg-gradient-to-br from-[#38BDF8] to-[#1473E6] text-white flex items-center justify-center shadow-2xs">
+                        <Bot className="w-3 h-3" />
                       </div>
                       <span className="font-semibold text-[#1473E6]">XLR8 AI Support</span>
                       <span>•</span>
-                      <span>{msg.timestamp}</span>
-                      {msg.model && (
-                        <span className="text-[9px] bg-[#EBF3FC] text-[#0D66D0] px-1.5 py-0.2 rounded font-mono">
-                          {msg.model}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </div>
-
-                {/* Message Bubble */}
-                <div
-                  className={`max-w-3xl rounded-2xl p-4 shadow-2xs ${
-                    msg.role === 'user'
-                      ? 'bg-[#1473E6] text-white rounded-tr-xs'
-                      : 'bg-white text-[#2C2C2C] border border-[#E1E5EA] rounded-tl-xs'
-                  }`}
-                >
-                  {/* Attached Screenshot in message */}
-                  {msg.image && (
-                    <div className="mb-3">
-                      <div className="relative group inline-block rounded-xl overflow-hidden border border-white/20 shadow-xs">
-                        <img
-                          src={msg.image}
-                          alt="Uploaded Screenshot"
-                          className="max-h-64 max-w-full rounded-lg object-contain bg-black/10 cursor-pointer transition-transform group-hover:scale-[1.01]"
-                          onClick={() => setLightboxImage(msg.image!)}
-                        />
-                        <div
-                          onClick={() => setLightboxImage(msg.image!)}
-                          className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer text-white text-xs font-semibold space-x-1.5"
-                        >
-                          <Maximize2 className="w-4 h-4" />
-                          <span>Click to Enlarge</span>
-                        </div>
+                      <span>Analyzing screenshot...</span>
+                    </div>
+                    <div className="bg-white rounded-2xl rounded-tl-xs p-4 border border-[#E1E5EA] shadow-2xs flex items-center space-x-3">
+                      <div className="w-5 h-5 border-2 border-[#1473E6] border-t-transparent rounded-full animate-spin" />
+                      <div className="text-xs text-[#262A33]">
+                        <span className="font-semibold text-[#1E1E1E] block">Inspecting Screenshot & Error Context</span>
+                        <span className="text-[11px] text-[#262A33]">Running multimodal diagnostics across XDM, Ingestion, and Identity Graph...</span>
                       </div>
-                      {msg.imageName && (
-                        <span
-                          className={`text-[10px] block mt-1 ${
-                            msg.role === 'user' ? 'text-white/80' : 'text-[#262A33]'
-                          } font-mono`}
-                        >
-                          📎 {msg.imageName}
-                        </span>
-                      )}
                     </div>
-                  )}
-
-                  {/* Message Content */}
-                  <div className={msg.role === 'user' ? 'text-sm text-white' : 'space-y-1'}>
-                    {msg.role === 'user' ? (
-                      <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
-                    ) : (
-                      renderMarkdown(msg.text)
-                    )}
                   </div>
-
-                  {/* Remediation Action Buttons */}
-                  {msg.actionTabs && msg.actionTabs.length > 0 && (
-                    <div className="mt-4 pt-3 border-t border-[#F2F4F7] flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#262A33] block w-full">
-                        Remediation Shortcuts:
-                      </span>
-                      {msg.actionTabs.map((action) => (
-                        <button
-                          key={action.tab}
-                          onClick={() => setActiveTab(action.tab)}
-                          className="px-3 py-1.5 rounded-lg bg-[#F2F4F7] hover:bg-[#EBF3FC] text-[#0D66D0] hover:text-[#1473E6] border border-[#D5D5D5] hover:border-[#C5DCFA] text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
-                        >
-                          <span>{action.label}</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-
-            {/* Loading / Thinking State */}
-            {isLoading && (
-              <div className="flex flex-col items-start space-y-1.5">
-                <div className="flex items-center space-x-1.5 px-1 text-[11px] text-[#262A33]">
-                  <div className="w-4 h-4 rounded-full bg-[#1473E6] text-white flex items-center justify-center">
-                    <Bot className="w-2.5 h-2.5" />
-                  </div>
-                  <span className="font-semibold text-[#1473E6]">XLR8 AI Support</span>
-                  <span>•</span>
-                  <span>Analyzing screenshot...</span>
-                </div>
-                <div className="bg-white rounded-2xl rounded-tl-xs p-4 border border-[#E1E5EA] shadow-2xs flex items-center space-x-3">
-                  <div className="w-5 h-5 border-2 border-[#1473E6] border-t-transparent rounded-full animate-spin" />
-                  <div className="text-xs text-[#262A33]">
-                    <span className="font-semibold text-[#1E1E1E] block">Inspecting Screenshot & Error Context</span>
-                    <span className="text-[11px] text-[#262A33]">Running multimodal diagnostics across XDM, Ingestion, and Identity Graph...</span>
-                  </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -674,7 +590,7 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
           {/* Screenshot Drop / Attachment Preview Bar */}
           {attachedImage && (
             <div className="px-4 sm:px-6 pt-2">
-              <div className="bg-white rounded-xl border border-[#1473E6] p-2.5 flex items-center justify-between shadow-xs">
+              <div className="max-w-3xl mx-auto bg-white rounded-xl border border-[#1473E6] p-2.5 flex items-center justify-between shadow-xs">
                 <div className="flex items-center space-x-3">
                   <img
                     src={attachedImage}
@@ -711,145 +627,67 @@ Chat session cleared. You can paste a new screenshot with **Ctrl+V** (or **⌘+V
 
           {/* Chat Input Box / Composer */}
           <div className="p-4 sm:p-6 bg-white border-t border-[#E1E5EA]">
-            <div className="relative border border-[#D5D5D5] focus-within:border-[#1473E6] focus-within:ring-2 focus-within:ring-[#1473E6]/20 rounded-2xl bg-white shadow-2xs transition-all">
-              <textarea
-                ref={textareaRef}
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={
-                  attachedImage
-                    ? 'Ask what you need help with regarding this screenshot (or press Enter to analyze)...'
-                    : 'Paste a screenshot (Ctrl+V or ⌘+V) or type your troubleshooting question...'
-                }
-                rows={2}
-                className="w-full px-4 pt-3.5 pb-12 rounded-2xl resize-none outline-hidden text-xs sm:text-sm text-[#1E1E1E] placeholder:text-[#262A33]"
-              />
+            <div className="max-w-3xl mx-auto">
+              <div className="relative border border-[#D5D5D5] focus-within:border-[#1473E6] focus-within:ring-2 focus-within:ring-[#1473E6]/20 rounded-2xl bg-white shadow-2xs transition-all">
+                <textarea
+                  ref={textareaRef}
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={
+                    attachedImage
+                      ? 'Describe what happened before this error screenshot, or press Enter to diagnose...'
+                      : 'Describe an XDM schema error, ingestion issue, or identity question...'
+                  }
+                  rows={2}
+                  className="w-full px-4 pt-3.5 pb-14 rounded-2xl resize-none outline-hidden text-sm sm:text-base text-[#1E1E1E] placeholder:text-[#64748B]"
+                />
 
-              {/* Composer Controls Bar */}
-              <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  {/* File Upload Button */}
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileUpload}
-                    accept="image/*"
-                    className="hidden"
-                  />
+                {/* Composer Controls Bar */}
+                <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2.5">
+                    {/* File Upload Pill Button */}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#1473E6] hover:from-[#0284C7] hover:to-[#0D66D0] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap active:scale-98"
+                      title="Upload screenshot from file"
+                    >
+                      <ImageIcon className="w-3.5 h-3.5 text-white shrink-0" />
+                      <span>Upload Image</span>
+                    </button>
+
+                    <span className="text-[10px] text-[#475569] hidden md:inline">
+                      Tip: Press <kbd className="px-1.5 py-0.5 font-mono bg-[#F2F4F7] rounded border border-[#E1E5EA] text-[#1E2229]">Ctrl+V</kbd> anywhere to paste screenshot
+                    </span>
+                  </div>
+
+                  {/* Send Pill Button */}
                   <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 rounded-lg hover:bg-[#F2F4F7] text-[#262A33] hover:text-[#1473E6] transition-colors cursor-pointer flex items-center space-x-1.5 text-xs font-medium"
-                    title="Upload screenshot from file"
+                    onClick={handleSendMessage}
+                    disabled={(!inputText.trim() && !attachedImage) || isLoading}
+                    className={`px-4 py-1.5 rounded-full font-semibold text-xs flex items-center space-x-1.5 transition-all whitespace-nowrap ${
+                      (inputText.trim() || attachedImage) && !isLoading
+                        ? 'bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] hover:from-[#1982FC] hover:to-[#0D4A9E] text-white shadow-xs cursor-pointer active:scale-98'
+                        : 'bg-gradient-to-r from-[#93C5FD] to-[#60A5FA] text-white/95 opacity-60 cursor-not-allowed'
+                    }`}
                   >
-                    <ImageIcon className="w-4 h-4" />
-                    <span className="hidden sm:inline text-[11px]">Upload Image</span>
+                    <span>Send</span>
+                    <Send className="w-3.5 h-3.5" />
                   </button>
-
-                  <span className="text-[10px] text-[#262A33] hidden md:inline">
-                    Tip: Press <kbd className="px-1 py-0.5 font-mono bg-[#F2F4F7] rounded border border-[#E1E5EA]">Ctrl+V</kbd> anywhere to paste screenshot
-                  </span>
                 </div>
-
-                {/* Send Button */}
-                <button
-                  onClick={handleSendMessage}
-                  disabled={(!inputText.trim() && !attachedImage) || isLoading}
-                  className={`px-3.5 py-1.5 rounded-xl font-semibold text-xs flex items-center space-x-1.5 transition-all ${
-                    (inputText.trim() || attachedImage) && !isLoading
-                      ? 'bg-[#1473E6] hover:bg-[#0D66D0] text-white shadow-xs cursor-pointer active:scale-98'
-                      : 'bg-[#E1E5EA] text-[#262A33] cursor-not-allowed'
-                  }`}
-                >
-                  <span>Send</span>
-                  <Send className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-2 flex items-center justify-between text-[10px] text-[#262A33]">
-              <span>XLR8 Realtime CDP Support • Powered by Gemini Multimodal Reasoning</span>
-              <span className="hidden sm:inline">Use Shift + Enter for new lines</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Reference Knowledge Panel (Collapsible / Informational) */}
-        <div className="w-80 border-l border-[#E1E5EA] bg-white hidden xl:flex flex-col overflow-hidden">
-          <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] text-white px-5 py-3.5 border-b border-[#0E4DA4] flex items-center space-x-2 shrink-0">
-            <HelpCircle className="w-4 h-4 text-white shrink-0" />
-            <h2 className="text-xs font-bold text-white uppercase tracking-wider">Troubleshooting Guide</h2>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs text-[#2C2C2C]">
-            <div className="p-3 rounded-xl bg-[#F8F9FA] border border-[#E1E5EA]">
-              <span className="font-bold text-[#1E1E1E] block mb-1">📸 Instant Screenshot Pasting</span>
-              <p className="text-[11px] text-[#1E2229] leading-relaxed">
-                Take a snippet with <kbd className="px-1 py-0.5 bg-white border border-[#D5D5D5] rounded text-[10px] font-mono">Win+Shift+S</kbd> (Windows) or <kbd className="px-1 py-0.5 bg-white border border-[#D5D5D5] rounded text-[10px] font-mono">Cmd+Shift+4</kbd> (Mac), then immediately click inside XLR8 AI Support and press <kbd className="px-1 py-0.5 bg-white border border-[#D5D5D5] rounded text-[10px] font-mono">Ctrl+V</kbd>.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <span className="font-bold text-[11px] uppercase tracking-wider text-[#262A33] block">
-                Common Resolutions
-              </span>
-
-              <div className="p-2.5 rounded-lg border border-[#E1E5EA] hover:border-[#1473E6] transition-colors">
-                <span className="font-semibold text-[#1E1E1E] block text-[11px]">422 Schema Rejections</span>
-                <p className="text-[10px] text-[#262A33] mt-0.5">
-                  Verify date-time format matches ISO-8601 string standards and all required fields are present.
-                </p>
               </div>
 
-              <div className="p-2.5 rounded-lg border border-[#E1E5EA] hover:border-[#1473E6] transition-colors">
-                <span className="font-semibold text-[#1E1E1E] block text-[11px]">Identity Graph Splits</span>
-                <p className="text-[10px] text-[#262A33] mt-0.5">
-                  Adjust merge policies to set CRM ID precedence over anonymous cookie identifiers (ECID).
-                </p>
-              </div>
-
-              <div className="p-2.5 rounded-lg border border-[#E1E5EA] hover:border-[#1473E6] transition-colors">
-                <span className="font-semibold text-[#1E1E1E] block text-[11px]">DULE Consent Enforcement</span>
-                <p className="text-[10px] text-[#262A33] mt-0.5">
-                  Check if an outbound activation destination is blocked due to opt-out policy tags (C1-C12).
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-[#F2F4F7]">
-              <span className="font-bold text-[11px] uppercase tracking-wider text-[#262A33] block mb-2">
-                Quick Navigation
-              </span>
-              <div className="space-y-1">
-                <button
-                  onClick={() => setActiveTab('schemas')}
-                  className="w-full text-left px-2.5 py-1.5 rounded-md hover:bg-[#F2F4F7] text-[#1473E6] font-medium text-[11px] flex items-center justify-between"
-                >
-                  <span>Schemas Registry (XDM)</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={() => setActiveTab('ingestion')}
-                  className="w-full text-left px-2.5 py-1.5 rounded-md hover:bg-[#F2F4F7] text-[#1473E6] font-medium text-[11px] flex items-center justify-between"
-                >
-                  <span>Data Ingestion & Streams</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={() => setActiveTab('identities')}
-                  className="w-full text-left px-2.5 py-1.5 rounded-md hover:bg-[#F2F4F7] text-[#1473E6] font-medium text-[11px] flex items-center justify-between"
-                >
-                  <span>Identity Graph Resolution</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={() => setActiveTab('governance')}
-                  className="w-full text-left px-2.5 py-1.5 rounded-md hover:bg-[#F2F4F7] text-[#1473E6] font-medium text-[11px] flex items-center justify-between"
-                >
-                  <span>DULE Policy Governance</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
+              <div className="mt-2 flex items-center justify-between text-[10px] text-[#262A33]">
+                <span>XLR8 Realtime CDP Support • Powered by Gemini Multimodal Reasoning</span>
+                <span className="hidden sm:inline">Use Shift + Enter for new lines</span>
               </div>
             </div>
           </div>

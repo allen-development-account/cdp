@@ -32,7 +32,9 @@ import {
   AnomalyAlert,
   CampaignVariant,
   AuditLogEntry,
-  DeadLetterQueueItem
+  DeadLetterQueueItem,
+  DatabricksConnectionStatus,
+  DatabricksQueryResult
 } from '../types/cdp';
 import {
   INITIAL_SCHEMAS,
@@ -228,6 +230,13 @@ interface CDPContextType {
   mergeProfiles: (sourceProfileId: string, targetProfileId: string, confidenceScore?: number, reason?: string) => boolean;
   splitProfileIdentity: (profileId: string, identityId: string) => boolean;
   recalculateCalculatedAttributes: () => Record<string, any>;
+  databricksStatus: DatabricksConnectionStatus | null;
+  refreshDatabricksStatus: () => Promise<DatabricksConnectionStatus | null>;
+  connectDatabricks: (config: { host: string; httpPath: string; token?: string; catalog?: string; schema?: string }) => Promise<{ success: boolean; status: DatabricksConnectionStatus; message: string }>;
+  disconnectDatabricks: () => Promise<void>;
+  runDatabricksSql: (sql: string) => Promise<DatabricksQueryResult>;
+  syncDatabricksNow: () => Promise<void>;
+  streamEcommerceEvent: (payload: Record<string, any>) => Promise<any>;
 }
 
 const CDPContext = createContext<CDPContextType | undefined>(undefined);
@@ -396,7 +405,9 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         'connectors_destinations',
         'sources',
         'destinations',
-        'schemas'
+        'schemas',
+        'ecommerce_store',
+        'databricks_warehouse'
       ];
       setActiveTab(prev => (minimalAllowedTabs.includes(prev) ? prev : 'home'));
     }
@@ -472,6 +483,8 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       case 'schemas':
       case 'datasets':
       case 'ingestion':
+      case 'ecommerce_store':
+      case 'databricks_warehouse':
       case 'federated_composition':
         return 'hub_data_management';
       case 'sources':
@@ -531,6 +544,8 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       case 'create_dataset':
       case 'bring_in_dataset': return 'Bring In New Dataset';
       case 'ingestion': return 'Data Ingestion & Streams';
+      case 'ecommerce_store': return 'Live E-Commerce Storefront';
+      case 'databricks_warehouse': return 'Databricks Unity Catalog';
       case 'federated_composition': return 'Zero-Copy Data Mesh';
       case 'sources':
       case 'connectors':
@@ -783,6 +798,23 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [dlq, setDlq] = useState<DeadLetterQueueItem[]>([]);
   const [isLiveStreamConnected, setIsLiveStreamConnected] = useState<boolean>(false);
   const [liveWebSocketPingMs, setLiveWebSocketPingMs] = useState<number>(3.2);
+  const [databricksStatus, setDatabricksStatus] = useState<DatabricksConnectionStatus | null>(null);
+
+  const refreshDatabricksStatus = useCallback(async (): Promise<DatabricksConnectionStatus | null> => {
+    try {
+      const res = await fetch('/api/v1/databricks/status');
+      if (!res.ok) return null;
+      const status = (await res.json()) as DatabricksConnectionStatus;
+      setDatabricksStatus(status);
+      return status;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshDatabricksStatus();
+  }, [refreshDatabricksStatus]);
 
   // Connect to the authoritative server-side WebSocket stream
   useEffect(() => {
@@ -826,6 +858,9 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                 if (data.data?.dlq) setDlq(data.data.dlq);
                 if (data.data?.syncLogs) setSyncLogs(data.data.syncLogs);
               }
+              if (data.data?.databricks) {
+                setDatabricksStatus(data.data.databricks);
+              }
             } else if (data.type === 'pong') {
               if ((ws as any)._pingStart) {
                 const diff = performance.now() - (ws as any)._pingStart;
@@ -835,15 +870,59 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
               if (data.profile) {
                 setProfiles(prev => {
                   const exists = prev.some(p => p.id === data.profile.id);
-                  if (exists) {
-                    return prev.map(p => p.id === data.profile.id ? data.profile : p);
-                  }
-                  return [data.profile, ...prev];
+                  const nextProfiles = exists
+                    ? prev.map(p => p.id === data.profile.id ? data.profile : p)
+                    : [data.profile, ...prev];
+                  setAudiences(prevAuds => {
+                    if (prevAuds.length === 0) return prevAuds;
+                    return recomputeAllAudiencesAndProfiles(nextProfiles, prevAuds).audiences;
+                  });
+                  return nextProfiles;
                 });
               }
               if (data.event) {
+                setSources(prev => {
+                  const nowIso = new Date().toISOString();
+                  const ecomIdx = prev.findIndex(s => s.id === 'src_ecommerce_web_sdk' || s.name.includes('E-Commerce'));
+                  if (ecomIdx >= 0) {
+                    return prev.map((s, idx) =>
+                      idx === ecomIdx
+                        ? {
+                            ...s,
+                            todayEventCount: s.todayEventCount + 1,
+                            ratePerSec: Math.max(s.ratePerSec, 12),
+                            lastEventReceived: nowIso,
+                            status: 'Healthy'
+                          }
+                        : s
+                    );
+                  }
+                  const newEcomSource: IngestionSource = {
+                    id: 'src_ecommerce_web_sdk',
+                    name: 'XLR8 Apex E-Commerce Storefront',
+                    type: 'Streaming',
+                    status: 'Healthy',
+                    ratePerSec: 18,
+                    todayEventCount: 1,
+                    latencyMs: 2.4,
+                    errorRatePercent: 0,
+                    lastEventReceived: nowIso,
+                    category: 'Commerce & Retail',
+                    targetSchemaId: 'xdm_experience_event',
+                    targetSchemaName: 'XDM Experience Event (Commerce & Cart)',
+                    authMethod: 'API Secret / Web SDK Tag',
+                    icon: 'Store',
+                    description: 'Live interactive storefront streaming PageView, ProductView, Search, AddToCart, CartAbandoned, and Purchase events.'
+                  };
+                  return [newEcomSource, ...prev];
+                });
                 addTerminalLog('info', 'STREAM-EVENT', `[${data.event.channel}] ${data.event.eventType} processed in ${data.latencyMs}ms`);
               }
+              if (data.databricks) {
+                setDatabricksStatus(data.databricks);
+              }
+            } else if (data.type === 'databricks:synced') {
+              if (data.status) setDatabricksStatus(data.status);
             } else if (data.type === 'dlq:new' || data.type === 'dlq:updated') {
               if (data.dlq) setDlq(data.dlq);
               if (data.item) {
@@ -857,10 +936,12 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             } else if (data.type === 'state:reset') {
               if (data.data?.profiles) setProfiles(data.data.profiles);
               if (data.data?.dlq) setDlq(data.data.dlq);
+              if (data.data?.databricks) setDatabricksStatus(data.data.databricks);
             } else if (data.type === 'state:clear') {
               setProfiles([]);
               setDlq([]);
               setSyncLogs([]);
+              if (data.data?.databricks) setDatabricksStatus(data.data.databricks);
             }
           } catch (e) {
             // ignore
@@ -999,13 +1080,20 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const crmId = (raw.crm_id || raw.crmId || raw.sfdc_id || '').trim();
     const deviceToken = (raw.device_token || raw.deviceToken || raw.idfa || '').trim();
 
-    let rawEventType = (raw.event_name || raw.eventType || raw.action || 'PageView').trim();
-    if (rawEventType.toLowerCase().includes('cart')) rawEventType = 'AddToCart';
-    else if (rawEventType.toLowerCase().includes('purchase') || rawEventType.toLowerCase().includes('order') || raw.transaction_id) rawEventType = 'Purchase';
-    else if (rawEventType.toLowerCase().includes('ticket') || rawEventType.toLowerCase().includes('support')) rawEventType = 'SupportTicket';
-    else if (rawEventType.toLowerCase().includes('app') || rawEventType.toLowerCase().includes('open')) rawEventType = 'AppOpen';
-    else if (rawEventType.toLowerCase().includes('consent') || rawEventType.toLowerCase().includes('opt')) rawEventType = 'ConsentUpdate';
-    else if (rawEventType.toLowerCase().includes('form') || rawEventType.toLowerCase().includes('login')) rawEventType = 'FormSubmit';
+    let rawEventType = String(raw.event_name || raw.eventType || raw.action || 'PageView').trim();
+    const evLower = rawEventType.toLowerCase();
+    if (evLower.includes('abandon')) rawEventType = 'CartAbandoned';
+    else if (evLower.includes('removecart') || evLower.includes('remove_from_cart') || (evLower.includes('remove') && evLower.includes('cart'))) rawEventType = 'RemoveFromCart';
+    else if (evLower.includes('checkout')) rawEventType = 'CheckoutStarted';
+    else if (evLower.includes('wishlist')) rawEventType = 'WishlistAdd';
+    else if (evLower.includes('productview') || evLower.includes('product_view')) rawEventType = 'ProductView';
+    else if (evLower.includes('search')) rawEventType = 'Search';
+    else if (evLower.includes('cart') || evLower === 'addtocart') rawEventType = 'AddToCart';
+    else if (evLower.includes('purchase') || evLower.includes('order') || raw.transaction_id) rawEventType = 'Purchase';
+    else if (evLower.includes('ticket') || evLower.includes('support')) rawEventType = 'SupportTicket';
+    else if (evLower.includes('app') || evLower.includes('open')) rawEventType = 'AppOpen';
+    else if (evLower.includes('consent') || evLower.includes('opt')) rawEventType = 'ConsentUpdate';
+    else if (evLower.includes('form') || evLower.includes('login') || evLower.includes('identify')) rawEventType = 'FormSubmit';
 
     const eventType = rawEventType as CDPEvent['eventType'];
     const nowIso = new Date().toISOString();
@@ -2879,6 +2967,61 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
         mergeProfiles,
         splitProfileIdentity,
         recalculateCalculatedAttributes,
+        databricksStatus,
+        refreshDatabricksStatus,
+        connectDatabricks: async (config) => {
+          const res = await fetch('/api/v1/databricks/connect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(config)
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed to connect Databricks SQL Warehouse.');
+          if (data.status) setDatabricksStatus(data.status);
+          addTerminalLog('success', 'DATABRICKS', data.message || 'Connected to Databricks SQL Warehouse');
+          return data;
+        },
+        disconnectDatabricks: async () => {
+          const res = await fetch('/api/v1/databricks/disconnect', { method: 'POST' });
+          const data = await res.json();
+          if (data.status) setDatabricksStatus(data.status);
+          addTerminalLog('warn', 'DATABRICKS', 'Disconnected live cloud Databricks PAT; active in Local Delta Lakehouse mode');
+        },
+        runDatabricksSql: async (sql: string): Promise<DatabricksQueryResult> => {
+          const res = await fetch('/api/v1/databricks/query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sql })
+          });
+          const data = (await res.json()) as DatabricksQueryResult;
+          await refreshDatabricksStatus();
+          if (data.success) {
+            addTerminalLog('success', 'DATABRICKS-SQL', `Query returned ${data.rowCount} rows in ${data.executionTimeMs}ms (${data.mode})`);
+          } else {
+            addTerminalLog('error', 'DATABRICKS-SQL', data.message || 'SQL execution failed');
+          }
+          return data;
+        },
+        syncDatabricksNow: async () => {
+          const res = await fetch('/api/v1/databricks/sync-all', { method: 'POST' });
+          const data = await res.json();
+          if (data.status) setDatabricksStatus(data.status);
+          addTerminalLog('success', 'DATABRICKS-SYNC', `Synchronized profiles & events into Unity Catalog Delta tables`);
+        },
+        streamEcommerceEvent: async (payload: Record<string, any>) => {
+          const res = await fetch('/api/v1/collect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              timestamp: new Date().toISOString(),
+              channel: 'Web SDK',
+              schemaId: 'xdm_experience_event',
+              ...payload
+            })
+          });
+          const ack = await res.json();
+          return ack;
+        },
       }}
     >
       {children}

@@ -18,6 +18,7 @@ import {
   INITIAL_DYNAMIC_OFFERS
 } from '../data/seedData';
 import { diskStorage } from './storage';
+import { databricksService } from './databricksService';
 
 export interface IngestResponse {
   success: boolean;
@@ -30,6 +31,8 @@ export interface IngestResponse {
   audiencesQualified?: string[];
   egressDispatched?: number;
   errorCode?: string;
+  databricksSynced?: boolean;
+  databricksLatencyMs?: number;
 }
 
 export interface EdgeDecisionResult {
@@ -105,6 +108,9 @@ export class RealTimeCDPEngine {
       this.syncLogs = saved.syncLogs || [];
       this.streamEvents = saved.streamEvents || [];
       this.isDemoSeeded = Boolean(saved.isDemoSeeded);
+      if (databricksService.getStatus().totalEventsStreamed === 0 && this.profiles.length > 0) {
+        databricksService.syncSnapshotFromProfiles(this.profiles);
+      }
       console.log(`[RealTimeCDPEngine] Restored active datastore from disk: ${this.profiles.length} profiles, ${this.dlq.length} DLQ entries.`);
     } else {
       // Fresh Day-0 clean slate by default (no demo content until user enables Demo mode)
@@ -136,6 +142,7 @@ export class RealTimeCDPEngine {
     this.eventCounter = 0;
     this.recentEventsInSec = 0;
     this.isDemoSeeded = false;
+    databricksService.clearLakehouse();
     diskStorage.saveImmediate({
       profiles: [],
       audiences: [],
@@ -198,6 +205,7 @@ export class RealTimeCDPEngine {
       webhookDest.endpoint = 'https://httpbin.org/post';
     }
     this.persistToDisk(true);
+    databricksService.syncSnapshotFromProfiles(this.profiles);
   }
 
   public addClient(ws: WebSocket): void {
@@ -247,7 +255,8 @@ export class RealTimeCDPEngine {
       dlq: this.dlq,
       syncLogs: this.syncLogs.slice(0, 30),
       dynamicOffers: this.dynamicOffers,
-      metrics: this.getMetrics()
+      metrics: this.getMetrics(),
+      databricks: databricksService.getStatus()
     };
   }
 
@@ -542,6 +551,11 @@ export class RealTimeCDPEngine {
       raw = rawInput;
     }
 
+    const rawParsed = raw;
+    if (rawParsed.payload && typeof rawParsed.payload === 'object' && !Array.isArray(rawParsed.payload)) {
+      raw = { ...rawParsed.payload, ...rawParsed };
+    }
+
     // Step 1: Extract Identifiers across all canonical namespaces
     let email = (raw.customer_email || raw.user_email || raw.email || raw.userEmail || '').trim().toLowerCase();
     let cookieId = (raw.anon_cookie_id || raw.cookie_id || raw.cookieId || raw.cid || raw.ecid || '').trim();
@@ -583,13 +597,20 @@ export class RealTimeCDPEngine {
       };
     }
 
-    // Step 2: Normalize event type
-    let rawEventType = (raw.event_name || raw.eventType || raw.action || 'PageView').trim();
-    if (rawEventType.toLowerCase().includes('cart')) rawEventType = 'AddToCart';
-    else if (rawEventType.toLowerCase().includes('purchase') || rawEventType.toLowerCase().includes('order') || raw.transaction_id || raw.orderTotal) rawEventType = 'Purchase';
-    else if (rawEventType.toLowerCase().includes('ticket') || rawEventType.toLowerCase().includes('support')) rawEventType = 'SupportTicket';
-    else if (rawEventType.toLowerCase().includes('consent') || rawEventType.toLowerCase().includes('opt')) rawEventType = 'ConsentUpdate';
-    else if (rawEventType.toLowerCase().includes('identify') || rawEventType.toLowerCase().includes('login')) rawEventType = 'FormSubmit';
+    // Step 2: Normalize event type (preserving granular e-commerce events)
+    let rawEventType = String(raw.event_name || raw.eventType || raw.action || 'PageView').trim();
+    const evLower = rawEventType.toLowerCase();
+    if (evLower.includes('abandon')) rawEventType = 'CartAbandoned';
+    else if (evLower.includes('removecart') || evLower.includes('remove_from_cart') || (evLower.includes('remove') && evLower.includes('cart'))) rawEventType = 'RemoveFromCart';
+    else if (evLower.includes('checkout')) rawEventType = 'CheckoutStarted';
+    else if (evLower.includes('wishlist')) rawEventType = 'WishlistAdd';
+    else if (evLower.includes('productview') || evLower.includes('product_view')) rawEventType = 'ProductView';
+    else if (evLower.includes('search')) rawEventType = 'Search';
+    else if (evLower.includes('cart') || evLower === 'addtocart') rawEventType = 'AddToCart';
+    else if (evLower.includes('purchase') || evLower.includes('order') || raw.transaction_id || raw.orderTotal) rawEventType = 'Purchase';
+    else if (evLower.includes('ticket') || evLower.includes('support')) rawEventType = 'SupportTicket';
+    else if (evLower.includes('consent') || evLower.includes('opt')) rawEventType = 'ConsentUpdate';
+    else if (evLower.includes('identify') || evLower.includes('login') || evLower.includes('form')) rawEventType = 'FormSubmit';
 
     const eventType = rawEventType as CDPEvent['eventType'];
     const nowIso = new Date().toISOString();
@@ -704,22 +725,67 @@ export class RealTimeCDPEngine {
         });
       }
 
-      const eventSpend = Number(raw.total_amount || raw.orderTotal || raw.price || 0) || 0;
+      const eventSpend = eventType === 'Purchase' ? (Number(raw.total_amount || raw.orderTotal || raw.amount || 0) || 0) : 0;
       const newSpend = Number(((existing.attributes.totalSpend || 0) + eventSpend).toFixed(2));
+      const incomingCartVal = raw.cart_total !== undefined || raw.cartTotal !== undefined
+        ? Number(raw.cart_total ?? raw.cartTotal ?? 0)
+        : existing.attributes.activeCartValue || 0;
+      const incomingCartItems = raw.cart_items_count !== undefined || raw.cartItemsCount !== undefined
+        ? Number(raw.cart_items_count ?? raw.cartItemsCount ?? 0)
+        : existing.attributes.cartItemsCount || 0;
+
+      const updatedCartAttrs: Partial<CustomerProfile['attributes']> = {
+        activeCartValue: eventType === 'Purchase' ? 0 : incomingCartVal,
+        cartItemsCount: eventType === 'Purchase' ? 0 : incomingCartItems,
+        ...(eventType === 'CartAbandoned'
+          ? {
+              abandonedCartCount: (existing.attributes.abandonedCartCount || 0) + 1,
+              lastAbandonedCartTotal: Number(raw.cart_total || raw.cartTotal || existing.attributes.activeCartValue || 0),
+              lastAbandonedItems: Array.isArray(raw.items) ? raw.items.map((it: any) => it.name || it.sku).filter(Boolean) : existing.attributes.lastAbandonedItems,
+            }
+          : {}),
+        ...(raw.category ? { preferredCategory: String(raw.category) } : {}),
+      };
+
+      const nextPredictions = { ...existing.predictions };
+      if (eventType === 'CartAbandoned') {
+        nextPredictions.churnRisk = Math.min(90, Math.max(48, (nextPredictions.churnRisk || 20) + 18));
+        nextPredictions.churnRiskBand = nextPredictions.churnRisk >= 70 ? 'High' : 'Medium';
+        nextPredictions.nextBestAction = 'Send Instant Cart Recovery Incentive';
+        nextPredictions.nextBestOffer = '15% Off Abandoned Cart + Free Priority Shipping';
+        nextPredictions.calculatedAt = nowIso;
+      } else if (eventType === 'AddToCart' || eventType === 'CheckoutStarted') {
+        nextPredictions.nextBestAction = 'Monitor Checkout Completion / Trigger Express Nudge';
+        nextPredictions.nextBestOffer = 'Free Express Shipping Threshold Unlocked';
+        nextPredictions.calculatedAt = nowIso;
+      } else if (eventType === 'Purchase') {
+        nextPredictions.churnRisk = Math.max(5, (nextPredictions.churnRisk || 20) - 20);
+        nextPredictions.churnRiskBand = 'Low';
+        nextPredictions.predictedLtv = Math.round(Math.max(nextPredictions.predictedLtv || 0, newSpend * 2.2));
+        nextPredictions.brandLoyaltyScore = Math.min(99, (nextPredictions.brandLoyaltyScore || 60) + 12);
+        nextPredictions.nextBestAction = 'Deliver Post-Purchase VIP Thank You';
+        nextPredictions.nextBestOffer = '15% Accessory Bundle Credit';
+        nextPredictions.calculatedAt = nowIso;
+      }
 
       targetProfile = {
         ...existing,
+        unifiedName: raw.fullName || (raw.firstName ? `${raw.firstName} ${raw.lastName || ''}`.trim() : existing.unifiedName),
+        primaryEmail: existing.primaryEmail.includes('anonymous') && email ? email : existing.primaryEmail,
         identities: updatedIdentities,
         lastActiveAt: nowIso,
         attributes: {
           ...existing.attributes,
           totalSpend: newSpend,
           purchaseCount: (existing.attributes.purchaseCount || 0) + (eventType === 'Purchase' ? 1 : 0),
+          ...(eventType === 'Purchase' ? { lastPurchaseDate: nowIso } : {}),
           customerTier: newSpend >= 2500 ? 'VIP' : (newSpend >= 1000 ? 'Platinum' : (newSpend >= 500 ? 'Gold' : existing.attributes.customerTier)),
+          ...updatedCartAttrs,
           ...(raw.firstName ? { firstName: raw.firstName } : {}),
           ...(raw.lastName ? { lastName: raw.lastName } : {}),
           ...(raw.city ? { city: raw.city } : {})
         },
+        predictions: nextPredictions,
         events: [
           {
             id: 'evt_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 5),
@@ -745,10 +811,13 @@ export class RealTimeCDPEngine {
       if (phone) newIdentities.push({ id: 'id_' + Math.random().toString(36).substring(2, 8), type: 'phone', value: phone, firstSeen: nowIso, lastSeen: nowIso, source: sourceChannel });
       if (crmId) newIdentities.push({ id: 'id_' + Math.random().toString(36).substring(2, 8), type: 'crmId', value: crmId, firstSeen: nowIso, lastSeen: nowIso, source: sourceChannel });
 
-      const initialSpend = Number(raw.total_amount || raw.orderTotal || 0) || 0;
+      const initialSpend = eventType === 'Purchase' ? (Number(raw.total_amount || raw.orderTotal || 0) || 0) : 0;
+      const activeCartValue = eventType === 'Purchase' ? 0 : Number(raw.cart_total ?? raw.cartTotal ?? (eventType === 'AddToCart' ? (raw.unit_price || raw.price || 0) : 0));
+      const cartItemsCount = eventType === 'Purchase' ? 0 : Number(raw.cart_items_count ?? raw.cartItemsCount ?? (eventType === 'AddToCart' ? 1 : 0));
+
       targetProfile = {
         id: newId,
-        unifiedName: raw.firstName ? `${raw.firstName} ${raw.lastName || ''}`.trim() : (email ? email.split('@')[0] : 'Visitor Profile'),
+        unifiedName: raw.fullName || (raw.firstName ? `${raw.firstName} ${raw.lastName || ''}`.trim() : (email ? email.split('@')[0] : `Visitor (${cookieId ? cookieId.slice(-4) : 'Web'})`)),
         primaryEmail: email || 'anonymous@visitor.stream',
         primaryPhone: phone || undefined,
         avatarUrl: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80`,
@@ -759,13 +828,19 @@ export class RealTimeCDPEngine {
         attributes: {
           firstName: raw.firstName || (email ? email.split('@')[0] : 'Visitor'),
           lastName: raw.lastName || '',
-          city: raw.city || 'Undetermined',
+          city: raw.city || 'San Francisco',
           state: 'CA',
           country: 'US',
           customerTier: initialSpend >= 1000 ? 'Gold' : 'Silver',
           totalSpend: initialSpend,
           purchaseCount: eventType === 'Purchase' ? 1 : 0,
-          loyaltyPoints: 100
+          loyaltyPoints: 100 + Math.floor(initialSpend),
+          preferredCategory: raw.category || 'Cloud Hardware',
+          activeCartValue,
+          cartItemsCount,
+          abandonedCartCount: eventType === 'CartAbandoned' ? 1 : 0,
+          lastAbandonedCartTotal: eventType === 'CartAbandoned' ? activeCartValue : 0,
+          lastAbandonedItems: eventType === 'CartAbandoned' && Array.isArray(raw.items) ? raw.items.map((it: any) => it.name || it.sku).filter(Boolean) : undefined
         },
         consent: {
           gdprConsent: true,
@@ -777,13 +852,13 @@ export class RealTimeCDPEngine {
           consentSource: sourceChannel
         },
         predictions: {
-          churnRisk: 12,
-          churnRiskBand: 'Low',
-          predictedLtv: 2400,
+          churnRisk: eventType === 'CartAbandoned' ? 54 : 14,
+          churnRiskBand: eventType === 'CartAbandoned' ? 'Medium' : 'Low',
+          predictedLtv: Math.round(Math.max(1200, (initialSpend || activeCartValue || 500) * 2.2)),
           upsellPropensity: 78,
           brandLoyaltyScore: 85,
-          nextBestAction: 'Deliver VIP Welcome Offer',
-          nextBestOffer: '15% Off Next Purchase',
+          nextBestAction: eventType === 'CartAbandoned' ? 'Send Instant Cart Recovery Incentive' : 'Deliver VIP Welcome Offer',
+          nextBestOffer: eventType === 'CartAbandoned' ? '15% Off Abandoned Cart + Free Shipping' : '15% Off Next Purchase',
           calculatedAt: nowIso
         },
         events: [
@@ -809,7 +884,12 @@ export class RealTimeCDPEngine {
     this.audiences = this.audiences.map(aud => {
       let isMatch = false;
       if (aud.id === 'aud_cart_abandoners') {
-        isMatch = (targetProfile.events.some(e => e.eventType === 'AddToCart') && !targetProfile.events.some(e => e.eventType === 'Purchase'));
+        const latestPurchase = targetProfile.events.find(e => e.eventType === 'Purchase');
+        const latestCart = targetProfile.events.find(e => e.eventType === 'AddToCart' || e.eventType === 'CartAbandoned');
+        isMatch = Boolean(
+          latestCart &&
+          (!latestPurchase || Date.parse(latestCart.timestamp) >= Date.parse(latestPurchase.timestamp))
+        );
       } else if (aud.id === 'aud_vip_gold') {
         isMatch = (targetProfile.attributes.totalSpend || 0) >= 1000;
       } else if (aud.id === 'aud_tech_saas') {
@@ -823,6 +903,8 @@ export class RealTimeCDPEngine {
         if (!targetProfile.qualifyingAudienceIds.includes(aud.id)) {
           targetProfile.qualifyingAudienceIds.push(aud.id);
         }
+      } else {
+        targetProfile.qualifyingAudienceIds = targetProfile.qualifyingAudienceIds.filter(id => id !== aud.id);
       }
 
       return {
@@ -891,7 +973,11 @@ export class RealTimeCDPEngine {
     // Persist mutated state to disk
     this.persistToDisk();
 
-    // Broadcast live event and updated profile to all WebSocket clients
+    // Stream event & unified profile into Databricks Unity Catalog Delta Lakehouse
+    const databricksStatus = databricksService.recordEvent(newStreamEvent, targetProfile);
+    const dbxLatency = databricksStatus.recentSyncLogs[0]?.latencyMs ?? 1.4;
+
+    // Broadcast live event, updated profile, and Databricks Delta sync telemetry to all WebSocket clients
     this.broadcast({
       type: 'stream:event',
       event: newStreamEvent,
@@ -899,7 +985,8 @@ export class RealTimeCDPEngine {
       isMerged,
       isNew,
       latencyMs,
-      metrics: this.getMetrics()
+      metrics: this.getMetrics(),
+      databricks: databricksStatus
     });
 
     return {
@@ -911,7 +998,9 @@ export class RealTimeCDPEngine {
       message: isMerged ? `Identity Collision Resolved: 2 profiles merged into ${targetProfile.id}` : (isNew ? `New unified profile created: ${targetProfile.id}` : `Profile ${targetProfile.id} updated`),
       matchedIdentifiers,
       audiencesQualified: qualifiedAudienceNames,
-      egressDispatched: egressCount
+      egressDispatched: egressCount,
+      databricksSynced: true,
+      databricksLatencyMs: dbxLatency
     };
   }
 

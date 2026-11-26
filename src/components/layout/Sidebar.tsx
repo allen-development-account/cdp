@@ -18,7 +18,8 @@ import {
   Bot,
   LifeBuoy,
   Award,
-  Compass
+  Compass,
+  ShoppingBag
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -55,6 +56,8 @@ export const Sidebar: React.FC = () => {
     activeTab === 'create_dataset' ||
     activeTab === 'bring_in_dataset' ||
     activeTab === 'ingestion' ||
+    activeTab === 'ecommerce_store' ||
+    activeTab === 'databricks_warehouse' ||
     activeTab === 'xdm_tester' ||
     activeTab === 'federated_composition';
 
@@ -160,34 +163,34 @@ export const Sidebar: React.FC = () => {
     <aside
       className={`${
         isSidebarCollapsed ? 'w-16' : 'w-60'
-      } bg-[#FFFFFF] flex flex-col h-full border-r border-[#E1E5EA] shrink-0 select-none text-[#2C2C2C] transition-all duration-200 ease-in-out`}
+      } bg-gradient-to-b from-[#0F172A] via-[#131F35] to-[#0A1120] flex flex-col h-full border-r border-slate-800/90 shrink-0 select-none text-slate-200 transition-all duration-200 ease-in-out shadow-xl`}
       id="platform-sidebar-root"
     >
       {/* Real-Time Processing Status Header & Panel Toggle */}
       {isSidebarCollapsed ? (
-        <div className="py-2.5 bg-[#F9FAFB] border-b border-[#E8ECEF] flex flex-col items-center justify-center min-h-[41px] relative">
+        <div className="py-2.5 bg-[#0B111E]/60 border-b border-slate-800/80 flex flex-col items-center justify-center min-h-[41px] relative">
           <button
             onClick={toggleSidebar}
             title="Expand sidebar panel"
             aria-label="Expand sidebar panel"
-            className="p-1.5 rounded text-[#1E2229] hover:text-[#1473E6] hover:bg-[#EBF3FC] active:bg-[#DFE3E8] transition-colors flex items-center justify-center cursor-pointer"
+            className="p-1.5 rounded text-slate-300 hover:text-white hover:bg-white/10 active:bg-white/15 transition-colors flex items-center justify-center cursor-pointer"
             id="sidebar-toggle-btn"
           >
             <PanelLeftOpen className="w-4 h-4" />
           </button>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] absolute top-1.5 right-2" title="Pipeline Active" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_rgba(56,189,248,0.8)] absolute top-1.5 right-2" title="Pipeline Active" />
         </div>
       ) : (
-        <div className="px-3 py-2 bg-[#F9FAFB] border-b border-[#E8ECEF] flex items-center justify-between text-xs min-h-[41px]">
+        <div className="px-3 py-2 bg-[#0B111E]/60 border-b border-slate-800/80 flex items-center justify-between text-xs min-h-[41px]">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
-            <span className="text-[11px] font-semibold text-[#333333]">Pipeline Active</span>
+            <span className="w-2 h-2 rounded-full bg-[#38BDF8] shadow-[0_0_8px_rgba(56,189,248,0.75)]" />
+            <span className="text-[11px] font-semibold text-slate-200">Pipeline Active</span>
           </div>
           <button
             onClick={toggleSidebar}
             title="Collapse sidebar panel"
             aria-label="Collapse sidebar panel"
-            className="p-1 rounded text-[#1E2229] hover:text-[#1473E6] hover:bg-[#EBF3FC] active:bg-[#DFE3E8] transition-colors flex items-center justify-center cursor-pointer"
+            className="p-1 rounded text-slate-300 hover:text-white hover:bg-white/10 active:bg-white/15 transition-colors flex items-center justify-center cursor-pointer"
             id="sidebar-toggle-btn"
           >
             <PanelLeftClose className="w-4 h-4" />
@@ -204,18 +207,18 @@ export const Sidebar: React.FC = () => {
             onClick={() => navigateFromSidebar('home')}
             className={`w-full flex items-center ${
               isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
-            } rounded-lg transition-all text-left relative group ${
+            } rounded-lg transition-all text-left relative group cursor-pointer ${
               activeTab === 'home'
-                ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs'
-                : 'text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] font-normal'
+                ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
             }`}
             title="Home"
           >
             {activeTab === 'home' && (
-              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
             )}
             <div className={`flex items-center ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
-              <div className={activeTab === 'home' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1A1D23]'}>
+              <div className={activeTab === 'home' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}>
                 <Home className="w-4 h-4" />
               </div>
               {!isSidebarCollapsed && <span className="text-xs tracking-tight">Home</span>}
@@ -223,7 +226,7 @@ export const Sidebar: React.FC = () => {
             {!isSidebarCollapsed && (
               <ChevronRight
                 className={`w-3.5 h-3.5 ${
-                  activeTab === 'home' ? 'text-[#1473E6]' : 'text-[#262A33] opacity-0 group-hover:opacity-100 transition-opacity'
+                  activeTab === 'home' ? 'text-[#38BDF8]' : 'text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity'
                 }`}
               />
             )}
@@ -237,16 +240,16 @@ export const Sidebar: React.FC = () => {
               isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
             } rounded-lg transition-all text-left relative group cursor-pointer ${
               activeTab === 'get_started'
-                ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs'
-                : 'text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] font-normal'
+                ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
             }`}
             title="Get Started (Guided Steps)"
           >
             {activeTab === 'get_started' && (
-              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
             )}
             <div className={`flex items-center min-w-0 ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
-              <div className={`shrink-0 ${activeTab === 'get_started' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1473E6]'}`}>
+              <div className={`shrink-0 ${activeTab === 'get_started' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}`}>
                 <Compass className="w-4 h-4" />
               </div>
               {!isSidebarCollapsed && (
@@ -254,7 +257,7 @@ export const Sidebar: React.FC = () => {
               )}
             </div>
             {!isSidebarCollapsed && activeTab === 'get_started' && (
-              <ChevronRight className="w-3.5 h-3.5 shrink-0 text-[#1473E6]" />
+              <ChevronRight className="w-3.5 h-3.5 shrink-0 text-[#38BDF8]" />
             )}
           </button>
 
@@ -266,16 +269,16 @@ export const Sidebar: React.FC = () => {
               isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
             } rounded-lg transition-all text-left relative group cursor-pointer ${
               activeTab === 'ai_support'
-                ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs'
-                : 'text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] font-normal'
+                ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
             }`}
             title="XLR8 AI Support (Screenshot & Query Troubleshooting)"
           >
             {activeTab === 'ai_support' && (
-              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
             )}
             <div className={`flex items-center ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
-              <div className={activeTab === 'ai_support' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1473E6]'}>
+              <div className={activeTab === 'ai_support' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}>
                 <Bot className="w-4 h-4" />
               </div>
               {!isSidebarCollapsed && <span className="text-xs tracking-tight font-medium">XLR8 AI Support</span>}
@@ -283,29 +286,87 @@ export const Sidebar: React.FC = () => {
             {!isSidebarCollapsed && (
               <ChevronRight
                 className={`w-3.5 h-3.5 ${
-                  activeTab === 'ai_support' ? 'text-[#1473E6]' : 'text-[#262A33] opacity-0 group-hover:opacity-100 transition-opacity'
+                  activeTab === 'ai_support' ? 'text-[#38BDF8]' : 'text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity'
                 }`}
               />
             )}
             {isSidebarCollapsed && (
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#1473E6]" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
+            )}
+          </button>
+
+          {/* 4. LIVE E-COMMERCE STOREFRONT */}
+          <button
+            id="sidebar-nav-ecommerce-store"
+            onClick={() => navigateFromSidebar('ecommerce_store')}
+            className={`w-full flex items-center ${
+              isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
+            } rounded-lg transition-all text-left relative group cursor-pointer ${
+              activeTab === 'ecommerce_store'
+                ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
+            }`}
+            title="Live E-Commerce Storefront (Real-Time Web SDK Stream)"
+          >
+            {activeTab === 'ecommerce_store' && (
+              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
+            )}
+            <div className={`flex items-center min-w-0 ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
+              <div className={`shrink-0 ${activeTab === 'ecommerce_store' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}`}>
+                <ShoppingBag className="w-4 h-4" />
+              </div>
+              {!isSidebarCollapsed && <span className="text-xs tracking-tight truncate font-medium">Live Storefront</span>}
+            </div>
+            {!isSidebarCollapsed && (
+              <span className="text-[9px] font-bold bg-[#1473E6]/25 text-sky-200 px-1.5 py-0.2 rounded border border-sky-400/30 shrink-0">
+                Live
+              </span>
+            )}
+          </button>
+
+          {/* 5. DATABRICKS LAKEHOUSE */}
+          <button
+            id="sidebar-nav-databricks"
+            onClick={() => navigateFromSidebar('databricks_warehouse')}
+            className={`w-full flex items-center ${
+              isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
+            } rounded-lg transition-all text-left relative group cursor-pointer ${
+              activeTab === 'databricks_warehouse'
+                ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
+            }`}
+            title="Databricks Unity Catalog & Delta Lakehouse"
+          >
+            {activeTab === 'databricks_warehouse' && (
+              <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
+            )}
+            <div className={`flex items-center min-w-0 ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
+              <div className={`shrink-0 ${activeTab === 'databricks_warehouse' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}`}>
+                <Database className="w-4 h-4" />
+              </div>
+              {!isSidebarCollapsed && <span className="text-xs tracking-tight truncate font-medium">Databricks Delta</span>}
+            </div>
+            {!isSidebarCollapsed && (
+              <span className="text-[9px] font-bold bg-[#1473E6]/25 text-sky-200 px-1.5 py-0.2 rounded border border-sky-400/30 shrink-0">
+                DW
+              </span>
             )}
           </button>
         </div>
 
         {/* SECTION DIVIDER & HEADING */}
-        <div className="pt-2 border-t border-[#F0F2F5]">
+        <div className="pt-2 border-t border-slate-800/80">
           {!isSidebarCollapsed ? (
-            <div className="mb-2 px-2.5 py-1.5 rounded-md bg-gradient-to-r from-[#1473E6] via-[#105EBF] to-[#0D4488] text-white flex items-center justify-between shadow-xs border border-[#1473E6]/30">
+            <div className="mb-2 px-2.5 py-1.5 rounded-md bg-gradient-to-r from-[#1473E6] via-[#105EBF] to-[#0D4488] text-white flex items-center justify-between shadow-sm border border-sky-400/25">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-white">
                 Platform Modules
               </span>
-              <span className="text-[9px] font-semibold text-blue-100 bg-white/20 px-1.5 py-0.5 rounded border border-white/20">
+              <span className="text-[9px] font-semibold text-blue-100 bg-white/15 px-1.5 py-0.5 rounded border border-white/20">
                 App Drawers
               </span>
             </div>
           ) : (
-            <div className="my-2 mx-auto w-8 h-1 rounded-full bg-gradient-to-r from-[#1473E6] to-[#0D4488]" title="Platform Modules" />
+            <div className="my-2 mx-auto w-8 h-1 rounded-full bg-gradient-to-r from-[#38BDF8] to-[#1473E6]" title="Platform Modules" />
           )}
 
           {/* ONLY MAIN HEADINGS */}
@@ -318,20 +379,20 @@ export const Sidebar: React.FC = () => {
                   onClick={() => navigateFromSidebar(item.id)}
                   className={`w-full flex items-center ${
                     isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
-                  } rounded-lg transition-all text-left relative group ${
+                  } rounded-lg transition-all text-left relative group cursor-pointer ${
                     isActive
-                      ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs'
-                      : 'text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] font-normal'
+                      ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                      : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
                   }`}
                   title={`${item.label}${item.badge ? ` (${item.badge})` : ''}${item.count !== undefined ? ` [${item.count}]` : ''}`}
                 >
                   {/* Left Active Indicator */}
                   {isActive && (
-                    <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+                    <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
                   )}
 
                   <div className={`flex items-center ${isSidebarCollapsed ? '' : 'space-x-2.5'} truncate`}>
-                    <div className={isActive ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1A1D23]'}>
+                    <div className={isActive ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}>
                       {item.icon}
                     </div>
                     {!isSidebarCollapsed && (
@@ -343,20 +404,24 @@ export const Sidebar: React.FC = () => {
                   {!isSidebarCollapsed && (
                     <div className="flex items-center space-x-1 shrink-0 ml-1">
                       {item.badge && (
-                        <span className={`text-[9px] font-semibold px-1.5 py-0.2 rounded ${
-                          isActive ? 'bg-[#D6E6F9] text-[#0D66D0]' : 'bg-[#EAEAEA] text-[#1A1D23]'
+                        <span className={`text-[9px] font-semibold px-1.5 py-0.2 rounded border ${
+                          isActive
+                            ? 'bg-[#1473E6]/35 text-sky-200 border-sky-400/35'
+                            : 'bg-slate-800/90 text-slate-300 border-slate-700/70'
                         }`}>
                           {item.badge}
                         </span>
                       )}
                       {item.count !== undefined && (
-                        <span className={`text-[10px] font-mono font-medium px-1.5 py-0.2 rounded ${
-                          isActive ? 'bg-[#D6E6F9] text-[#0D66D0]' : 'bg-[#F0F2F5] text-[#1E2229]'
+                        <span className={`text-[10px] font-mono font-medium px-1.5 py-0.2 rounded border ${
+                          isActive
+                            ? 'bg-[#1473E6]/35 text-sky-200 border-sky-400/35'
+                            : 'bg-slate-800/90 text-slate-300 border-slate-700/70'
                         }`}>
                           {item.count}
                         </span>
                       )}
-                      <ChevronRight className={`w-3.5 h-3.5 ${isActive ? 'text-[#1473E6]' : 'text-[#C0C0C0] opacity-0 group-hover:opacity-100 transition-opacity'}`} />
+                      <ChevronRight className={`w-3.5 h-3.5 ${isActive ? 'text-[#38BDF8]' : 'text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity'}`} />
                     </div>
                   )}
 
@@ -365,10 +430,10 @@ export const Sidebar: React.FC = () => {
                     <span
                       className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full ${
                         item.id === 'hub_intelligence' && anomalies && anomalies.filter(a => a.status === 'Active').length > 0
-                          ? 'bg-[#0284C7]'
+                          ? 'bg-[#38BDF8]'
                           : isActive
-                          ? 'bg-[#1473E6]'
-                          : 'bg-[#93C5FD]'
+                          ? 'bg-[#38BDF8]'
+                          : 'bg-[#60A5FA]/70'
                       }`}
                     />
                   )}
@@ -378,7 +443,7 @@ export const Sidebar: React.FC = () => {
           </div>
 
           {/* BOTTOM MENU ITEMS: Why Choose XLR8? + Overview & Metrics */}
-          <div className="pt-2 mt-2 border-t border-[#F0F2F5] space-y-1">
+          <div className="pt-2 mt-2 border-t border-slate-800/80 space-y-1">
             <button
               id="sidebar-nav-why-xlr8"
               onClick={() => navigateFromSidebar('why_excelr8')}
@@ -386,34 +451,34 @@ export const Sidebar: React.FC = () => {
                 isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
               } rounded-lg transition-all text-left relative group cursor-pointer ${
                 activeTab === 'why_excelr8'
-                  ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs'
-                  : 'text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] font-normal'
+                  ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold border border-[#38BDF8]/30 shadow-xs'
+                  : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-normal border border-transparent'
               }`}
               title="Why Choose XLR8 Realtime CDP? (vs Adobe RT-CDP)"
             >
               {activeTab === 'why_excelr8' && (
-                <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+                <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
               )}
               <div className={`flex items-center ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
-                <div className={activeTab === 'why_excelr8' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1473E6]'}>
+                <div className={activeTab === 'why_excelr8' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}>
                   <Award className="w-4 h-4" />
                 </div>
                 {!isSidebarCollapsed && <span className="text-xs tracking-tight font-medium">Why Choose XLR8?</span>}
               </div>
               {!isSidebarCollapsed && (
                 <div className="flex items-center space-x-1 shrink-0">
-                  <span className="text-[9px] font-bold bg-[#EBF3FC] text-[#0D66D0] px-1.5 py-0.2 rounded border border-[#BFDBFE]">
+                  <span className="text-[9px] font-bold bg-[#1473E6]/25 text-sky-200 px-1.5 py-0.2 rounded border border-sky-400/30">
                     vs Adobe
                   </span>
                   <ChevronRight
                     className={`w-3.5 h-3.5 ${
-                      activeTab === 'why_excelr8' ? 'text-[#1473E6]' : 'text-[#262A33] opacity-0 group-hover:opacity-100 transition-opacity'
+                      activeTab === 'why_excelr8' ? 'text-[#38BDF8]' : 'text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity'
                     }`}
                   />
                 </div>
               )}
               {isSidebarCollapsed && (
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
               )}
             </button>
 
@@ -426,22 +491,22 @@ export const Sidebar: React.FC = () => {
                 isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
               } rounded-lg transition-all text-left relative group cursor-pointer ${
                 activeTab === 'dashboard'
-                  ? 'bg-[#EBF3FC] text-[#0D66D0] font-semibold shadow-2xs border border-[#BFDBFE]'
-                  : 'bg-[#F8FAFC] text-[#1A1D23] hover:bg-[#F2F4F7] hover:text-[#2C2C2C] border border-[#E1E5EA] font-medium'
+                  ? 'bg-gradient-to-r from-[#1473E6]/30 to-[#0D66D0]/15 text-white font-semibold shadow-xs border border-[#38BDF8]/35'
+                  : 'bg-white/[0.04] text-slate-200 hover:bg-white/[0.09] hover:text-white border border-slate-700/70 font-medium'
               }`}
               title="Overview & Metrics (Live Telemetry)"
             >
               {activeTab === 'dashboard' && (
-                <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#1473E6] rounded-r" />
+                <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-[#38BDF8] to-[#1473E6] rounded-r" />
               )}
               <div className={`flex items-center min-w-0 ${isSidebarCollapsed ? '' : 'space-x-2.5'}`}>
-                <div className={`shrink-0 ${activeTab === 'dashboard' ? 'text-[#1473E6]' : 'text-[#1E2229] group-hover:text-[#1473E6]'}`}>
+                <div className={`shrink-0 ${activeTab === 'dashboard' ? 'text-[#38BDF8]' : 'text-[#60A5FA]/80 group-hover:text-[#38BDF8]'}`}>
                   <LayoutDashboard className="w-4 h-4" />
                 </div>
                 {!isSidebarCollapsed && <span className="text-xs tracking-tight truncate">Overview &amp; Metrics</span>}
               </div>
               {!isSidebarCollapsed && (
-                <span className="text-[9px] font-semibold bg-[#E0F2FE] text-[#0369A1] px-1.5 py-0.2 rounded border border-[#BAE6FD] shrink-0">
+                <span className="text-[9px] font-semibold bg-sky-500/20 text-sky-300 px-1.5 py-0.2 rounded border border-sky-400/30 shrink-0">
                   Live
                 </span>
               )}
@@ -451,23 +516,23 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Footer: Demo Reset Action & Platform Identity */}
-      <div className={`border-t border-[#E8ECEF] bg-[#F9FAFB] ${isSidebarCollapsed ? 'p-2 flex flex-col items-center space-y-2' : 'p-2.5 space-y-2'}`}>
+      <div className={`border-t border-slate-800/80 bg-[#090E1A]/75 ${isSidebarCollapsed ? 'p-2 flex flex-col items-center space-y-2' : 'p-2.5 space-y-2'}`}>
         <button
           onClick={resetToDefaults}
           className={`${
             isSidebarCollapsed ? 'w-10 h-9 p-0' : 'w-full py-1.5 px-2'
-          } flex items-center justify-center space-x-1.5 bg-[#FFFFFF] hover:bg-[#F2F4F7] text-[#1A1D23] hover:text-[#222222] text-[11px] font-medium rounded-lg border border-[#D5D5D5] transition-colors shadow-2xs cursor-pointer`}
+          } flex items-center justify-center space-x-1.5 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white text-[11px] font-medium rounded-lg border border-slate-700/80 transition-colors shadow-2xs cursor-pointer`}
           title={isDemoMode ? 'Reset demo data to initial state' : 'Reset workspace to clean fresh state'}
           aria-label={isDemoMode ? 'Reset demo engine' : 'Reset clean slate'}
         >
-          <RotateCcw className="w-3 h-3 text-[#262A33]" />
+          <RotateCcw className="w-3 h-3 text-[#38BDF8]" />
           {!isSidebarCollapsed && <span>{isDemoMode ? 'Reset Demo Engine' : 'Reset Clean Slate'}</span>}
         </button>
 
         {!isSidebarCollapsed && (
-          <div className="px-2 py-0.5 flex items-center justify-between text-[10px] text-[#262A33]">
+          <div className="px-2 py-0.5 flex items-center justify-between text-[10px] text-slate-400">
             <span>XLR8 Realtime CDP</span>
-            <span className="font-mono">v4.12.0</span>
+            <span className="font-mono text-slate-300">v4.12.0</span>
           </div>
         )}
       </div>

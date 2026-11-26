@@ -6,6 +6,7 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { cdpEngine } from "./src/server/realtimeEngine";
+import { databricksService } from "./src/server/databricksService";
 
 dotenv.config();
 
@@ -26,13 +27,45 @@ function getGenAI(): GoogleGenAI | null {
 }
 
 // -------------------------------------------------------------
+// Cross-Origin Middleware for Real-World Website Web SDK & Edge
+// -------------------------------------------------------------
+app.use(["/api/v1/sdk.js", "/xlr8-sdk.js", "/api/v1/collect", "/api/v1/edge"], (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-XLR8-Source, X-Datastream-Id");
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  return next();
+});
+
+// -------------------------------------------------------------
 // Live Embeddable Web SDK Script
 // -------------------------------------------------------------
 const WEB_SDK_SCRIPT = `
-// XLR8 Real-Time CDP Web Tracking SDK (v1.4.0)
+// XLR8 Real-Time CDP Web Tracking SDK (v1.5.0)
 (function(window, document) {
   'use strict';
   if (window.xlr8 && window.xlr8.loaded) return;
+
+  var scriptOrigin = '';
+  try {
+    var cs = document.currentScript || (function() {
+      var scripts = document.getElementsByTagName('script');
+      for (var i = scripts.length - 1; i >= 0; i--) {
+        if (scripts[i].src && (scripts[i].src.indexOf('/api/v1/sdk.js') !== -1 || scripts[i].src.indexOf('/xlr8-sdk.js') !== -1)) {
+          return scripts[i];
+        }
+      }
+      return null;
+    })();
+    if (cs && cs.src) {
+      scriptOrigin = new URL(cs.src).origin;
+    }
+  } catch(e) {}
+  if (!scriptOrigin && window.location && window.location.origin) {
+    scriptOrigin = window.location.origin;
+  }
 
   var XLR8 = function() {
     var args = Array.prototype.slice.call(arguments);
@@ -42,11 +75,14 @@ const WEB_SDK_SCRIPT = `
 
   XLR8.q = (window.xlr8 && window.xlr8.q) || [];
   XLR8.loaded = true;
-  XLR8.version = '1.4.0';
+  XLR8.version = '1.5.0';
+  XLR8.origin = scriptOrigin;
   XLR8.config = {
-    endpoint: (window.location && window.location.origin ? window.location.origin : '') + '/api/v1/collect',
+    endpoint: scriptOrigin + '/api/v1/collect',
     datastreamId: 'ds_production_edge_web',
     cookieName: 'xlr8_ecid',
+    schemaId: 'xdm_experience_event',
+    siteName: (typeof location !== 'undefined' && location.hostname) ? location.hostname : 'external-web',
     debug: true
   };
 
@@ -74,7 +110,7 @@ const WEB_SDK_SCRIPT = `
       var arg1 = item[1];
       var arg2 = item[2];
 
-      if (action === 'init') {
+      if (action === 'init' || action === 'configure') {
         if (arg1 && typeof arg1 === 'object') {
           for (var key in arg1) XLR8.config[key] = arg1[key];
         }
@@ -85,8 +121,8 @@ const WEB_SDK_SCRIPT = `
         XLR8.send({
           eventType: 'FormSubmit',
           channel: 'Web SDK',
-          schemaId: 'xdm_experience_event',
-          payload: { action: 'IdentifyUser', identities: XLR8.userIdentities }
+          schemaId: XLR8.config.schemaId,
+          payload: Object.assign({ action: 'IdentifyUser', identities: XLR8.userIdentities }, arg1 || {})
         });
       } else if (action === 'track') {
         var eventType = typeof arg1 === 'string' ? arg1 : 'PageView';
@@ -94,33 +130,50 @@ const WEB_SDK_SCRIPT = `
         XLR8.send({
           eventType: eventType,
           channel: 'Web SDK',
-          schemaId: 'xdm_experience_event',
+          schemaId: XLR8.config.schemaId,
           payload: payload
         });
       } else if (action === 'sendEvent') {
-        XLR8.send(arg1);
+        XLR8.send(arg1 || {});
       }
     }
   };
 
-  XLR8.send = function(eventObj) {
+  XLR8.send = function(eventObj, options) {
+    var rawPayload = eventObj.payload || eventObj.xdm || eventObj || {};
     var eventPayload = {
       timestamp: new Date().toISOString(),
       channel: eventObj.channel || 'Web SDK',
-      eventType: eventObj.eventType || 'PageView',
-      schemaId: eventObj.schemaId || 'xdm_experience_event',
+      eventType: eventObj.eventType || eventObj.event_name || 'PageView',
+      schemaId: eventObj.schemaId || XLR8.config.schemaId || 'xdm_experience_event',
+      datastreamId: XLR8.config.datastreamId,
+      storefront_app: XLR8.config.siteName,
+      page_url: (typeof window !== 'undefined' && window.location) ? window.location.href : undefined,
       anon_cookie_id: XLR8.ecid,
-      customer_email: XLR8.userIdentities.email || eventObj.email || eventObj.customer_email || undefined,
-      crm_id: XLR8.userIdentities.crmId || eventObj.crmId || eventObj.crm_id || undefined,
-      contact_phone: XLR8.userIdentities.phone || eventObj.phone || eventObj.contact_phone || undefined,
-      payload: eventObj.payload || eventObj.xdm || eventObj
+      customer_email: XLR8.userIdentities.email || eventObj.email || eventObj.customer_email || rawPayload.customer_email || rawPayload.email || undefined,
+      crm_id: XLR8.userIdentities.crmId || eventObj.crmId || eventObj.crm_id || rawPayload.crm_id || undefined,
+      contact_phone: XLR8.userIdentities.phone || eventObj.phone || eventObj.contact_phone || rawPayload.contact_phone || undefined,
+      firstName: XLR8.userIdentities.firstName || rawPayload.firstName || undefined,
+      lastName: XLR8.userIdentities.lastName || rawPayload.lastName || undefined,
+      payload: rawPayload
     };
 
     var bodyStr = JSON.stringify(eventPayload);
 
-    fetch(XLR8.config.endpoint, {
+    if (options && options.useBeacon && typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      try {
+        var blob = new Blob([bodyStr], { type: 'application/json' });
+        if (navigator.sendBeacon(XLR8.config.endpoint, blob)) return Promise.resolve({ queued: true });
+      } catch(e) {}
+    }
+
+    return fetch(XLR8.config.endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Datastream-Id': XLR8.config.datastreamId || 'ds_production_edge_web'
+      },
+      keepalive: true,
       body: bodyStr
     }).then(function(res) {
       return res.json();
@@ -128,8 +181,10 @@ const WEB_SDK_SCRIPT = `
       if (XLR8.config.debug) {
         console.log('[XLR8 Real-Time SDK] Ingest Ack (' + ack.latencyMs + 'ms):', ack);
       }
+      return ack;
     }).catch(function(err) {
       console.warn('[XLR8 Real-Time SDK] Ingest error:', err);
+      return { success: false, error: err && err.message };
     });
   };
 
@@ -141,7 +196,7 @@ const WEB_SDK_SCRIPT = `
 // Expose SDK via script tags
 app.get(["/api/v1/sdk.js", "/xlr8-sdk.js"], (req, res) => {
   res.setHeader("Content-Type", "application/javascript");
-  res.setHeader("Cache-Control", "public, max-age=300");
+  res.setHeader("Cache-Control", "public, max-age=120");
   res.send(WEB_SDK_SCRIPT);
 });
 
@@ -600,6 +655,76 @@ app.post("/api/v1/clear", (req, res) => {
   cdpEngine.clear();
   cdpEngine.broadcast({ type: "state:clear", data: cdpEngine.getState() });
   res.json({ success: true, message: "Platform state cleared to fresh empty Day-0 workspace." });
+});
+
+// -------------------------------------------------------------
+// Databricks Unity Catalog & SQL Warehouse Lakehouse API
+// -------------------------------------------------------------
+app.get("/api/v1/databricks/status", (req, res) => {
+  res.json(databricksService.getStatus());
+});
+
+app.post("/api/v1/databricks/connect", async (req, res) => {
+  try {
+    const { host, httpPath, token, catalog, schema } = req.body || {};
+    if (!host || !httpPath) {
+      return res.status(400).json({
+        success: false,
+        error: "Databricks workspace host URL and SQL Warehouse HTTP Path are required."
+      });
+    }
+
+    const result = await databricksService.connect({
+      host: String(host),
+      httpPath: String(httpPath),
+      token: token ? String(token) : undefined,
+      catalog: catalog ? String(catalog) : undefined,
+      schema: schema ? String(schema) : undefined
+    });
+
+    cdpEngine.broadcast({ type: "databricks:synced", status: result.status });
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(400).json({
+      success: false,
+      error: err?.message || "Failed to verify Databricks SQL Warehouse connection."
+    });
+  }
+});
+
+app.post("/api/v1/databricks/disconnect", (req, res) => {
+  const status = databricksService.disconnectCloud();
+  cdpEngine.broadcast({ type: "databricks:synced", status });
+  return res.json({ success: true, status });
+});
+
+app.post("/api/v1/databricks/sync-all", (req, res) => {
+  const currentState = cdpEngine.getState();
+  const status = databricksService.syncSnapshotFromProfiles(currentState.profiles);
+  cdpEngine.broadcast({ type: "databricks:synced", status });
+  return res.json({ success: true, status });
+});
+
+app.post("/api/v1/databricks/query", async (req, res) => {
+  try {
+    const { sql } = req.body || {};
+    if (!sql || typeof sql !== "string" || !sql.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: "A valid SQL statement is required."
+      });
+    }
+
+    const currentState = cdpEngine.getState();
+    const result = await databricksService.executeQuery(sql, currentState.profiles);
+    cdpEngine.broadcast({ type: "databricks:synced", status: databricksService.getStatus() });
+    return res.status(result.success ? 200 : 400).json(result);
+  } catch (err: any) {
+    return res.status(400).json({
+      success: false,
+      error: err?.message || "Failed to execute Databricks SQL query."
+    });
+  }
 });
 
 // -------------------------------------------------------------

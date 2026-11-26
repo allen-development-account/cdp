@@ -34,7 +34,8 @@ import {
   Plus,
   FolderPlus,
   Split,
-  Award
+  Award,
+  ShoppingBag
 } from 'lucide-react';
 
 export type DrawerCategory =
@@ -76,7 +77,8 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
     b2bAccounts,
     dsarRequests,
     anomalies,
-    warehouses
+    warehouses,
+    databricksStatus
   } = useCDP();
 
   const [activeCategory, setActiveCategory] = useState<DrawerCategory>(initialCategory);
@@ -147,6 +149,30 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
           description: 'Interactive XDM playground to fire sample ExperienceEvents, trace real-time pipeline latency, and observe dynamic segment qualification.',
           metrics: '< 5ms Edge SLA Latency',
           tags: ['XDM Tester', 'Edge Simulation', 'Live Payload', 'PQL Trace']
+        },
+        {
+          id: 'ecommerce_store',
+          tabId: 'ecommerce_store',
+          title: 'Live E-Commerce Storefront',
+          badge: 'Real-Time Stream',
+          badgeColor: 'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
+          icon: <ShoppingBag className="w-6 h-6 text-white" />,
+          iconBg: 'bg-gradient-to-br from-[#38BDF8] to-[#1473E6]',
+          description: 'Interactive Apex Commerce storefront streaming PageView, Search, AddToCart, CartAbandoned, Identify, and Purchase events live.',
+          metrics: `${(databricksStatus?.totalEventsStreamed ?? 0).toLocaleString()} Streamed Events`,
+          tags: ['Web SDK', 'Cart Abandonment', 'Checkout', 'Identity Stitching']
+        },
+        {
+          id: 'databricks_warehouse',
+          tabId: 'databricks_warehouse',
+          title: 'Databricks Delta Lakehouse',
+          badge: databricksStatus?.mode === 'live_cloud' ? 'Cloud SQL Connected' : 'Delta Active',
+          badgeColor: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]',
+          icon: <Database className="w-6 h-6 text-white" />,
+          iconBg: 'bg-gradient-to-br from-[#1473E6] to-[#0A3D82]',
+          description: 'Unity Catalog Bronze/Silver/Gold Delta tables receiving live storefront events, unified profiles, and cart abandonment analytics.',
+          metrics: `${(databricksStatus?.totalProfilesMerged ?? 0).toLocaleString()} Silver Profiles · ${(databricksStatus?.totalCartAbandonments ?? 0).toLocaleString()} Abandoned`,
+          tags: ['Unity Catalog', 'Delta Lake', 'SQL Warehouse', 'Bronze/Silver/Gold']
         },
         {
           id: 'federated_composition',

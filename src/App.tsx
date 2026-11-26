@@ -31,6 +31,8 @@ import { AuditLogsView } from './components/audit/AuditLogsView';
 import { HomePageView } from './components/home/HomePageView';
 import { AppDrawerPageView } from './components/drawer/AppDrawerPageView';
 import { GetStartedGuidedView } from './components/walkthrough/GetStartedGuidedView';
+import { LiveEcommerceStorefrontView } from './components/ecommerce/LiveEcommerceStorefrontView';
+import { DatabricksWarehouseView } from './components/federated/DatabricksWarehouseView';
 
 const MainContent: React.FC = () => {
   const { activeTab, goBack, goForward, canGoBack, canGoForward, toggleSidebar } = useCDP();
@@ -87,6 +89,8 @@ const MainContent: React.FC = () => {
           {activeTab === 'schemas' && <SchemaRegistryView />}
           {(activeTab === 'create_schema' || activeTab === 'schema_editor') && <SchemaEditorPageView />}
           {activeTab === 'ingestion' && <DataIngestionView />}
+          {activeTab === 'ecommerce_store' && <LiveEcommerceStorefrontView />}
+          {activeTab === 'databricks_warehouse' && <DatabricksWarehouseView />}
           {activeTab === 'identities' && <IdentityGraphView />}
           {activeTab === 'profiles' && <ProfileExplorerView />}
           {activeTab === 'b2b_accounts' && <B2BAccountExplorerView />}
