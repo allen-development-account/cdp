@@ -815,12 +815,25 @@ export class RealTimeCDPEngine {
       const activeCartValue = eventType === 'Purchase' ? 0 : Number(raw.cart_total ?? raw.cartTotal ?? (eventType === 'AddToCart' ? (raw.unit_price || raw.price || 0) : 0));
       const cartItemsCount = eventType === 'Purchase' ? 0 : Number(raw.cart_items_count ?? raw.cartItemsCount ?? (eventType === 'AddToCart' ? 1 : 0));
 
+      const avatarPaths = [
+        '/src/assets/images/avatar_elena_1795851515709.jpg',
+        '/src/assets/images/avatar_marcus_1795851515411.jpg',
+        '/src/assets/images/avatar_aarav_1795851516160.jpg',
+        '/src/assets/images/avatar_sofia_1795851516706.jpg',
+        '/src/assets/images/avatar_claire_1795851516483.jpg',
+        '/src/assets/images/avatar_kenji_1795851516827.jpg'
+      ];
+      const usedAvatars = new Set(this.profiles.map(p => p.avatarUrl).filter(Boolean));
+      const availableAvatar = (email || raw.fullName || raw.firstName)
+        ? avatarPaths.find(path => !usedAvatars.has(path))
+        : undefined;
+
       targetProfile = {
         id: newId,
         unifiedName: raw.fullName || (raw.firstName ? `${raw.firstName} ${raw.lastName || ''}`.trim() : (email ? email.split('@')[0] : `Visitor (${cookieId ? cookieId.slice(-4) : 'Web'})`)),
         primaryEmail: email || 'anonymous@visitor.stream',
         primaryPhone: phone || undefined,
-        avatarUrl: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80`,
+        avatarUrl: availableAvatar,
         createdAt: nowIso,
         lastActiveAt: nowIso,
         identities: newIdentities,

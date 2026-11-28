@@ -35,7 +35,8 @@ import {
   FolderPlus,
   Split,
   Award,
-  ShoppingBag
+  ShoppingBag,
+  Info
 } from 'lucide-react';
 
 export type DrawerCategory =
@@ -127,6 +128,20 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
           tags: ['XDM System', 'Mixins', 'Behavioral Events', 'Tenancy']
         },
         {
+          id: 'create_dataset',
+          tabId: 'create_dataset',
+          title: 'Bring in New Dataset',
+          badge: 'Onboarding Flow',
+          badgeColor: 'bg-[#EBF3FC] text-[#0D66D0] border-[#C5DCFA]',
+          icon: <FolderPlus className="w-6 h-6 text-white" />,
+          iconBg: 'bg-gradient-to-br from-[#1473E6] to-[#0284C7]',
+          description: 'Bring in datasets (CSV, Excel, Streaming, Cloud, Zero-Copy), bind XDM schemas, and configure DULE governance.',
+          metrics: 'Streaming, Batch & Zero-Copy',
+          tags: ['Bring In Dataset', 'XDM Schema Binding', 'DULE Governance', 'Profile-Enabled'],
+          actionLabel: 'Bring In Dataset',
+          onClick: () => setActiveTab('create_dataset')
+        },
+        {
           id: 'ingestion',
           tabId: 'ingestion',
           title: 'Data Ingestion & Streams',
@@ -135,20 +150,20 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
           icon: <Radio className="w-6 h-6 text-white" />,
           iconBg: 'bg-gradient-to-br from-[#38BDF8] to-[#0284C7]',
           description: 'Streaming event ingestion endpoints, Flink validation pipeline, live payload inspector, and throughput graphs.',
-          metrics: `${systemMetrics.ratePerSec.toLocaleString()} evt/sec (2.4ms latency)`,
+          metrics: `${systemMetrics.ratePerSec.toLocaleString()} evt/sec · 2.4ms latency`,
           tags: ['Kafka', 'Web SDK', 'Streaming Gateway', 'JSON/Avro']
         },
         {
-          id: 'xdm_tester',
-          tabId: 'xdm_tester',
-          title: 'Live XDM Ingestion Tester',
-          badge: 'Sub-5ms Edge',
-          badgeColor: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]',
-          icon: <Zap className="w-6 h-6 text-white" />,
-          iconBg: 'bg-gradient-to-br from-[#0EA5E9] to-[#1473E6]',
-          description: 'Interactive XDM playground to fire sample ExperienceEvents, trace real-time pipeline latency, and observe dynamic segment qualification.',
-          metrics: '< 5ms Edge SLA Latency',
-          tags: ['XDM Tester', 'Edge Simulation', 'Live Payload', 'PQL Trace']
+          id: 'datasets',
+          tabId: 'datasets',
+          title: 'Datasets & DULE Labeling',
+          badge: `${datasets.length} Datasets`,
+          badgeColor: 'bg-[#E0F2FE] text-[#075985] border-[#BAE6FD]',
+          icon: <Database className="w-6 h-6 text-white" />,
+          iconBg: 'bg-gradient-to-br from-[#0F58B8] to-[#0A3D82]',
+          description: 'Catalog of brought-in datasets with Adobe Real-Time CDP Data Usage Labels (C, I, S, R series) and enforcement.',
+          metrics: `${datasets.filter(d => d.labels.length > 0).length} Labeled / ${datasets.length} Total`,
+          tags: ['DULE Labels', 'Adobe RT-CDP', 'Contractual C-Series', 'Identity I-Series']
         },
         {
           id: 'ecommerce_store',
@@ -161,6 +176,18 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
           description: 'Interactive Apex Commerce storefront streaming PageView, Search, AddToCart, CartAbandoned, Identify, and Purchase events live.',
           metrics: `${(databricksStatus?.totalEventsStreamed ?? 0).toLocaleString()} Streamed Events`,
           tags: ['Web SDK', 'Cart Abandonment', 'Checkout', 'Identity Stitching']
+        },
+        {
+          id: 'xdm_tester',
+          tabId: 'xdm_tester',
+          title: 'Live XDM Ingestion Tester',
+          badge: 'Sub-5ms Edge',
+          badgeColor: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]',
+          icon: <Zap className="w-6 h-6 text-white" />,
+          iconBg: 'bg-gradient-to-br from-[#0EA5E9] to-[#1473E6]',
+          description: 'Interactive XDM playground to fire sample ExperienceEvents, trace real-time pipeline latency, and observe dynamic segment qualification.',
+          metrics: '< 5ms Edge SLA Latency',
+          tags: ['XDM Tester', 'Edge Simulation', 'Live Payload', 'PQL Trace']
         },
         {
           id: 'databricks_warehouse',
@@ -185,32 +212,6 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
           description: 'Execute pushdown SQL queries into Snowflake, Google BigQuery, and Databricks without duplicating or moving data.',
           metrics: warehouses.length > 0 ? `${warehouses.length} Warehouses Connected` : 'Zero-Copy Pushdown Ready',
           tags: ['Pushdown Query', 'Snowflake', 'BigQuery', 'Databricks']
-        },
-        {
-          id: 'datasets',
-          tabId: 'datasets',
-          title: 'Datasets & DULE Labeling',
-          badge: `${datasets.length} Datasets`,
-          badgeColor: 'bg-[#E0F2FE] text-[#075985] border-[#BAE6FD]',
-          icon: <Database className="w-6 h-6 text-white" />,
-          iconBg: 'bg-gradient-to-br from-[#0F58B8] to-[#0A3D82]',
-          description: 'Catalog of brought-in datasets with Adobe Real-Time CDP Data Usage Labels (C, I, S, R series) and enforcement.',
-          metrics: `${datasets.filter(d => d.labels.length > 0).length} Labeled / ${datasets.length} Total`,
-          tags: ['DULE Labels', 'Adobe RT-CDP', 'Contractual C-Series', 'Identity I-Series']
-        },
-        {
-          id: 'create_dataset',
-          tabId: 'create_dataset',
-          title: 'Bring in New Dataset',
-          badge: 'Dedicated Page Flow',
-          badgeColor: 'bg-[#EBF3FC] text-[#0D66D0] border-[#C5DCFA]',
-          icon: <FolderPlus className="w-6 h-6 text-white" />,
-          iconBg: 'bg-gradient-to-br from-[#1473E6] to-[#0284C7]',
-          description: 'Dedicated web page to bring in datasets (CSV, Excel, Streaming, Cloud, Zero-Copy), hot reload ingestion drivers, bind XDM schemas, and configure DULE governance.',
-          metrics: 'Streaming, Batch & Zero-Copy Ingestion',
-          tags: ['Bring In Dataset', 'XDM Schema Binding', 'DULE Governance', 'Profile-Enabled'],
-          actionLabel: 'Bring In Dataset',
-          onClick: () => setActiveTab('create_dataset')
         }
       ]
     },
@@ -595,82 +596,73 @@ export const AppDrawerPageView: React.FC<AppDrawerPageViewProps> = ({ category: 
           </div>
         </div>
 
-        {/* Mobile App Drawer Grid */}
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredItems.map(item => (
-              <div
-                key={item.id}
-                onClick={() => {
-                  if (item.onClick) {
-                    item.onClick();
-                  } else {
-                    setActiveTab(item.tabId as any);
-                  }
-                }}
-                className="bg-white rounded-2xl border border-[#E1E5EA] hover:border-[#1473E6] p-6 shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group relative"
-              >
-                <div>
-                  {/* Top: Dedicated App Icon + Status Badge */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-2xl ${item.iconBg} flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform`}>
-                      {item.icon}
-                    </div>
+        {/* Compact Vertical Strips List */}
+        <div className="space-y-4">
+          {filteredItems.map((item, idx) => (
+            <div
+              key={item.id}
+              onClick={() => {
+                if (item.onClick) {
+                  item.onClick();
+                } else {
+                  setActiveTab(item.tabId as any);
+                }
+              }}
+              className="relative hover:z-20 bg-white rounded-xl border border-[#E1E5EA] hover:border-[#1473E6] px-5 py-4 shadow-2xs hover:shadow-sm transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+            >
+              <div className="flex items-center gap-4 min-w-0 flex-1">
+                <span className="text-xs font-mono font-bold text-[#64748B] w-6 text-center shrink-0 tabular-nums">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
 
-                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${item.badgeColor || 'bg-[#F2F4F7] text-[#1A1D23] border-[#E1E5EA]'}`}>
-                      {item.badge}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-base font-bold text-[#1E1E1E] group-hover:text-[#1473E6] transition-colors mb-1.5 flex items-center justify-between">
-                    <span>{item.title}</span>
-                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-[#1473E6]" />
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-xs text-[#1E2229] leading-relaxed mb-4">
-                    {item.description}
-                  </p>
+                <div className={`w-9 h-9 rounded-lg ${item.iconBg} flex items-center justify-center shrink-0 shadow-2xs [&_svg]:w-4 [&_svg]:h-4`}>
+                  {item.icon}
                 </div>
 
-                {/* Bottom: Tags + Metric + Launch Button */}
-                <div className="pt-4 border-t border-[#F2F4F7] space-y-3">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-[#262A33] font-medium">Status / Telemetry:</span>
-                    <span className="font-semibold text-[#2C2C2C] font-mono text-[10px]">{item.metrics}</span>
-                  </div>
-
-                  {/* Tag chips */}
-                  <div className="flex flex-wrap gap-1">
-                    {item.tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="text-[10px] px-2 py-0.5 rounded bg-[#F8F9FA] text-[#1A1D23] border border-[#E8ECEF]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (item.onClick) {
-                        item.onClick();
-                      } else {
-                        setActiveTab(item.tabId as any);
-                      }
-                    }}
-                    className="w-full mt-2 py-2 rounded-xl bg-[#F8F9FA] group-hover:bg-[#1473E6] group-hover:text-white border border-[#E1E5EA] group-hover:border-[#1473E6] text-xs font-semibold text-[#2C2C2C] transition-all flex items-center justify-center space-x-1.5 shadow-2xs"
-                  >
-                    <span>{item.actionLabel || 'Launch Flow'}</span>
-                    {item.onClick ? <Plus className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
-                  </button>
+                <div className="min-w-0 flex-1 flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-[#1E2229] group-hover:text-[#1473E6] transition-colors truncate">
+                    {item.title}
+                  </h3>
+                  <Info className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#1473E6] transition-colors shrink-0" />
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* Hover Tooltip showing stats & description */}
+              <div
+                role="tooltip"
+                className={`pointer-events-none invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-opacity duration-150 absolute left-5 sm:left-16 z-30 w-[calc(100%-2.5rem)] max-w-lg rounded-xl bg-[#0F172A] text-white p-3.5 shadow-xl border border-slate-700 ${
+                  idx === 0 ? 'top-full mt-2' : 'bottom-full mb-2'
+                }`}
+              >
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] font-medium text-sky-300">
+                  <span>{item.badge}</span>
+                  <span aria-hidden="true">·</span>
+                  <span className="font-mono tabular-nums">{item.metrics}</span>
+                </div>
+                <p className="text-xs text-slate-200 leading-relaxed mt-1">
+                  {item.description}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end shrink-0 pl-9 sm:pl-0">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (item.onClick) {
+                      item.onClick();
+                    } else {
+                      setActiveTab(item.tabId as any);
+                    }
+                  }}
+                  className="px-3.5 py-1.5 rounded-lg bg-[#F8FAFC] group-hover:bg-[#1473E6] group-hover:text-white border border-[#E1E5EA] group-hover:border-[#1473E6] text-xs font-semibold text-[#1E2229] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                >
+                  <span>{item.actionLabel || 'Launch Flow'}</span>
+                  {item.onClick ? <Plus className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+            </div>
+          ))}
 
           {filteredItems.length === 0 && (
             <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-[#E1E5EA]">

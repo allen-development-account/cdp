@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCDP } from '../../context/CDPContext';
 import { CustomerProfile } from '../../types/cdp';
 import { DULEBadge } from '../common/DULEBadge';
+import { resolveAvatarUrl } from '../../utils/avatarResolver';
 import {
   X,
   Shield,
@@ -61,12 +62,23 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({ profile,
         {/* Modal Top Header */}
         <div className="p-5 bg-[#2C2C2C] text-white flex items-start justify-between border-b border-[#3E3E3E]">
           <div className="flex items-center space-x-3.5">
-            <img
-              src={profile.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
-              alt={profile.unifiedName}
-              referrerPolicy="no-referrer"
-              className="w-12 h-12 rounded object-cover border border-[#4B4B4B]"
-            />
+            {profile.avatarUrl ? (
+              <img
+                src={resolveAvatarUrl(profile.avatarUrl, profile.id)}
+                alt={profile.unifiedName}
+                referrerPolicy="no-referrer"
+                className="w-12 h-12 rounded object-cover border border-[#4B4B4B]"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded bg-[#1473E6] text-white border border-[#4B4B4B] flex items-center justify-center text-sm font-bold shrink-0">
+                {(profile.unifiedName || 'U')
+                  .split(' ')
+                  .map(s => s[0])
+                  .slice(0, 2)
+                  .join('')
+                  .toUpperCase()}
+              </div>
+            )}
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="text-base font-bold text-white tracking-tight">{profile.unifiedName}</h2>

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useCDP } from '../../context/CDPContext';
 import { PageBackButton } from '../common/PageBackButton';
 import { evaluateAudience, isProfileDuleTargetable } from '../../utils/audienceEvaluator';
+import { resolveAvatarUrl } from '../../utils/avatarResolver';
 import {
   Layers,
   Sparkles,
@@ -966,12 +967,23 @@ export const AudienceOverlapExplorerView: React.FC = () => {
                       <tr key={p.id} className="hover:bg-[#F8FAFC] transition-colors">
                         <td className="py-2.5 px-3">
                           <div className="flex items-center space-x-2.5">
-                            <img
-                              src={p.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
-                              alt={p.unifiedName}
-                              referrerPolicy="no-referrer"
-                              className="w-7 h-7 rounded-full object-cover border border-[#E1E5EA] shrink-0"
-                            />
+                            {p.avatarUrl ? (
+                              <img
+                                src={resolveAvatarUrl(p.avatarUrl, p.id)}
+                                alt={p.unifiedName}
+                                referrerPolicy="no-referrer"
+                                className="w-7 h-7 rounded-full object-cover border border-[#E1E5EA] shrink-0"
+                              />
+                            ) : (
+                              <div className="w-7 h-7 rounded-full bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA] flex items-center justify-center text-[10px] font-bold shrink-0">
+                                {(p.unifiedName || 'U')
+                                  .split(' ')
+                                  .map(s => s[0])
+                                  .slice(0, 2)
+                                  .join('')
+                                  .toUpperCase()}
+                              </div>
+                            )}
                             <div className="min-w-0">
                               <p className="font-bold text-[#1E2229] truncate">{p.unifiedName}</p>
                               <p className="text-[10px] text-[#596780] font-mono truncate">{p.primaryEmail}</p>

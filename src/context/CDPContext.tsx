@@ -70,6 +70,7 @@ import {
   evaluateAudience,
   recomputeAllAudiencesAndProfiles
 } from '../utils/audienceEvaluator';
+import { CUSTOMER_AVATAR_PATHS } from '../utils/avatarResolver';
 
 interface IngestionResult {
   success: boolean;
@@ -139,6 +140,7 @@ interface CDPContextType {
   setIsDemoMode: (enabled: boolean) => void;
   toggleDemoMode: () => void;
   loadDemoData: () => void;
+  generateSampleProfiles: () => number;
   clearToNewUserMode: () => void;
   isGhostUser: boolean;
   toggleGhostUser: () => void;
@@ -237,6 +239,7 @@ interface CDPContextType {
   runDatabricksSql: (sql: string) => Promise<DatabricksQueryResult>;
   syncDatabricksNow: () => Promise<void>;
   streamEcommerceEvent: (payload: Record<string, any>) => Promise<any>;
+  streamEvents: CDPEvent[];
 }
 
 const CDPContext = createContext<CDPContextType | undefined>(undefined);
@@ -266,9 +269,20 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   })();
 
+  const initialCleanSlate = (() => {
+    try {
+      return localStorage.getItem('xlr8_clean_slate') === 'true';
+    } catch {
+      return false;
+    }
+  })();
+
   const initialDemoEval = initialDemoActive
     ? recomputeAllAudiencesAndProfiles(INITIAL_PROFILES, INITIAL_AUDIENCES)
-    : { profiles: [], audiences: [] };
+    : {
+        profiles: initialCleanSlate ? [] : INITIAL_PROFILES,
+        audiences: []
+      };
 
   const [schemas, setSchemas] = useState<SchemaDefinition[]>(() => {
     if (initialDemoActive) return STANDARD_SCHEMA_BLUEPRINTS;
@@ -799,6 +813,7 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isLiveStreamConnected, setIsLiveStreamConnected] = useState<boolean>(false);
   const [liveWebSocketPingMs, setLiveWebSocketPingMs] = useState<number>(3.2);
   const [databricksStatus, setDatabricksStatus] = useState<DatabricksConnectionStatus | null>(null);
+  const [streamEvents, setStreamEvents] = useState<CDPEvent[]>([]);
 
   const refreshDatabricksStatus = useCallback(async (): Promise<DatabricksConnectionStatus | null> => {
     try {
@@ -858,6 +873,9 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                 if (data.data?.dlq) setDlq(data.data.dlq);
                 if (data.data?.syncLogs) setSyncLogs(data.data.syncLogs);
               }
+              if (Array.isArray(data.data?.streamEvents)) {
+                setStreamEvents([...data.data.streamEvents].reverse());
+              }
               if (data.data?.databricks) {
                 setDatabricksStatus(data.data.databricks);
               }
@@ -916,6 +934,19 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                   };
                   return [newEcomSource, ...prev];
                 });
+                setStreamEvents(prev => [data.event, ...prev.filter(e => e.id !== data.event.id)].slice(0, 60));
+                setAuditLogs(prev => [{
+                  id: `audit_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 5)}`,
+                  timestamp: new Date().toLocaleTimeString(),
+                  actor: data.event.identifiers?.email || data.event.identifiers?.cookieId || 'Storefront Visitor',
+                  role: 'Data Steward' as const,
+                  category: 'Schema & Ingestion' as const,
+                  action: `Storefront Event: ${data.event.eventType}`,
+                  targetResource: data.event.payload?.product_name || data.event.payload?.search_query || data.event.identifiers?.cookieId || 'Apex Storefront',
+                  details: `Ingested ${data.event.eventType} via ${data.event.channel} in ${data.latencyMs}ms`,
+                  status: 'Success' as const,
+                  ipAddress: 'Web SDK Stream'
+                }, ...prev].slice(0, 100));
                 addTerminalLog('info', 'STREAM-EVENT', `[${data.event.channel}] ${data.event.eventType} processed in ${data.latencyMs}ms`);
               }
               if (data.databricks) {
@@ -937,10 +968,12 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
               if (data.data?.profiles) setProfiles(data.data.profiles);
               if (data.data?.dlq) setDlq(data.data.dlq);
               if (data.data?.databricks) setDatabricksStatus(data.data.databricks);
+              if (Array.isArray(data.data?.streamEvents)) setStreamEvents([...data.data.streamEvents].reverse());
             } else if (data.type === 'state:clear') {
               setProfiles([]);
               setDlq([]);
               setSyncLogs([]);
+              setStreamEvents([]);
               if (data.data?.databricks) setDatabricksStatus(data.data.databricks);
             }
           } catch (e) {
@@ -1271,12 +1304,17 @@ export const CDPProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const initialTier = raw.customer_tier || raw.customerTier || (initialSpend > 2000 ? 'Platinum' : initialSpend > 800 ? 'Gold' : 'Bronze');
       const churnBand = raw.churn_risk === 'High' ? 'High' : raw.churn_risk === 'Medium' ? 'Medium' : 'Low';
 
+      const usedAvatars = new Set(profiles.map(p => p.avatarUrl).filter(Boolean));
+      const availableAvatar = email || raw.fullName || raw.firstName
+        ? CUSTOMER_AVATAR_PATHS.find(path => !usedAvatars.has(path))
+        : undefined;
+
       targetProfile = {
         id: newId,
         unifiedName: displayName,
         primaryEmail: email || `anon_${newId}@unregistered.guest`,
         primaryPhone: phone || undefined,
-        avatarUrl: `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80`,
+        avatarUrl: availableAvatar,
         createdAt: nowIso,
         lastActiveAt: nowIso,
         identities: createdNodes,
@@ -2703,6 +2741,7 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
   const loadDemoData = useCallback(() => {
     setIsDemoMode(true);
     try {
+      localStorage.removeItem('xlr8_clean_slate');
       localStorage.setItem('xlr8_demo_mode', 'true');
       localStorage.setItem('xlr8_cdp_datasets', JSON.stringify(INITIAL_DATASETS));
       localStorage.setItem('nexus_cdp_sources', JSON.stringify(INITIAL_INGESTION_SOURCES));
@@ -2735,6 +2774,147 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
     addTerminalLog('success', 'DEMO_MODE', 'Demo Mode enabled: Loaded XDM Schemas, Datasets, Customer 360 Profiles, Audiences, and Connectors.');
   }, [addTerminalLog]);
 
+  const generateSampleProfiles = useCallback(() => {
+    try {
+      localStorage.removeItem('xlr8_clean_slate');
+    } catch (e) {
+      console.error(e);
+    }
+    let addedCount = 0;
+    setProfiles(prev => {
+      const existingIds = new Set(prev.map(p => p.id));
+      const missingSeedProfiles = INITIAL_PROFILES.filter(p => !existingIds.has(p.id));
+
+      if (missingSeedProfiles.length > 0) {
+        addedCount = missingSeedProfiles.length;
+        const merged = [...prev, ...missingSeedProfiles];
+        if (audiences.length > 0) {
+          const synced = recomputeAllAudiencesAndProfiles(merged, audiences);
+          setAudiences(synced.audiences);
+          return synced.profiles;
+        }
+        return merged;
+      }
+
+      // If seed profiles are already loaded, generate an additional unique profile
+      const syntheticRoster = [
+        { first: 'Nadia', last: 'Al-Mansoor', city: 'Dubai', country: 'AE', tier: 'Platinum' as const, spend: 4620 },
+        { first: 'Lucas', last: 'Bergstrom', city: 'Stockholm', country: 'SE', tier: 'Gold' as const, spend: 1980 },
+        { first: 'Priya', last: 'Nair', city: 'Singapore', country: 'SG', tier: 'VIP' as const, spend: 6850 },
+        { first: 'Mateo', last: 'Silva', city: 'Sao Paulo', country: 'BR', tier: 'Silver' as const, spend: 740 },
+        { first: 'Hannah', last: 'OConnor', city: 'Dublin', country: 'IE', tier: 'Gold' as const, spend: 2340 }
+      ];
+      const nextIdx = prev.length % syntheticRoster.length;
+      const spec = syntheticRoster[nextIdx];
+      const nowIso = new Date().toISOString();
+      const suffix = Math.floor(1000 + Math.random() * 9000);
+      const newId = `prof_gen_${suffix}`;
+      const usedAvatars = new Set(prev.map(p => p.avatarUrl).filter(Boolean));
+      const unusedAvatar = CUSTOMER_AVATAR_PATHS.find(path => !usedAvatars.has(path));
+
+      const syntheticProfile: CustomerProfile = {
+        id: newId,
+        unifiedName: `${spec.first} ${spec.last}`,
+        primaryEmail: `${spec.first.toLowerCase()}.${spec.last.toLowerCase().replace(/[^a-z]/g, '')}${suffix}@enterprise.io`,
+        primaryPhone: `+1-415-555-${suffix}`,
+        avatarUrl: unusedAvatar,
+        createdAt: nowIso,
+        lastActiveAt: nowIso,
+        identities: [
+          {
+            id: `id_email_${suffix}`,
+            type: 'email',
+            value: `${spec.first.toLowerCase()}.${spec.last.toLowerCase().replace(/[^a-z]/g, '')}${suffix}@enterprise.io`,
+            firstSeen: nowIso,
+            lastSeen: nowIso,
+            source: 'Profile Generator',
+            isPrimary: true
+          },
+          {
+            id: `id_cookie_${suffix}`,
+            type: 'cookie',
+            value: `ecid_gen_${suffix}`,
+            firstSeen: nowIso,
+            lastSeen: nowIso,
+            source: 'Web SDK'
+          },
+          {
+            id: `id_crm_${suffix}`,
+            type: 'crmId',
+            value: `CRM_GEN_${suffix}`,
+            firstSeen: nowIso,
+            lastSeen: nowIso,
+            source: 'CRM Sync'
+          }
+        ],
+        identityLinks: [
+          {
+            sourceId: `id_cookie_${suffix}`,
+            targetId: `id_email_${suffix}`,
+            relationship: 'deterministic',
+            confidence: 1.0,
+            establishedAt: nowIso,
+            linkedByEvent: 'Authenticated Identity Stitching'
+          },
+          {
+            sourceId: `id_crm_${suffix}`,
+            targetId: `id_email_${suffix}`,
+            relationship: 'deterministic',
+            confidence: 1.0,
+            establishedAt: nowIso,
+            linkedByEvent: 'CRM Identity Resolution'
+          }
+        ],
+        attributes: {
+          firstName: spec.first,
+          lastName: spec.last,
+          city: spec.city,
+          country: spec.country,
+          customerTier: spec.tier,
+          totalSpend: spec.spend,
+          purchaseCount: Math.max(2, Math.round(spec.spend / 600)),
+          loyaltyPoints: Math.round(spec.spend * 1.4),
+          preferredCategory: 'Enterprise Cloud Suite',
+          hasActiveSubscription: spec.spend > 1500,
+          deviceType: 'Desktop Chrome'
+        },
+        consent: {
+          gdprConsent: true,
+          ccpaOptOut: false,
+          marketingEmailConsent: true,
+          thirdPartySharingConsent: true,
+          sensitiveDataAllowed: false,
+          lastUpdated: nowIso,
+          consentSource: 'Preference Center'
+        },
+        predictions: {
+          churnRisk: spec.spend > 3000 ? 12 : 28,
+          churnRiskBand: spec.spend > 3000 ? 'Low' : 'Medium',
+          predictedLtv: Math.round(spec.spend * 2.4),
+          upsellPropensity: 82,
+          brandLoyaltyScore: 88,
+          nextBestAction: 'Send Personalized VIP Account Offer',
+          nextBestOffer: '20% Annual Plan Upgrade',
+          calculatedAt: nowIso
+        },
+        events: [],
+        qualifyingAudienceIds: [],
+        activeJourneys: []
+      };
+
+      addedCount = 1;
+      const merged = [syntheticProfile, ...prev];
+      if (audiences.length > 0) {
+        const synced = recomputeAllAudiencesAndProfiles(merged, audiences);
+        setAudiences(synced.audiences);
+        return synced.profiles;
+      }
+      return merged;
+    });
+    addTerminalLog('success', 'PROFILES', `Generated unified customer profile records with distinct identity graphs`);
+    return addedCount;
+  }, [audiences, addTerminalLog]);
+
   const resetPlatformDemo = useCallback(async () => {
     try {
       await fetch('/api/v1/reset-demo', { method: 'POST' });
@@ -2749,6 +2929,7 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
     setIsDemoMode(false);
     try {
       localStorage.setItem('xlr8_demo_mode', 'false');
+      localStorage.setItem('xlr8_clean_slate', 'true');
       localStorage.removeItem('xlr8_cdp_datasets');
       localStorage.removeItem('xlr8_cdp_schemas');
       localStorage.removeItem('xlr8_cdp_destinations');
@@ -2868,6 +3049,7 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
         setIsDemoMode,
         toggleDemoMode,
         loadDemoData,
+        generateSampleProfiles,
         clearToNewUserMode,
         isGhostUser,
         toggleGhostUser,
@@ -3022,6 +3204,7 @@ ${isZeroCopy ? "JOIN ENTERPRISE_DW.PUBLIC.CUSTOMER_360_VIEW dw ON p.primary_emai
           const ack = await res.json();
           return ack;
         },
+        streamEvents,
       }}
     >
       {children}

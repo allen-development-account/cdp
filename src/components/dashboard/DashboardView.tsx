@@ -4,6 +4,7 @@ import { PageBackButton } from '../common/PageBackButton';
 import { MetricTile } from '../common/MetricTile';
 import { TerminalLog } from '../common/TerminalLog';
 import { DULEBadge } from '../common/DULEBadge';
+import { resolveAvatarUrl } from '../../utils/avatarResolver';
 import {
   Users,
   GitMerge,
@@ -255,12 +256,23 @@ export const DashboardView: React.FC = () => {
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-2.5">
-                        <img
-                          src={profile.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
-                          alt={profile.unifiedName}
-                          referrerPolicy="no-referrer"
-                          className="w-7 h-7 rounded-full object-cover border border-[#E1E5EA]"
-                        />
+                        {profile.avatarUrl ? (
+                          <img
+                            src={resolveAvatarUrl(profile.avatarUrl, profile.id)}
+                            alt={profile.unifiedName}
+                            referrerPolicy="no-referrer"
+                            className="w-7 h-7 rounded-full object-cover border border-[#E1E5EA]"
+                          />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA] flex items-center justify-center text-[10px] font-bold shrink-0">
+                            {(profile.unifiedName || 'U')
+                              .split(' ')
+                              .map(s => s[0])
+                              .slice(0, 2)
+                              .join('')
+                              .toUpperCase()}
+                          </div>
+                        )}
                         <div>
                           <p className="font-semibold text-[#2C2C2C] group-hover:text-[#1473E6] transition-colors">
                             {profile.unifiedName}

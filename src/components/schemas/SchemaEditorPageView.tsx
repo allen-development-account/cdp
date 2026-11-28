@@ -61,6 +61,9 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
     ingestEvent,
     guidedReturnStep,
     returnToGuidedStep,
+    history,
+    historyIndex,
+    goBack,
   } = useCDP();
 
   // Auto-minimize the left-side menu panel when arriving on this dedicated schema builder page
@@ -488,6 +491,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
               onClick={() => {
                 setEditingSchemaId(null);
                 if (onBack) onBack();
+                else if (historyIndex > 0 && history[historyIndex - 1] === 'schemas') goBack();
                 else setActiveTab('schemas');
               }}
               className="flex items-center space-x-1.5 text-xs font-medium text-white bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1.5 rounded transition-colors cursor-pointer"
@@ -557,6 +561,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
               setEditingSchemaId(null);
               if (onBack) onBack();
               else if (guidedReturnStep !== null) returnToGuidedStep();
+              else if (historyIndex > 0 && history[historyIndex - 1] === 'schemas') goBack();
               else setActiveTab('schemas');
             }}
             className="px-3 py-1.5 text-xs font-medium text-blue-100 hover:text-white hover:bg-white/15 rounded transition-colors cursor-pointer"
@@ -603,20 +608,20 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             </button>
           </div>
 
-          <div className="p-3 space-y-4">
+          <div className="p-4 space-y-6">
             {/* Section 1: Class */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Class</span>
+            <div className="bg-[#243042] rounded-xl border border-slate-600/70 shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] px-3.5 py-2.5 border-b border-[#0E4DA4] flex items-center justify-between">
+                <span className="text-[11px] font-bold text-white uppercase tracking-wider">Class</span>
                 <button
                   onClick={() => setIsClassSelectorModalOpen(true)}
-                  className="text-[11px] font-medium text-[#60A5FA] hover:text-blue-300 cursor-pointer"
+                  className="text-[11px] font-semibold text-white hover:text-blue-100 bg-white/15 hover:bg-white/25 border border-white/25 px-2 py-0.5 rounded transition-colors cursor-pointer"
                 >
                   Change
                 </button>
               </div>
 
-              <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-2">
+              <div className="p-3.5 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-semibold text-xs text-white">{currentClass.name}</span>
                   <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-200 border border-slate-600 shrink-0">
@@ -630,26 +635,26 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             </div>
 
             {/* Section 2: Field Groups */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
+            <div className="bg-[#243042] rounded-xl border border-slate-600/70 shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] px-3.5 py-2.5 border-b border-[#0E4DA4] flex items-center justify-between">
                 <div className="flex items-center space-x-1.5">
-                  <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Field groups</span>
-                  <span className="text-[10px] font-mono text-slate-100 bg-slate-700/80 border border-slate-600/70 px-1.5 py-0.2 rounded font-bold tabular-nums">
+                  <span className="text-[11px] font-bold text-white uppercase tracking-wider">Field Groups</span>
+                  <span className="text-[10px] font-mono text-white bg-white/15 border border-white/25 px-1.5 py-0.5 rounded font-bold tabular-nums">
                     {attachedGroupIds.length}
                   </span>
                 </div>
 
                 <button
                   onClick={() => setIsAddFieldGroupsModalOpen(true)}
-                  className="text-xs font-semibold text-[#60A5FA] hover:text-blue-300 flex items-center space-x-1 cursor-pointer"
+                  className="text-[11px] font-semibold text-white hover:text-blue-100 bg-white/15 hover:bg-white/25 border border-white/25 px-2 py-0.5 rounded flex items-center space-x-1 transition-colors cursor-pointer"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-3 h-3" />
                   <span>Add</span>
                 </button>
               </div>
 
               {/* List of Attached Field Groups */}
-              <div className="space-y-1.5">
+              <div className="p-3 space-y-2">
                 {attachedGroupIds.map(groupId => {
                   const group = STANDARD_FIELD_GROUPS.find(g => g.id === groupId);
                   if (!group) return null;
@@ -657,7 +662,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                   return (
                     <div
                       key={group.id}
-                      className="p-2.5 bg-[#243042] rounded-lg border border-slate-600/60 hover:border-[#60A5FA]/70 shadow-2xs group flex items-start justify-between gap-2 transition-colors"
+                      className="p-2.5 bg-[#1B2432] rounded-lg border border-slate-600/60 hover:border-[#60A5FA]/70 shadow-2xs group flex items-start justify-between gap-2 transition-colors"
                     >
                       <div className="min-w-0">
                         <div className="flex items-center space-x-1.5">
@@ -680,7 +685,7 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
 
                 <button
                   onClick={() => setIsAddFieldGroupsModalOpen(true)}
-                  className="w-full py-2 border border-dashed border-[#60A5FA]/60 hover:border-[#60A5FA] bg-[#243042]/60 hover:bg-[#2B3A50] text-[#93C5FD] rounded-lg text-xs font-medium transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                  className="w-full py-2 border border-dashed border-[#60A5FA]/60 hover:border-[#60A5FA] bg-[#1B2432]/70 hover:bg-[#2B3A50] text-[#93C5FD] rounded-lg text-xs font-medium transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Field Groups</span>
@@ -689,15 +694,15 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             </div>
 
             {/* Section 3: Identities Summary */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wide">Identities</span>
-                <span className="text-[10px] font-mono text-slate-100 bg-slate-700/80 border border-slate-600/70 px-1.5 py-0.2 rounded font-bold tabular-nums">
+            <div className="bg-[#243042] rounded-xl border border-slate-600/70 shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] px-3.5 py-2.5 border-b border-[#0E4DA4] flex items-center justify-between">
+                <span className="text-[11px] font-bold text-white uppercase tracking-wider">Identities</span>
+                <span className="text-[10px] font-mono text-white bg-white/15 border border-white/25 px-1.5 py-0.5 rounded font-bold tabular-nums">
                   {identityFields.length}
                 </span>
               </div>
 
-              <div className="p-2.5 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-1.5">
+              <div className="p-3 space-y-1.5">
                 {identityFields.length === 0 ? (
                   <p className="text-[11px] text-slate-300 italic">No identity keys defined in this schema.</p>
                 ) : (
@@ -705,13 +710,13 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                     <div
                       key={idField.id}
                       onClick={() => handleSelectField(idField)}
-                      className="flex items-center justify-between text-xs py-1 px-1.5 rounded hover:bg-slate-700/60 cursor-pointer transition-colors"
+                      className="flex items-center justify-between text-xs py-1.5 px-2 rounded hover:bg-[#1B2432]/80 cursor-pointer transition-colors"
                     >
                       <div className="flex items-center space-x-1.5 truncate">
                         <Key className="w-3 h-3 text-[#60A5FA] shrink-0" />
                         <span className="font-mono text-[11px] text-slate-100 truncate">{idField.name}</span>
                       </div>
-                      <span className="text-[10px] uppercase font-semibold text-[#93C5FD] bg-[#1D4ED8]/30 px-1.5 py-0.2 rounded border border-[#60A5FA]/40 shrink-0">
+                      <span className="text-[10px] uppercase font-semibold text-[#93C5FD] bg-[#1D4ED8]/30 px-1.5 py-0.5 rounded border border-[#60A5FA]/40 shrink-0">
                         {idField.identifierType || 'CRM'}
                       </span>
                     </div>
@@ -721,14 +726,17 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
             </div>
 
             {/* Section 4: Real-Time Customer Profile Toggle */}
-            <div className="p-3 bg-[#243042] rounded-lg border border-slate-600/60 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white">Real-Time Profile</span>
+            <div className="bg-[#243042] rounded-xl border border-slate-600/70 shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-[#1473E6] via-[#0F58B8] to-[#0A3D82] px-3.5 py-2.5 border-b border-[#0E4DA4] flex items-center justify-between">
+                <span className="text-[11px] font-bold text-white uppercase tracking-wider">Real-Time Profile</span>
                 <button
                   type="button"
+                  aria-label="Toggle Real-Time Profile"
                   onClick={() => setIsProfileEnabled(!isProfileEnabled)}
-                  className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    isProfileEnabled ? 'bg-[#1473E6]' : 'bg-slate-600'
+                  className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border transition-colors duration-200 ease-in-out focus:outline-none ${
+                    isProfileEnabled
+                      ? 'bg-[#38BDF8] border-white/40'
+                      : 'bg-slate-900/50 border-white/30'
                   }`}
                 >
                   <span
@@ -739,9 +747,11 @@ export const SchemaEditorPageView: React.FC<SchemaEditorPageViewProps> = ({ onBa
                 </button>
               </div>
 
-              <p className="text-[11px] text-slate-300 leading-relaxed">
-                When enabled, streaming datasets mapped to this schema will stitch into the real-time unified customer graph.
-              </p>
+              <div className="p-3.5">
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  When enabled, streaming datasets mapped to this schema will stitch into the real-time unified customer graph.
+                </p>
+              </div>
             </div>
           </div>
         </div>

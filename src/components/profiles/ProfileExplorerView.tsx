@@ -3,6 +3,7 @@ import { useCDP } from '../../context/CDPContext';
 import { PageBackButton } from '../common/PageBackButton';
 import { CustomerProfile } from '../../types/cdp';
 import { ProfileDetailModal } from './ProfileDetailModal';
+import { resolveAvatarUrl } from '../../utils/avatarResolver';
 import {
   Users,
   Search,
@@ -19,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export const ProfileExplorerView: React.FC = () => {
-  const { profiles, selectedProfileId, setSelectedProfileId, uiMode } = useCDP();
+  const { profiles, selectedProfileId, setSelectedProfileId, uiMode, generateSampleProfiles } = useCDP();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTierFilter, setSelectedTierFilter] = useState<string>('ALL');
@@ -209,12 +210,23 @@ export const ProfileExplorerView: React.FC = () => {
                     {/* Customer Info */}
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-2.5">
-                        <img
-                          src={p.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
-                          alt={p.unifiedName}
-                          referrerPolicy="no-referrer"
-                          className="w-7 h-7 rounded-full object-cover border border-[#E1E5EA] shrink-0"
-                        />
+                        {p.avatarUrl ? (
+                          <img
+                            src={resolveAvatarUrl(p.avatarUrl, p.id)}
+                            alt={p.unifiedName}
+                            referrerPolicy="no-referrer"
+                            className="w-7 h-7 rounded-full object-cover border border-[#E1E5EA] shrink-0"
+                          />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA] flex items-center justify-center text-[10px] font-bold shrink-0">
+                            {(p.unifiedName || 'U')
+                              .split(' ')
+                              .map(s => s[0])
+                              .slice(0, 2)
+                              .join('')
+                              .toUpperCase()}
+                          </div>
+                        )}
                         <div>
                           <p className="font-semibold text-[#2C2C2C] group-hover:text-[#1473E6] transition-colors">
                             {p.unifiedName}
@@ -329,7 +341,19 @@ export const ProfileExplorerView: React.FC = () => {
           <div className="p-8 text-center text-[#262A33]">
             <Users className="w-7 h-7 mx-auto mb-2 opacity-40 text-[#262A33]" />
             <p className="font-semibold text-xs text-[#1A1D23]">No matching unified profiles found</p>
-            <p className="text-[11px] text-[#262A33] mt-0.5">Try adjusting search criteria or clearing filters.</p>
+            <p className="text-[11px] text-[#262A33] mt-0.5">
+              {profiles.length === 0 ? 'Generate sample unified customer profiles to get started.' : 'Try adjusting search criteria or clearing filters.'}
+            </p>
+            {profiles.length === 0 && (
+              <button
+                type="button"
+                onClick={generateSampleProfiles}
+                className="mt-3 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-[#1473E6] hover:bg-[#0D66D0] text-white text-xs font-semibold transition-colors cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Generate Customer Profiles</span>
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -48,10 +48,12 @@ export const PageBackButton: React.FC<PageBackButtonProps> = ({
       onCustomBack();
     } else if (isGuidedNavigation) {
       returnToGuidedStep();
-    } else if (canGoBack) {
+    } else if (isPrevGetStarted && canGoBack) {
       goBack();
     } else if (fallbackTab) {
       setActiveTab(fallbackTab);
+    } else if (canGoBack) {
+      goBack();
     }
   };
 

@@ -6,6 +6,7 @@ import {
   evaluateAudience,
   isProfileDuleTargetable
 } from '../../utils/audienceEvaluator';
+import { resolveAvatarUrl } from '../../utils/avatarResolver';
 import {
   Layers,
   Plus,
@@ -1884,12 +1885,23 @@ export const AudienceBuilderView: React.FC = () => {
                               : 'bg-[#FFF1F0] border-[#FFCCC7] hover:border-[#D7373F]'
                           }`}
                         >
-                          <img
-                            src={p.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
-                            alt={p.unifiedName}
-                            referrerPolicy="no-referrer"
-                            className="w-7 h-7 rounded-full object-cover shrink-0"
-                          />
+                          {p.avatarUrl ? (
+                            <img
+                              src={resolveAvatarUrl(p.avatarUrl, p.id)}
+                              alt={p.unifiedName}
+                              referrerPolicy="no-referrer"
+                              className="w-7 h-7 rounded-full object-cover shrink-0"
+                            />
+                          ) : (
+                            <div className="w-7 h-7 rounded-full bg-[#EBF3FC] text-[#0D66D0] border border-[#C5DCFA] flex items-center justify-center text-[10px] font-bold shrink-0">
+                              {(p.unifiedName || 'U')
+                                .split(' ')
+                                .map(s => s[0])
+                                .slice(0, 2)
+                                .join('')
+                                .toUpperCase()}
+                            </div>
+                          )}
                           <div className="min-w-0 flex-1 text-xs">
                             <div className="flex items-center justify-between">
                               <p className="font-semibold text-[#2C2C2C] truncate">{p.unifiedName}</p>
